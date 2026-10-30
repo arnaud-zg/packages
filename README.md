@@ -1,11 +1,13 @@
-# 📦 expo-packages
+# 📦 packages: open-source npm packages by arnaud-zg
 
 <p align="center">
-  <img src="assets/icon.png" width="128" height="128" alt="expo-packages logo" />
+  <img src="assets/icon.png" width="128" height="128" alt="arnaud-zg packages logo" />
 </p>
 
 <div align="center">
-  <b>Small, focused tools for Expo monorepos, each one standalone, no shared runtime between them.</b>
+  <b>Small, focused, well-tested npm packages for Expo, React Native and TypeScript projects.</b>
+  <br/>
+  Each one is standalone: install only what you need, nothing else comes along.
 </div>
 
 ---
@@ -29,30 +31,46 @@
 
 ---
 
+## 👋 What is this?
+
+This repository is the home of every npm package I publish. Each package solves one specific
+problem, ships its own README, and is versioned and released independently. They share a single
+toolchain (TypeScript, ESLint, Prettier, Vitest, Changesets) so every package gets the same quality
+bar.
+
 ## 📦 Packages
 
-| Package                                             | What it's for                                                                                                                          |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog) | Deterministic Expo SDK checks and sync for pnpm catalogs, like `expo-doctor` for a whole workspace                                     |
-| [`expo-native-guard`](./packages/expo-native-guard) | Resolve or select native-only implementations without crashing in Expo Go, with a visible reminder the native path still needs testing |
+| Package                                             | What it does                                                                                                                       | Install                                    |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| [`expo-native-guard`](./packages/expo-native-guard) | Load native-only modules (Nitro, TurboModules, custom Expo modules) without crashing in **Expo Go**, with a visible fallback badge | `npm install expo-native-guard`            |
+| [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog) | Check and sync **Expo SDK** versions in **pnpm catalogs**, like `expo-doctor` and `expo install --fix` for a whole workspace       | `npm install --save-dev expo-pnpm-catalog` |
 
-Each package is independently versioned and publishes on its own, installing one never pulls in the
-other.
+More packages will land here over time. ⭐ Star or watch the repo to hear about them.
 
-```sh
-npm install --save-dev expo-pnpm-catalog
-npm install expo-native-guard
-```
+### 🤔 Which one do I need?
 
-See each package's own README for usage: [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog#readme),
-[`expo-native-guard`](./packages/expo-native-guard#readme).
+- **"My app crashes in Expo Go because a library needs native code."** →
+  [`expo-native-guard`](./packages/expo-native-guard#readme)
+- **"`expo-doctor` can't read my `catalog:` versions in a pnpm monorepo."** →
+  [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog#readme)
 
 ## 📚 Documentation
 
 - 🚀 **[Tutorial](./docs/tutorial.md)**: install and wire up each package, step by step.
-- 🛠️ **[How-to guides](./docs/how-to.md)**: task recipes.
-- 📖 **[Reference](./docs/reference.md)**: API and package layout.
-- 💡 **[Explanation](./docs/explanation.md)**: design rationale.
+- 🛠️ **[How-to guides](./docs/how-to.md)**: short recipes for common tasks.
+- 📖 **[Reference](./docs/reference.md)**: full API and package layout.
+- 💡 **[Explanation](./docs/explanation.md)**: why things work the way they do.
+
+## ❓ FAQ
+
+**Does installing one package pull in the others?** No. Packages have no shared runtime and no
+dependencies on each other.
+
+**Are they production ready?** Yes. Every package is written in TypeScript, fully typed, tested with
+Vitest, and released with semantic versioning and a changelog.
+
+**Found a bug or have an idea?** [Open an issue](https://github.com/arnaud-zg/packages/issues).
+Feedback is very welcome.
 
 ## 🤝 Contributing
 
@@ -61,9 +79,9 @@ pnpm install
 pnpm verify
 ```
 
-Released independently per package with [Changesets](https://github.com/changesets/changesets); see
-[How-to § Release a new version](./docs/how-to.md#release-a-new-version).
+Each package is released independently with [Changesets](https://github.com/changesets/changesets);
+see [How-to § Release a new version](./docs/how-to.md#release-a-new-version).
 
-## License
+## 📄 License
 
-MIT
+[MIT](./LICENSE) © Arnaud Zheng

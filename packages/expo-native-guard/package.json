@@ -7,15 +7,19 @@
     "expo-go",
     "react-native",
     "native-module",
-    "fallback"
+    "fallback",
+    "expo-dev-client",
+    "nitro-modules",
+    "turbomodules",
+    "typescript"
   ],
-  "homepage": "https://github.com/arnaud-zg/expo-packages/tree/main/packages/expo-native-guard#readme",
+  "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/expo-native-guard#readme",
   "bugs": {
-    "url": "https://github.com/arnaud-zg/expo-packages/issues"
+    "url": "https://github.com/arnaud-zg/packages/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/arnaud-zg/expo-packages.git",
+    "url": "git+https://github.com/arnaud-zg/packages.git",
     "directory": "packages/expo-native-guard"
   },
   "license": "MIT",
