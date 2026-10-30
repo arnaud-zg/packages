@@ -40,10 +40,11 @@ bar.
 
 ## 📦 Packages
 
-| Package                                             | What it does                                                                                                                       | Install                                    |
-| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| [`expo-native-guard`](./packages/expo-native-guard) | Load native-only modules (Nitro, TurboModules, custom Expo modules) without crashing in **Expo Go**, with a visible fallback badge | `npm install expo-native-guard`            |
-| [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog) | Check and sync **Expo SDK** versions in **pnpm catalogs**, like `expo-doctor` and `expo install --fix` for a whole workspace       | `npm install --save-dev expo-pnpm-catalog` |
+| Package                                                         | What it does                                                                                                                       | Install                                          |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| [`expo-native-guard`](./packages/expo-native-guard)             | Load native-only modules (Nitro, TurboModules, custom Expo modules) without crashing in **Expo Go**, with a visible fallback badge | `npm install expo-native-guard`                  |
+| [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog)             | Check and sync **Expo SDK** versions in **pnpm catalogs**, like `expo-doctor` and `expo install --fix` for a whole workspace       | `npm install --save-dev expo-pnpm-catalog`       |
+| [`vite-workspace-resolver`](./packages/vite-workspace-resolver) | Resolve workspace packages' **exports-map subpaths** and deep `src/` imports in **Vite/Vitest**, without per-package aliases       | `npm install --save-dev vite-workspace-resolver` |
 
 More packages will land here over time. ⭐ Star or watch the repo to hear about them.
 
@@ -53,6 +54,8 @@ More packages will land here over time. ⭐ Star or watch the repo to hear about
   [`expo-native-guard`](./packages/expo-native-guard#readme)
 - **"`expo-doctor` can't read my `catalog:` versions in a pnpm monorepo."** →
   [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog#readme)
+- **"Vitest can't resolve `@my/pkg/subpath` from another workspace package."** →
+  [`vite-workspace-resolver`](./packages/vite-workspace-resolver#readme)
 
 ## 📚 Documentation
 
