@@ -3,12 +3,12 @@
 
 # 💡 Explanation
 
-## Why two unrelated packages share one repo
+## Why independent packages share one repo
 
-Both are small, focused tools for Expo monorepos with no shared runtime between them: installing one
-never pulls in the other, and each publishes and versions independently. A monorepo buys one set of
+Every package here is a small, focused tool with no shared runtime between them: installing one
+never pulls in another, and each publishes and versions independently. A monorepo buys one set of
 dev tooling (lint, format, release process, CI) instead of duplicating it per package; nothing about
-either package's own code depends on the other existing.
+any package's own code depends on the others existing.
 
 ## Why the loaders must be `require()` calls, not static imports
 

@@ -8,15 +8,19 @@
     "catalog",
     "monorepo",
     "expo-doctor",
-    "cli"
+    "cli",
+    "pnpm-workspace",
+    "expo-sdk",
+    "dependency-management",
+    "react-native"
   ],
-  "homepage": "https://github.com/arnaud-zg/expo-packages/tree/main/packages/expo-pnpm-catalog#readme",
+  "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/expo-pnpm-catalog#readme",
   "bugs": {
-    "url": "https://github.com/arnaud-zg/expo-packages/issues"
+    "url": "https://github.com/arnaud-zg/packages/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/arnaud-zg/expo-packages.git",
+    "url": "git+https://github.com/arnaud-zg/packages.git",
     "directory": "packages/expo-pnpm-catalog"
   },
   "license": "MIT",
