@@ -1,6 +1,6 @@
 {
   "name": "vite-workspace-resolver",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Vite plugin resolving workspace package exports-map subpaths and deep src/ imports that Vite's test resolver won't follow.",
   "keywords": [
     "vite",
