@@ -23,9 +23,11 @@
 <br/>
 <a href="https://www.npmjs.com/package/expo-pnpm-catalog"><img src="https://img.shields.io/npm/v/expo-pnpm-catalog.svg?label=expo-pnpm-catalog" alt="expo-pnpm-catalog npm version"></a>
 <a href="https://www.npmjs.com/package/expo-native-guard"><img src="https://img.shields.io/npm/v/expo-native-guard.svg?label=expo-native-guard" alt="expo-native-guard npm version"></a>
+<a href="https://www.npmjs.com/package/vite-workspace-resolver"><img src="https://img.shields.io/npm/v/vite-workspace-resolver.svg?label=vite-workspace-resolver" alt="vite-workspace-resolver npm version"></a>
 <br/>
 <a href="https://npm-stat.com/charts.html?package=expo-pnpm-catalog"><img src="https://img.shields.io/npm/dm/expo-pnpm-catalog.svg?label=expo-pnpm-catalog" alt="expo-pnpm-catalog npm downloads"></a>
 <a href="https://npm-stat.com/charts.html?package=expo-native-guard"><img src="https://img.shields.io/npm/dm/expo-native-guard.svg?label=expo-native-guard" alt="expo-native-guard npm downloads"></a>
+<a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver"><img src="https://img.shields.io/npm/dm/vite-workspace-resolver.svg?label=vite-workspace-resolver" alt="vite-workspace-resolver npm downloads"></a>
 
 </div>
 
