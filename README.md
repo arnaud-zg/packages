@@ -1,4 +1,4 @@
-# 📦 packages: open-source npm packages by arnaud-zg
+# 📦 packages
 
 <p align="center">
   <img src="assets/icon.png" width="128" height="128" alt="arnaud-zg packages logo" />
