@@ -1,22 +1,22 @@
-[🏠 Home](../../README.md) · [📚 Docs](../README.md) · `context-budget`:
+[🏠 Home](../../README.md) · [📚 Docs](../README.md) · `agent-context-budget`:
 [🚀 Tutorial](./tutorial.md) · [🛠️ How-to](./how-to.md) · **📖 Reference** ·
 [💡 Explanation](./explanation.md)
 
-# 📖 Reference: `context-budget`
+# 📖 Reference: `agent-context-budget`
 
 ## Exports
 
-| Package          | Subpath              | Resolves to     | Needs                                      |
-| ---------------- | -------------------- | --------------- | ------------------------------------------ |
-| `context-budget` | `.`                  | `dist/index.js` | nothing extra (bundles `commander`, `zod`) |
-| `context-budget` | bin `context-budget` | `dist/cli.js`   | same                                       |
+| Package                | Subpath              | Resolves to     | Needs                                      |
+| ---------------------- | -------------------- | --------------- | ------------------------------------------ |
+| `agent-context-budget` | `.`                  | `dist/index.js` | nothing extra (bundles `commander`, `zod`) |
+| `agent-context-budget` | bin `context-budget` | `dist/cli.js`   | same                                       |
 
 ## CLI
 
 ```sh
-npx context-budget check
-npx context-budget check --json
-npx context-budget check --explain CLAUDE.md
+npx agent-context-budget check
+npx agent-context-budget check --json
+npx agent-context-budget check --explain CLAUDE.md
 ```
 
 File discovery is relative to the current working directory, so run it from the directory containing
@@ -75,7 +75,7 @@ With no config file present, `loadConfig()` returns exactly these defaults.
 ## Programmatic use
 
 ```ts
-import { analyzeFile, estimateTokens, findSimilarFiles, loadConfig } from "context-budget";
+import { analyzeFile, estimateTokens, findSimilarFiles, loadConfig } from "agent-context-budget";
 
 const config = loadConfig();
 const content = "# My CLAUDE.md\n...";

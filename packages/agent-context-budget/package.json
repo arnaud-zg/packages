@@ -1,5 +1,5 @@
 {
-  "name": "context-budget",
+  "name": "agent-context-budget",
   "version": "0.1.0",
   "description": "Token-budget analysis for AI agent context files like CLAUDE.md and AGENTS.md.",
   "keywords": [
@@ -12,14 +12,14 @@
     "linter",
     "cli"
   ],
-  "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/context-budget#readme",
+  "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/agent-context-budget#readme",
   "bugs": {
     "url": "https://github.com/arnaud-zg/packages/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/arnaud-zg/packages.git",
-    "directory": "packages/context-budget"
+    "directory": "packages/agent-context-budget"
   },
   "license": "MIT",
   "author": "Arnaud Zheng <arnaud.zg@gmail.com>",

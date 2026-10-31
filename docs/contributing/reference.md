@@ -10,14 +10,14 @@ packages/
   expo-native-guard/     src/index.ts (barrel), src/core.ts (no React import)
   expo-pnpm-catalog/     src/index.ts (programmatic API), src/cli.ts (bin entry point)
   vite-workspace-resolver/ src/index.ts (Vite plugin)
-  context-budget/        src/index.ts (programmatic API), src/cli.ts (bin entry point)
+  agent-context-budget/        src/index.ts (programmatic API), src/cli.ts (bin entry point)
 docs/                    this documentation
 ```
 
 Each package's `dist/` (gitignored) is what its `package.json` `exports` actually resolve to.
 `expo-native-guard` and `vite-workspace-resolver` build through `tsdown`; `expo-pnpm-catalog` and
-`context-budget` build through `tsc` directly, since their `bin` entry point (`dist/cli.js`) isn't
-part of the `exports` map `tsdown` generates from.
+`agent-context-budget` build through `tsc` directly, since their `bin` entry point (`dist/cli.js`)
+isn't part of the `exports` map `tsdown` generates from.
 
 ## Scripts (for contributors to this repo)
 

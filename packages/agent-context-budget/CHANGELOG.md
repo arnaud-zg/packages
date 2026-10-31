@@ -1,4 +1,4 @@
-# context-budget
+# agent-context-budget
 
 ## 0.1.0
 

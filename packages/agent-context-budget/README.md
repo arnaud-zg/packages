@@ -1,9 +1,9 @@
-# context-budget
+# agent-context-budget
 
 Token-budget analysis for AI agent context files (CLAUDE.md, AGENTS.md, etc.).
 
 Large context files (CLAUDE.md, AGENTS.md, per-package context docs) load on every agent session —
-every extra token is a recurring tax. `context-budget` scores a repo's context files against
+every extra token is a recurring tax. `agent-context-budget` scores a repo's context files against
 configurable token thresholds and surfaces where to cut:
 
 - **Calibrated token estimation** — prose, code, and markdown structure tokenize at different rates;
@@ -20,20 +20,22 @@ configurable token thresholds and surfaces where to cut:
   merge-candidate files across the whole set
 
 📚 Full guides:
-[tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/context-budget).
+[tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/agent-context-budget).
 
 ## Install
 
 ```sh
-npm install --save-dev context-budget
+npm install --save-dev agent-context-budget
 ```
+
+It installs the `context-budget` command; `npx agent-context-budget` runs it without installing.
 
 ## Usage
 
 ```sh
-npx context-budget check
-npx context-budget check --json
-npx context-budget check --explain CLAUDE.md
+npx agent-context-budget check
+npx agent-context-budget check --json
+npx agent-context-budget check --explain CLAUDE.md
 ```
 
 File discovery is relative to the current working directory, so run it from the directory containing
@@ -92,7 +94,7 @@ With no config file present, `loadConfig()` returns exactly these defaults.
 ## Programmatic use
 
 ```ts
-import { analyzeFile, estimateTokens, findSimilarFiles, loadConfig } from "context-budget";
+import { analyzeFile, estimateTokens, findSimilarFiles, loadConfig } from "agent-context-budget";
 
 const config = loadConfig();
 const content = "# My CLAUDE.md\n...";
@@ -118,10 +120,10 @@ Point a pre-commit hook at your context files so a bloated CLAUDE.md never lands
 ```yaml
 pre-commit:
   commands:
-    context-budget:
+    agent-context-budget:
       glob: ["CLAUDE.md", "AGENTS.md", ".planning/codebase/*.md"]
-      run: npx context-budget check
+      run: npx agent-context-budget check
 ```
 
 Exit code `2` means advisory findings only; treat it as a pass if you only want to block on budgets:
-`npx context-budget check || [ $? -eq 2 ]`.
+`npx agent-context-budget check || [ $? -eq 2 ]`.
