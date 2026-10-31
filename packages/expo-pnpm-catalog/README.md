@@ -13,6 +13,9 @@ version strings. `expo-pnpm-catalog` temporarily resolves the catalog references
 **entire** pnpm workspace, runs the real Expo tooling against the resolved manifest, and restores
 the original `package.json` afterwards.
 
+📚 Full guides:
+[tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/expo-pnpm-catalog).
+
 ## Install
 
 ```bash

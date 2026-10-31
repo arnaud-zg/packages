@@ -9,6 +9,9 @@ modules like `react-native-vision-camera`, TurboModules like `react-native-onesi
 Expo module like `expo-mascot` — throws at import or resolution time when it isn't there. This
 package makes that a controlled, visible fallback instead of a crash.
 
+📚 Full guides:
+[tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/expo-native-guard).
+
 ## Install
 
 ```bash

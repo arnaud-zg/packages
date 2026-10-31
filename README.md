@@ -5,7 +5,7 @@
 </p>
 
 <div align="center">
-  <b>Small, focused, well-tested npm packages for Expo, React Native and TypeScript projects.</b>
+  <b>Small, focused, well-tested npm packages for TypeScript projects: Expo and React Native apps, Vite and Vitest monorepos, and AI coding agents.</b>
   <br/>
   Each one is standalone: install only what you need, nothing else comes along.
 </div>
@@ -24,10 +24,12 @@
 <a href="https://www.npmjs.com/package/expo-pnpm-catalog"><img src="https://img.shields.io/npm/v/expo-pnpm-catalog.svg?label=expo-pnpm-catalog" alt="expo-pnpm-catalog npm version"></a>
 <a href="https://www.npmjs.com/package/expo-native-guard"><img src="https://img.shields.io/npm/v/expo-native-guard.svg?label=expo-native-guard" alt="expo-native-guard npm version"></a>
 <a href="https://www.npmjs.com/package/vite-workspace-resolver"><img src="https://img.shields.io/npm/v/vite-workspace-resolver.svg?label=vite-workspace-resolver" alt="vite-workspace-resolver npm version"></a>
+<a href="https://www.npmjs.com/package/context-budget"><img src="https://img.shields.io/npm/v/context-budget.svg?label=context-budget" alt="context-budget npm version"></a>
 <br/>
 <a href="https://npm-stat.com/charts.html?package=expo-pnpm-catalog"><img src="https://img.shields.io/npm/dm/expo-pnpm-catalog.svg?label=expo-pnpm-catalog" alt="expo-pnpm-catalog npm downloads"></a>
 <a href="https://npm-stat.com/charts.html?package=expo-native-guard"><img src="https://img.shields.io/npm/dm/expo-native-guard.svg?label=expo-native-guard" alt="expo-native-guard npm downloads"></a>
 <a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver"><img src="https://img.shields.io/npm/dm/vite-workspace-resolver.svg?label=vite-workspace-resolver" alt="vite-workspace-resolver npm downloads"></a>
+<a href="https://npm-stat.com/charts.html?package=context-budget"><img src="https://img.shields.io/npm/dm/context-budget.svg?label=context-budget" alt="context-budget npm downloads"></a>
 
 </div>
 
@@ -47,6 +49,7 @@ bar.
 | [`expo-native-guard`](./packages/expo-native-guard)             | Load native-only modules (Nitro, TurboModules, custom Expo modules) without crashing in **Expo Go**, with a visible fallback badge | `npm install expo-native-guard`                  |
 | [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog)             | Check and sync **Expo SDK** versions in **pnpm catalogs**, like `expo-doctor` and `expo install --fix` for a whole workspace       | `npm install --save-dev expo-pnpm-catalog`       |
 | [`vite-workspace-resolver`](./packages/vite-workspace-resolver) | Resolve workspace packages' **exports-map subpaths** and deep `src/` imports in **Vite/Vitest**, without per-package aliases       | `npm install --save-dev vite-workspace-resolver` |
+| [`context-budget`](./packages/context-budget)                   | Score **CLAUDE.md**, **AGENTS.md** and the docs they reference against **token budgets**, and show which sections to cut           | `npm install --save-dev context-budget`          |
 
 More packages will land here over time. ⭐ Star or watch the repo to hear about them.
 
@@ -58,13 +61,18 @@ More packages will land here over time. ⭐ Star or watch the repo to hear about
   [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog#readme)
 - **"Vitest can't resolve `@my/pkg/subpath` from another workspace package."** →
   [`vite-workspace-resolver`](./packages/vite-workspace-resolver#readme)
+- **"My CLAUDE.md keeps growing and every agent session pays for it."** →
+  [`context-budget`](./packages/context-budget#readme)
 
 ## 📚 Documentation
 
-- 🚀 **[Tutorial](./docs/tutorial.md)**: install and wire up each package, step by step.
-- 🛠️ **[How-to guides](./docs/how-to.md)**: short recipes for common tasks.
-- 📖 **[Reference](./docs/reference.md)**: full API and package layout.
-- 💡 **[Explanation](./docs/explanation.md)**: why things work the way they do.
+Start at the **[documentation index](./docs/README.md)**: one folder per package, each with the same
+four pages.
+
+- 🚀 **Tutorial**: install and wire it up, step by step.
+- 🛠️ **How-to**: short recipes for one task.
+- 📖 **Reference**: every export, flag and option.
+- 💡 **Explanation**: why it works the way it does.
 
 ## ❓ FAQ
 
@@ -85,7 +93,7 @@ pnpm verify
 ```
 
 Each package is released independently with [Changesets](https://github.com/changesets/changesets);
-see [How-to § Release a new version](./docs/how-to.md#release-a-new-version).
+see [How-to § Release a new version](./docs/contributing/how-to.md#release-a-new-version).
 
 ## 📄 License
 
