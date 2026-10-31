@@ -1,8 +1,8 @@
-[🏠 Home](../../README.md) · [📚 Docs](../README.md) · `context-budget`:
+[🏠 Home](../../README.md) · [📚 Docs](../README.md) · `agent-context-budget`:
 [🚀 Tutorial](./tutorial.md) · [🛠️ How-to](./how-to.md) · [📖 Reference](./reference.md) · **💡
 Explanation**
 
-# 💡 Explanation: `context-budget`
+# 💡 Explanation: `agent-context-budget`
 
 ## What the score measures
 

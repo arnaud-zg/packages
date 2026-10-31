@@ -13,7 +13,7 @@ pnpm verify
 Or scope to one package:
 
 ```sh
-pnpm --filter context-budget test
+pnpm --filter agent-context-budget test
 ```
 
 ## Release a new version
@@ -50,9 +50,9 @@ Copy this into the PR description, filling in the version column from the `packa
 ```markdown
 ## Releases
 
-| Package          | Version |
-| ---------------- | ------- |
-| `context-budget` | 0.0.0   |
+| Package                | Version |
+| ---------------------- | ------- |
+| `agent-context-budget` | 0.0.0   |
 ```
 
 Review the diff (version bumps + `CHANGELOG.md`) and merge it like any other PR.

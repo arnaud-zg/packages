@@ -1,8 +1,8 @@
-[🏠 Home](../../README.md) · [📚 Docs](../README.md) · `context-budget`:
+[🏠 Home](../../README.md) · [📚 Docs](../README.md) · `agent-context-budget`:
 [🚀 Tutorial](./tutorial.md) · **🛠️ How-to** · [📖 Reference](./reference.md) ·
 [💡 Explanation](./explanation.md)
 
-# 🛠️ How-to guides: `context-budget`
+# 🛠️ How-to guides: `agent-context-budget`
 
 ## Block a commit when CLAUDE.md goes over budget
 
@@ -12,21 +12,21 @@ changes, and let advisory findings (exit `2`) through:
 ```yaml
 pre-commit:
   commands:
-    context-budget:
+    agent-context-budget:
       glob: ["CLAUDE.md", "AGENTS.md"]
-      run: npx context-budget check || [ $? -eq 2 ]
+      run: npx agent-context-budget check || [ $? -eq 2 ]
 ```
 
 ## Explain one file
 
 ```sh
-npx context-budget check --explain CLAUDE.md
+npx agent-context-budget check --explain CLAUDE.md
 ```
 
 ## Read the result in CI
 
 ```sh
-npx context-budget check --json > context-budget.json
+npx agent-context-budget check --json > agent-context-budget.json
 ```
 
 The JSON run exits with the same code as the human report.

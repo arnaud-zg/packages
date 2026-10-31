@@ -1,22 +1,22 @@
-[🏠 Home](../../README.md) · [📚 Docs](../README.md) · `context-budget`: **🚀 Tutorial** ·
+[🏠 Home](../../README.md) · [📚 Docs](../README.md) · `agent-context-budget`: **🚀 Tutorial** ·
 [🛠️ How-to](./how-to.md) · [📖 Reference](./reference.md) · [💡 Explanation](./explanation.md)
 
-# 🚀 `context-budget`: Keep agent context files under a token budget
+# 🚀 `agent-context-budget`: Keep agent context files under a token budget
 
 CLAUDE.md, AGENTS.md and the docs they link load on every agent session, so every extra token is
-paid again and again. `context-budget` estimates each file's tokens, compares it to a budget, and
-points at the sections worth cutting.
+paid again and again. `agent-context-budget` estimates each file's tokens, compares it to a budget,
+and points at the sections worth cutting.
 
 1. Install it next to your context files:
 
    ```sh
-   npm install --save-dev context-budget
+   npm install --save-dev agent-context-budget
    ```
 
 2. Run the check from the directory holding `CLAUDE.md`:
 
    ```sh
-   npx context-budget check
+   npx agent-context-budget check
    ```
 
    Each file gets a health bar. A file near its budget also gets a breakdown of which headings hold
@@ -25,7 +25,7 @@ points at the sections worth cutting.
 3. Dig into one file:
 
    ```sh
-   npx context-budget check --explain CLAUDE.md
+   npx agent-context-budget check --explain CLAUDE.md
    ```
 
 4. Adjust the budgets in `context-budget.config.json` (only the fields you change):
@@ -35,4 +35,4 @@ points at the sections worth cutting.
    ```
 
 Exit code `1` means a file is over a hard budget, `2` means advisory findings only. Every option is
-in the [package README](../../packages/context-budget#readme).
+in the [package README](../../packages/agent-context-budget#readme).

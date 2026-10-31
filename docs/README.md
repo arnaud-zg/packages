@@ -19,7 +19,7 @@ in the first table, then pick the page that matches what you need right now.
 | [`expo-native-guard`](./expo-native-guard/tutorial.md)             | Expo, React Native | [Tutorial](./expo-native-guard/tutorial.md)       | [How-to](./expo-native-guard/how-to.md)       | [Reference](./expo-native-guard/reference.md)       | [Explanation](./expo-native-guard/explanation.md)       |
 | [`expo-pnpm-catalog`](./expo-pnpm-catalog/tutorial.md)             | Expo, pnpm         | [Tutorial](./expo-pnpm-catalog/tutorial.md)       | [How-to](./expo-pnpm-catalog/how-to.md)       | [Reference](./expo-pnpm-catalog/reference.md)       | [Explanation](./expo-pnpm-catalog/explanation.md)       |
 | [`vite-workspace-resolver`](./vite-workspace-resolver/tutorial.md) | Vite, Vitest       | [Tutorial](./vite-workspace-resolver/tutorial.md) | [How-to](./vite-workspace-resolver/how-to.md) | [Reference](./vite-workspace-resolver/reference.md) | [Explanation](./vite-workspace-resolver/explanation.md) |
-| [`context-budget`](./context-budget/tutorial.md)                   | AI coding agents   | [Tutorial](./context-budget/tutorial.md)          | [How-to](./context-budget/how-to.md)          | [Reference](./context-budget/reference.md)          | [Explanation](./context-budget/explanation.md)          |
+| [`agent-context-budget`](./agent-context-budget/tutorial.md)       | AI coding agents   | [Tutorial](./agent-context-budget/tutorial.md)    | [How-to](./agent-context-budget/how-to.md)    | [Reference](./agent-context-budget/reference.md)    | [Explanation](./agent-context-budget/explanation.md)    |
 
 ## 🤔 Which package do I need?
 
@@ -28,7 +28,7 @@ in the first table, then pick the page that matches what you need right now.
 | Expo Go crashing on a native-only import (Nitro module, TurboModule, custom Expo module) | `expo-native-guard`       | Swaps in a visible fallback component instead of crashing                                     |
 | Expo SDK dependency versions drifting out of sync across a pnpm catalog                  | `expo-pnpm-catalog`       | Runs `expo-doctor` / `expo install --fix` against resolved catalog versions, syncs drift back |
 | Vitest failing to resolve another workspace package's subpath export or `src/` file      | `vite-workspace-resolver` | Vite plugin that resolves workspace exports maps and deep `src/` imports                      |
-| CLAUDE.md or AGENTS.md growing past what an agent session should load                    | `context-budget`          | Scores context files against token budgets, shows which sections to cut                       |
+| CLAUDE.md or AGENTS.md growing past what an agent session should load                    | `agent-context-budget`    | Scores context files against token budgets, shows which sections to cut                       |
 
 Each is a dependency of your project, not of the others: installing one never pulls in another.
 
