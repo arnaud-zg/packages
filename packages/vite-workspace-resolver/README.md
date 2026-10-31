@@ -5,6 +5,9 @@ subpaths, and can't reach into a package's `src/` for files that aren't exported
 `workspaceExports(rootDir)` scans every workspace package once and resolves both cases directly as a
 Vite plugin — no more hand-rolled `resolve.alias` entries per package/subpath.
 
+📚 Full guides:
+[tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/vite-workspace-resolver).
+
 ## Install
 
 ```sh
