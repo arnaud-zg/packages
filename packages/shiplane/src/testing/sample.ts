@@ -24,5 +24,5 @@ export const SAMPLE_TYPICAL_MINUTES: Record<string, number> = {
 export const EAS_DECIDES: DecidedBy = {
   platform: "EAS",
   choice: "build or update",
-  check: "pnpm shiplane:check",
+  check: "shiplane status",
 };

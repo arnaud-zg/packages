@@ -17,7 +17,7 @@ export interface ReleaseContext {
   open: Open;
   prompter: Prompter;
   output: Output;
-  /** Where the release is: its stage, what it reads or runs, Pr. Kipik's mood. */
+  /** Where the release is: its stage, what it reads or runs, the mascot's mood. */
   progress: Progress;
   clock: Clock;
   /** Runs the jobs plugins return, when they run from this machine. */

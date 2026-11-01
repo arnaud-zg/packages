@@ -19,7 +19,7 @@ describe("a preview release that takes apps along", () => {
       changesets: [
         {
           id: "inbox-copy",
-          summary: "Pr. Kipik's inbox says when a result is new.",
+          summary: "the mascot's inbox says when a result is new.",
           releases: [
             { name: "@acme/expo", type: "patch" },
             { name: "@acme/assets", type: "patch" },
@@ -56,7 +56,7 @@ describe("a preview release that takes apps along", () => {
           id: "inbox-copy",
           text: changesetText(
             { "@acme/expo": "patch", "@acme/assets": "patch" },
-            "Pr. Kipik's inbox says when a result is new.",
+            "the mascot's inbox says when a result is new.",
           ),
         },
       ],

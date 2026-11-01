@@ -2,7 +2,7 @@ const CLEAR = "\r\u001B[2K";
 const TICK_MS = 140;
 
 /**
- * The one line the release redraws in place: Pr. Kipik and what runs. Anything else printed goes
+ * The one line the release redraws in place: the mascot and what runs. Anything else printed goes
  * above it, and a prompt or a child process holds it so the terminal is theirs meanwhile.
  */
 class LiveLine {

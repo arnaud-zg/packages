@@ -1,6 +1,6 @@
 export const MOODS = ["thinking", "working", "waiting", "happy", "worried", "resting"] as const;
 
-/** What Pr. Kipik shows beside the release: reading, running, waiting on a person, done, failed, idle. */
+/** What the mascot shows beside the release: reading, running, waiting on a person, done, failed, idle. */
 export type Mood = (typeof MOODS)[number];
 
 // Spines that rise and fall, a face, then what he holds: every frame is 13 characters wide.
@@ -18,7 +18,7 @@ const FRAMES: Record<Mood, readonly string[]> = {
 
 export const mascotFrames = (mood: Mood) => FRAMES[mood];
 
-/** Pr. Kipik at a tick of his animation, looping. */
+/** The mascot at a tick of his animation, looping. */
 export const mascotFrame = (mood: Mood, tick: number) => {
   const frames = FRAMES[mood];
   return frames[tick % frames.length] ?? "";
@@ -34,18 +34,18 @@ export const progressBar = (done: number, total: number, width: number) => {
 export interface DisplayChoice {
   /** Says each thing it reads and runs, with a progress bar. */
   verbose?: boolean;
-  /** Pr. Kipik beside what is happening. */
+  /** The mascot beside what is happening. */
   mascot?: boolean;
 }
 
 export interface Display {
   verbose: boolean;
   mascot: boolean;
-  /** Pr. Kipik animates: only in a terminal, never in a CI log or under NO_MOTION. */
+  /** The mascot animates: only in a terminal, never in a CI log or under NO_MOTION. */
   motion: boolean;
 }
 
-/** A flag wins over the config, which wins over the default: verbose, with Pr. Kipik. */
+/** A flag wins over the config, which wins over the default: verbose, with the mascot. */
 export const resolveDisplay = (
   config: DisplayChoice,
   flags: DisplayChoice,

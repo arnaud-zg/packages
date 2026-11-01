@@ -6,7 +6,7 @@ export interface DecidedBy {
   platform: string;
   /** What it decides between: "build or update". */
   choice: string;
-  /** The command that shows its state: "pnpm shiplane:check". */
+  /** The command that shows its state: "shiplane status". */
   check: string;
 }
 

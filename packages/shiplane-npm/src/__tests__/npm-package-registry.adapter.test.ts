@@ -11,7 +11,7 @@ const BUDGET = testUnit("context-budget", {
   version: "0.2.0",
   module: "published-package",
   options: {
-    publishAs: "@airmelon/context-budget",
+    publishAs: "@acme/context-budget",
     tag: { preview: "next", production: "latest" },
   },
 });
@@ -67,13 +67,13 @@ describe("publishing a package to npm by default", () => {
 describe("publishing a package to npm under next, then latest", () => {
   it("given a released version npm does not have, when it ships to preview, then it is published under next with its public name, put back after", async () => {
     const { context, shell, prompter } = setUp();
-    shell.seed("npm view @airmelon/context-budget@0.2.0 version", notOnRegistry);
+    shell.seed("npm view @acme/context-budget@0.2.0 version", notOnRegistry);
     prompter.answer(true);
 
     expect(await shipTo(context, "preview", {})).toBe(true);
 
     expect(shell.calls.slice(1).map(({ command, args }) => [command, ...args].join(" "))).toEqual([
-      "npm pkg set name=@airmelon/context-budget",
+      "npm pkg set name=@acme/context-budget",
       "pnpm publish --no-git-checks --access public --tag next",
       "npm pkg set name=@acme/context-budget",
     ]);
@@ -82,7 +82,7 @@ describe("publishing a package to npm under next, then latest", () => {
 
   it("given the publish fails, when it ships, then the package name is put back anyway", async () => {
     const { context, shell, prompter } = setUp();
-    shell.seed("npm view @airmelon/context-budget@0.2.0 version", notOnRegistry);
+    shell.seed("npm view @acme/context-budget@0.2.0 version", notOnRegistry);
     shell.seed("pnpm publish", { status: 1 });
     prompter.answer(true);
 
@@ -93,8 +93,8 @@ describe("publishing a package to npm under next, then latest", () => {
 
   it("given the version is published and next points at it, when it ships to preview, then nothing runs", async () => {
     const { context, shell, output } = setUp();
-    shell.seed("npm view @airmelon/context-budget@0.2.0 version", { stdout: "0.2.0" });
-    shell.seed("npm view @airmelon/context-budget dist-tags", {
+    shell.seed("npm view @acme/context-budget@0.2.0 version", { stdout: "0.2.0" });
+    shell.seed("npm view @acme/context-budget dist-tags", {
       stdout: JSON.stringify({ latest: "0.1.0", next: "0.2.0" }),
     });
 
@@ -106,8 +106,8 @@ describe("publishing a package to npm under next, then latest", () => {
 
   it("given preview published it, when production ships, then latest moves to it without publishing again", async () => {
     const { context, shell, prompter } = setUp();
-    shell.seed("npm view @airmelon/context-budget@0.2.0 version", { stdout: "0.2.0" });
-    shell.seed("npm view @airmelon/context-budget dist-tags", {
+    shell.seed("npm view @acme/context-budget@0.2.0 version", { stdout: "0.2.0" });
+    shell.seed("npm view @acme/context-budget dist-tags", {
       stdout: JSON.stringify({ latest: "0.1.0", next: "0.2.0" }),
     });
     prompter.answer("production", true);
@@ -116,13 +116,13 @@ describe("publishing a package to npm under next, then latest", () => {
 
     expect(shell.calls.at(-1)).toMatchObject({
       command: "npm",
-      args: ["dist-tag", "add", "@airmelon/context-budget@0.2.0", "latest"],
+      args: ["dist-tag", "add", "@acme/context-budget@0.2.0", "latest"],
     });
   });
 
   it("given production and a version npm never got, when it ships, then it says to release it to preview first", async () => {
     const { context, shell, prompter, output } = setUp();
-    shell.seed("npm view @airmelon/context-budget@0.2.0 version", notOnRegistry);
+    shell.seed("npm view @acme/context-budget@0.2.0 version", notOnRegistry);
     prompter.answer("production");
 
     await shipTo(context, "production", {});

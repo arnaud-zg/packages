@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { mascotFrame, mascotFrames, MOODS, progressBar, resolveDisplay } from "../display";
 
-describe("Pr. Kipik beside the release", () => {
+describe("the mascot beside the release", () => {
   it("given any mood, when he animates, then every frame keeps one width so the line never jumps", () => {
     for (const mood of MOODS) {
       const widths = new Set(mascotFrames(mood).map((frame) => [...frame].length));
@@ -36,7 +36,7 @@ describe("the progress bar", () => {
 describe("how much the release says while it runs", () => {
   const terminal = { tty: true, ci: false, noMotion: false };
 
-  it("given nothing configured, when resolved, then it says what it does and Pr. Kipik moves", () => {
+  it("given nothing configured, when resolved, then it says what it does and the mascot moves", () => {
     expect(resolveDisplay({}, {}, terminal)).toEqual({ verbose: true, mascot: true, motion: true });
   });
 
@@ -56,7 +56,7 @@ describe("how much the release says while it runs", () => {
     });
   });
 
-  it("given a CI log, a pipe or NO_MOTION, when resolved, then Pr. Kipik stays still", () => {
+  it("given a CI log, a pipe or NO_MOTION, when resolved, then the mascot stays still", () => {
     expect(resolveDisplay({}, {}, { ...terminal, ci: true }).motion).toBe(false);
     expect(resolveDisplay({}, {}, { ...terminal, tty: false }).motion).toBe(false);
     expect(resolveDisplay({}, {}, { ...terminal, noMotion: true }).motion).toBe(false);

@@ -58,7 +58,7 @@ describe("what the release covers, asked before anything runs", () => {
     expect(choose({ app: "expo", version: "0.1.115", tagged: true })).toEqual({
       app: "expo",
       pending: false,
-      hint: "0.1.115 released, nothing new (pnpm shiplane:check shows its builds)",
+      hint: "0.1.115 released, nothing new (shiplane status shows its builds)",
     });
   });
 

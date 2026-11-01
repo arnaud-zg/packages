@@ -140,7 +140,7 @@ describe("the release pull request", () => {
 
   it("given one app with one change, when titled, then the title is that app releasing its version", () => {
     expect(
-      releaseTitle(landing(["Characters beside their words look at them, Pr. Kipik first."])),
+      releaseTitle(landing(["Characters beside their words look at them, the mascot first."])),
     ).toBe("chore(landing): release v0.1.1");
   });
 
