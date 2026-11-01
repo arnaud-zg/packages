@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/git",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Source control for shiplane: commits, tags and branches through git.",
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-git#readme",
   "bugs": {
