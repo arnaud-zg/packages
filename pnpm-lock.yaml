@@ -115,6 +115,18 @@ importers:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 'catalog:'
         version: 4.7.1(prettier@3.9.6)
+      '@shiplane/changesets':
+        specifier: workspace:*
+        version: link:packages/shiplane-changesets
+      '@shiplane/git':
+        specifier: workspace:*
+        version: link:packages/shiplane-git
+      '@shiplane/github':
+        specifier: workspace:*
+        version: link:packages/shiplane-github
+      '@shiplane/npm':
+        specifier: workspace:*
+        version: link:packages/shiplane-npm
       '@types/node':
         specifier: catalog:node
         version: 22.20.1
@@ -139,6 +151,9 @@ importers:
       remark-preset-lint-recommended:
         specifier: 'catalog:'
         version: 7.0.1
+      shiplane:
+        specifier: workspace:*
+        version: link:packages/shiplane
       tsdown:
         specifier: 'catalog:'
         version: 0.21.10(typescript@6.0.3)
