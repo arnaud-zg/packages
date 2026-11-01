@@ -1,0 +1,55 @@
+{
+  "name": "@shiplane/eas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mobile distribution for shiplane: an Expo app on EAS, a store build or an over-the-air update.",
+  "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-eas#readme",
+  "bugs": {
+    "url": "https://github.com/arnaud-zg/packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnaud-zg/packages.git",
+    "directory": "packages/shiplane-eas"
+  },
+  "license": "MIT",
+  "author": "Arnaud Zheng <arnaud.zg@gmail.com>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --write . --cache --cache-location .cache/.prettiercache",
+    "lint": "eslint --cache --cache-location .cache/.eslintcache",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.typecheck.json"
+  },
+  "devDependencies": {
+    "@arnaud-zg/configs": "catalog:",
+    "@shiplane/fly": "workspace:*",
+    "@types/node": "catalog:node",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "shiplane": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "shiplane": "workspace:*"
+  },
+  "shiplane": {
+    "adapters": [
+      "easMobileDistribution"
+    ]
+  }
+}

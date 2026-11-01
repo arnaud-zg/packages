@@ -1,0 +1,42 @@
+{
+  "name": "@shiplane/integration",
+  "version": "0.1.0",
+  "private": true,
+  "description": "shiplane's tests across several plugins at once: init offering each, and a ship through more than one host. Never published.",
+  "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-integration#readme",
+  "bugs": {
+    "url": "https://github.com/arnaud-zg/packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnaud-zg/packages.git",
+    "directory": "packages/shiplane-integration"
+  },
+  "license": "MIT",
+  "author": "Arnaud Zheng <arnaud.zg@gmail.com>",
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --write . --cache --cache-location .cache/.prettiercache",
+    "lint": "eslint --cache --cache-location .cache/.eslintcache",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.typecheck.json"
+  },
+  "devDependencies": {
+    "@arnaud-zg/configs": "catalog:",
+    "@shiplane/changesets": "workspace:*",
+    "@shiplane/cloudflare-pages": "workspace:*",
+    "@shiplane/eas": "workspace:*",
+    "@shiplane/fly": "workspace:*",
+    "@shiplane/git": "workspace:*",
+    "@shiplane/github": "workspace:*",
+    "@shiplane/npm": "workspace:*",
+    "@types/node": "catalog:node",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "shiplane": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

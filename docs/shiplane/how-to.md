@@ -1,0 +1,204 @@
+[🏠 Home](../../README.md) · [📚 Docs](../README.md) ·
+[`shiplane`](../../packages/shiplane/README.md) · [🚀 Tutorial](./tutorial.md) · **🛠️ How-to** ·
+[📖 Reference](./reference.md) · [🔌 Plugins](./plugins.md) · [💡 Explanation](./explanation.md)
+
+# 🛠️ How-to
+
+**Apps:** [Add an app](#add-an-app) · [Stop shipping an app](#stop-shipping-an-app) ·
+[Set a value per environment](#set-a-value-per-environment) ·
+[Read another app's value](#read-another-apps-value) · [Hold an app back](#hold-an-app-back)
+
+**Release:** [Preview every command](#preview-every-command) ·
+[Promote to production](#promote-to-production) ·
+[Widen a production rollout](#widen-a-production-rollout) ·
+[Choose GitHub Actions or this machine](#choose-github-actions-or-this-machine) ·
+[Ship with no laptop](#ship-with-no-laptop) · [Use it from a script](#use-it-from-a-script)
+
+**Hosts:** [Publish a package to npm](#publish-a-package-to-npm) ·
+[Release Claude Code plugins](#release-claude-code-plugins) ·
+[Ship a host with no plugin](#ship-a-host-with-no-plugin) · [Swap a provider](#swap-a-provider) ·
+[Write a plugin](#write-a-plugin) · [Comment on what shipped](#comment-on-what-shipped) ·
+[Set up the sign-ins](#set-up-the-sign-ins)
+
+## Add an app
+
+```sh
+pnpm shiplane add apps/docs
+```
+
+Or write `apps/docs/shiplane.unit.yml` yourself; `shiplane docs web-app` lists its keys:
+
+```yaml
+module: web-app
+project: acme-docs
+```
+
+## Stop shipping an app
+
+```sh
+pnpm shiplane remove docs
+```
+
+Its unit file goes. Changesets still version it.
+
+## Set a value per environment
+
+```yaml
+app:
+  preview: acme-api-preview
+  production: acme-api
+```
+
+## Read another app's value
+
+```yaml
+build:
+  env:
+    VITE_API_URL: ${units.api.url}
+```
+
+The app read must ship first: list its module before the reader's in `modules`.
+
+## Hold an app back
+
+Untick it when `pnpm shiplane` asks what to release. Its changesets wait for the next release.
+
+## Preview every command
+
+```sh
+pnpm shiplane plan --channel production
+```
+
+Nothing runs. It prints the release order, then each command, both ways.
+
+## Promote to production
+
+```sh
+pnpm shiplane promote
+```
+
+Type `production` when asked. Web apps redeploy the tag preview runs; the mobile app may first open
+a PR moving its production version, then build after you merge it.
+
+## Widen a production rollout
+
+Run `pnpm shiplane promote` again and pick the mobile app. It shows the rollout, its launches and
+crashes, and suggests the next step: 25%, 50%, everyone, stay, or roll back.
+
+## Choose GitHub Actions or this machine
+
+```sh
+pnpm shiplane ship --via github     # or --via local
+```
+
+Without `--via`, it asks per app and shows this month's Actions minutes. An app only one way can
+ship is not asked, and it says why.
+
+## Ship with no laptop
+
+Run the **Ship** workflow from the Actions tab, on a tag or `main`, with the units and the
+environment. Production runs as soon as you start it.
+
+## Use it from a script
+
+```sh
+pnpm -s shiplane status --json
+```
+
+Without a terminal every question answers no: pass `--yes` (refused on production) and `--via`.
+
+## Publish a package to npm
+
+```yaml
+# packages/my-tool/shiplane.unit.yml
+module: published-package
+```
+
+Needs `publishedPackage({ packageRegistry: npmPackageRegistry() })` in `modules`. A release
+publishes under `latest`; to stage under `next` first, add
+`tag: { preview: next, production: latest }`. A new package needs no changeset for its first
+version: merge it, then run `pnpm shiplane`.
+
+## Release Claude Code plugins
+
+```ts
+export default defineRelease({
+  units: ["plugins/*"],
+  tag: "{name}--v{version}",
+  flow: releaseFlow({
+    sourceControl: gitSourceControl(),
+    codeHost: gitHubCodeHost(),
+    ciPipeline: gitHubActionsCiPipeline(),
+    versioning: changesetsVersioning({
+      version: ["sh", "-c", "pnpm exec changeset version && node scripts/sync-versions.mjs"],
+    }),
+  }),
+  modules: [internalTool()],
+});
+```
+
+Each plugin gets `module: internal-tool`: versioned, tagged and given notes, deployed nowhere.
+
+## Ship a host with no plugin
+
+```ts
+modules: [backendService({ name: "custom", serverHosting: shellServerHosting() })],
+```
+
+```yaml
+module: custom
+deploy:
+  preview: [npx, my-host, deploy, --env, preview]
+  production: [npx, my-host, deploy, --env, production]
+```
+
+## Swap a provider
+
+One argument changes; the apps keep their module and take the new provider's keys:
+
+```ts
+modules: [webApp({ staticHosting: netlifyStaticHosting() })],
+```
+
+## Write a plugin
+
+```sh
+pnpm shiplane adapter new render
+```
+
+It writes `release/adapters/render.ts`, its contract test, and its module in the config. To share
+it, publish it as a package and name its adapters in its `package.json`, so `init` offers them:
+
+```json
+"shiplane": { "adapters": ["renderServerHosting"] }
+```
+
+The API is in [Plugins](./plugins.md#write-a-plugin); `@shiplane/fly` is a small example.
+
+## Comment on what shipped
+
+```ts
+features: [releaseComments({ codeHost, sourceControl })],
+```
+
+Each PR in a shipped version, and each issue it relates to, gets one comment with the version and
+the environment.
+
+## Set up the sign-ins
+
+| Plugin                    | On this machine                  | In CI                                |
+| ------------------------- | -------------------------------- | ------------------------------------ |
+| shiplane-github           | `gh auth login`                  | `GH_TOKEN`                           |
+| shiplane-npm              | `npm login`                      | none: it publishes from this machine |
+| shiplane-fly              | `flyctl auth login`              | `FLY_API_TOKEN`                      |
+| shiplane-cloudflare-pages | `npx wrangler login`             | `CLOUDFLARE_API_TOKEN`               |
+| shiplane-eas              | `pnpm exec eas login` in the app | `EXPO_TOKEN`                         |
+
+`pnpm shiplane doctor` checks each one and offers its fix; `pnpm shiplane` checks them before it
+writes anything.
+
+## Example
+
+[`examples/repository/shiplane.config.ts`](../../packages/shiplane/examples/repository/shiplane.config.ts)
+wires one adapter per port and ships an API on Fly and a site on Cloudflare Pages;
+`packages/shiplane-integration/src/__tests__/examples.e2e.test.ts` runs it.

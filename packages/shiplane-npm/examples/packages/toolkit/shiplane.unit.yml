@@ -1,0 +1,4 @@
+module: published-package
+tag:
+  preview: next
+  production: latest

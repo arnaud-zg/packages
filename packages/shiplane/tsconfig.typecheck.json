@@ -1,0 +1,15 @@
+{
+  "extends": ["@arnaud-zg/configs/tsconfig/base.json"],
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "noEmit": true,
+    "composite": false,
+    "types": ["node"],
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "scripts/**/*.mjs"],
+  "exclude": ["vitest.config.ts"]
+}

@@ -1,0 +1,20 @@
+{
+  "extends": ["@arnaud-zg/configs/tsconfig/base.json"],
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "noEmit": true,
+    "composite": false,
+    "types": ["node"],
+    // Every package's examples typecheck here, where shiplane and all its plugins resolve.
+    "paths": {
+      "shiplane": ["../shiplane/src/index.ts"],
+      "shiplane/plugin": ["../shiplane/src/plugin.ts"],
+      "shiplane/testing": ["../shiplane/src/testing/public.ts"],
+      "@shiplane/*": ["../shiplane-*/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "../shiplane/examples/**/*.ts", "../shiplane-*/examples/**/*.ts"],
+  "exclude": ["vitest.config.ts"]
+}

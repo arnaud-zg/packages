@@ -1,0 +1,4 @@
+module: backend-service
+app:
+  preview: acme-api-preview
+  production: acme-api
