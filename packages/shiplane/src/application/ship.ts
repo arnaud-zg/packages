@@ -16,6 +16,7 @@ import { confirm, fail, paint } from "./say";
 import {
   decideContext,
   dispatchShip,
+  environmentLabel,
   jobInput,
   moduleOf,
   runHere,
@@ -255,7 +256,13 @@ const shipQuestion = (
   going: Ready[],
   paths: ReadonlyMap<Ready, DeployPath>,
   environment: string,
+  context: ReleaseContext,
 ) => {
+  const label = environmentLabel(
+    context,
+    going.map(({ unit }) => unit.name),
+    environment,
+  );
   const used = [...new Set(going.flatMap((entry) => paths.get(entry) ?? []))];
   const [only] = used;
   const names = going
@@ -265,7 +272,7 @@ const shipQuestion = (
     })
     .join(", ");
   const how = used.length === 1 && only ? ` through ${PATH_LABEL[only]}` : "";
-  return `Ship ${names} to ${environment}${how}?`;
+  return `Ship ${names} ${label === "live" ? "live" : `to ${label}`}${how}?`;
 };
 
 /**
@@ -338,7 +345,11 @@ export const shipTo = async (
     return false;
   }
   if (
-    !(await confirm(context, shipQuestion(going, paths, environment), environment === "preview"))
+    !(await confirm(
+      context,
+      shipQuestion(going, paths, environment, context),
+      environment === "preview",
+    ))
   ) {
     // Production still asks for its name and decides each unit on its own rules.
     if (

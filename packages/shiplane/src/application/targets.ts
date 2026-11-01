@@ -147,3 +147,23 @@ export const afterShipContext = (context: ReleaseContext): AfterShipContext => (
     return commits.filter(({ files }) => filter(files).length > 0).map(({ subject }) => subject);
   },
 });
+
+/**
+ * What the person reads for an environment: a package registry has no staging, so when every unit
+ * is a published package, preview is where users install it — it reads "live".
+ */
+export const environmentLabel = (
+  context: ReleaseContext,
+  units: Iterable<string>,
+  environment: string,
+) => {
+  if (environment !== "preview") return environment;
+  const names = [...units];
+  const allPackages =
+    names.length > 0 &&
+    names.every((name) => {
+      const unit = context.release.units.find((candidate) => candidate.name === name);
+      return unit !== undefined && moduleOf(context, unit)?.kind === "published-package";
+    });
+  return allPackages ? "live" : environment;
+};

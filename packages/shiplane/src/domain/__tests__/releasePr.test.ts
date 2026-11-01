@@ -134,6 +134,18 @@ describe("the release pull request", () => {
     { app: "landing" as const, from: "0.1.0", to: "0.1.1", notes, movedWith: [] },
   ];
 
+  it("given eight packages moving, when titled, then the title counts them within commitlint's 100 characters", () => {
+    const many = Array.from({ length: 8 }, (_, index) => ({
+      app: `shiplane-plugin-${index}`,
+      from: "0.0.0",
+      to: "0.1.0",
+      notes: [],
+      movedWith: [],
+    }));
+
+    expect(releaseTitle(many)).toBe("chore(release): 8 apps");
+  });
+
   it("given three apps moving, when titled, then the title names each version", () => {
     expect(releaseTitle(bumps)).toBe("chore(release): expo v0.2.0, api v0.0.2 and admin v0.1.1");
   });
