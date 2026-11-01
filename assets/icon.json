@@ -1,6 +1,6 @@
 {
   "tool": "Icon Maker",
-  "icon": "box",
+  "icon": "package",
   "fill": {
     "type": "radial",
     "primaryColor": "#3B82F6",
