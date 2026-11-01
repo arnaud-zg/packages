@@ -60,7 +60,9 @@ export const releaseTitle = (bumps: AppBump[]) => {
   const [first, ...others] = bumps;
   if (!first) return "chore(release): package changelogs";
   if (others.length === 0) return releaseCommitTitle(first);
-  return `chore(release): ${sentence(bumps.map(({ app, to }) => `${app} v${to}`))}`;
+  const named = `chore(release): ${sentence(bumps.map(({ app, to }) => `${app} v${to}`))}`;
+  // commitlint caps the header at 100: past it, the count stands in and the body names each version.
+  return named.length <= MAX_LINE ? named : `chore(release): ${bumps.length} apps`;
 };
 
 /** A bullet wrapped to commitlint's 100-character body lines, continued under its text. */

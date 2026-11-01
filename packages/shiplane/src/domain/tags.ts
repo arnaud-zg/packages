@@ -51,7 +51,9 @@ export const cameWithRelease = ({ app, version, commit }: TagCandidate) => {
   return (
     new RegExp(`^chore\\(${literal(app)}\\): release v${exact}`).test(commit.subject) ||
     (commit.subject.startsWith("chore(release):") &&
-      new RegExp(`\\b${literal(app)} v?${exact}`).test(commit.subject))
+      (new RegExp(`\\b${literal(app)} v?${exact}`).test(commit.subject) ||
+        // Too many apps for one header names none: the commit that changed the version is it.
+        /^chore\(release\): \d+ apps\b/.test(commit.subject)))
   );
 };
 

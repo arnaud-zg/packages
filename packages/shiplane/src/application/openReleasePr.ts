@@ -11,7 +11,7 @@ import {
 } from "../domain/releasePr";
 import { confirm, fail, listed, paint } from "./say";
 import { branchStep, openPrStep, pushStep, runSteps } from "./steps";
-import { moduleOf } from "./targets";
+import { environmentLabel, moduleOf } from "./targets";
 
 const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
 
@@ -28,7 +28,7 @@ const shipsOnMerge =
       : bump.movedWith.length > 0
         ? ` (moved with ${bump.movedWith.join(", ")})`
         : "";
-    return `Ship to preview with ${(unit && moduleOf(context, unit)?.provider) ?? "its target"}${reason}`;
+    return `${environmentLabel(context, [bump.app], "preview") === "live" ? "Ship live" : "Ship to preview"} with ${(unit && moduleOf(context, unit)?.provider) ?? "its target"}${reason}`;
   };
 
 /** Units going out unpicked, each with the package that takes it along. */
@@ -55,14 +55,24 @@ export const printSummary = (context: ReleaseContext, prepared: Prepared) => {
   const dot = paint("dim", "·");
   const stays = held.filter((app) => !bumps.some((bump) => bump.app === app));
   const heldLabel = stays.length > 0 ? `  ${dot}  ${stays.join(", ")} held` : "";
+  const where = environmentLabel(
+    context,
+    bumps.map(({ app }) => app),
+    "preview",
+  );
   output.line();
   output.line(
-    `  ${paint("bold", "Release")}  ${dot}  preview  ${dot}  ${plural(pending, "changeset")}${heldLabel}`,
+    `  ${paint("bold", "Release")}  ${dot}  ${where}  ${dot}  ${plural(pending, "changeset")}${heldLabel}`,
   );
   output.line();
   // The unit column fits the longest name, as status does.
   const width = Math.max(13, ...release.units.map(({ name }) => name.length)) + 2;
-  output.line(paint("dim", `  ${"Unit".padEnd(width)}${"Version".padEnd(20)}Ships to preview`));
+  output.line(
+    paint(
+      "dim",
+      `  ${"Unit".padEnd(width)}${"Version".padEnd(20)}${where === "live" ? "Ships live" : "Ships to preview"}`,
+    ),
+  );
   release.units.forEach((unit) => {
     const bump = bumps.find(({ app }) => app === unit.name);
     const version = bump ? `${bump.from} → ${bump.to}` : unit.version;
@@ -137,7 +147,21 @@ export const openReleasePr = async (
   output.line(paint("dim", "  Steps"));
   planned.forEach((step, index) => output.line(`  ${index + 1}. ${step}`));
   output.line();
-  if (!(await confirm(context, "Release these to preview?", true))) {
+  if (
+    !(await confirm(
+      context,
+      `Release these ${
+        environmentLabel(
+          context,
+          prepared.bumps.map(({ app }) => app),
+          "preview",
+        ) === "live"
+          ? "live"
+          : "to preview"
+      }?`,
+      true,
+    ))
+  ) {
     output.line(paint("dim", "Nothing ran."));
     return null;
   }

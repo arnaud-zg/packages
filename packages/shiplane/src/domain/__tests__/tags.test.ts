@@ -35,6 +35,14 @@ describe("the tags and release notes", () => {
     ).toMatchObject([{ tag: "api@0.0.4", sha: "9a1b2c3", needsTag: true }]);
   });
 
+  it("given a release too long to name its apps, when tagging, then the commit that changed each version tags it", () => {
+    const commit = { sha: "9a1b2c3", subject: "chore(release): 8 apps (#24)" };
+
+    expect(
+      releaseTags([{ app: "shiplane-npm", version: "0.1.0", commit }], new Set(), new Set()),
+    ).toMatchObject([{ tag: "shiplane-npm@0.1.0", sha: "9a1b2c3", needsTag: true }]);
+  });
+
   it("given a release titled for several apps, when tagging, then each version it names gets its tag", () => {
     const commit = {
       sha: "9a1b2c3",
