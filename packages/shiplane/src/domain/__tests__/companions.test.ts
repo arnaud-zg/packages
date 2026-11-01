@@ -17,7 +17,7 @@ const TRANSLATIONS: StatusPlan = {
   changesets: [
     {
       id: "inbox-copy",
-      summary: "Pr. Kipik's inbox says when a result is new.",
+      summary: "the mascot's inbox says when a result is new.",
       releases: [
         { name: "@acme/expo", type: "patch" },
         { name: "@acme/assets", type: "patch" },
@@ -91,7 +91,7 @@ describe("apps preview ran together, offered when promoting to production", () =
     notes: notes(
       "- 03acc29: An identification you left running is pushed to your phone when it ends, even",
       "  with the app closed.",
-      "- 9f1e2d3: Pr. Kipik's inbox says when a result is new.",
+      "- 9f1e2d3: the mascot's inbox says when a result is new.",
     ),
   };
 
@@ -127,7 +127,7 @@ describe("apps preview ran together, offered when promoting to production", () =
         app: "admin",
         version: "0.1.5",
         with: ["expo"],
-        why: "went to preview with expo 0.3.0 for: Pr. Kipik's inbox says when a result is new.",
+        why: "went to preview with expo 0.3.0 for: the mascot's inbox says when a result is new.",
       },
     ]);
   });

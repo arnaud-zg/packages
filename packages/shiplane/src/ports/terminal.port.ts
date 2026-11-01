@@ -48,7 +48,7 @@ export interface StepPlace {
 
 /**
  * Where the release is, for a person to follow: the stage of its journey, what it is reading or
- * running right now, and Pr. Kipik's mood. How much of it shows is the adapter's choice.
+ * running right now, and the mascot's mood. How much of it shows is the adapter's choice.
  */
 export interface Progress {
   /** The release reached `stages[index]`. */

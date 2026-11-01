@@ -134,7 +134,7 @@ Source: `src/application/steps.ts`, `src/application/requirements.ts`, `src/appl
 
 ## `status --json`
 
-From `pnpm -s shiplane:check --json` in this repository, trimmed to one unit:
+From `pnpm -s shiplane status --json`, trimmed to one unit:
 
 ```json
 {

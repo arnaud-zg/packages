@@ -7,7 +7,7 @@ import { liveLine } from "./live-line";
 
 const MASCOT_WIDTH = 13;
 
-/** Pr. Kipik in colour: spines, face, then what he holds; red when worried, green when happy. */
+/** The mascot in colour: spines, face, then what he holds; red when worried, green when happy. */
 export const paintMascot = (mood: Mood, tick: number) => {
   const frame = [...mascotFrame(mood, tick)];
   if (mood === "worried") return styleText("red", frame.join(""));
@@ -32,7 +32,7 @@ const counterOf = (step?: StepPlace) => (step ? `${step.index + 1}/${step.total}
 
 /**
  * Progress in a terminal. Verbose: the journey bar, what it reads, each step redrawn in place with
- * its time, Pr. Kipik beside it. Not verbose: only each step's name, as before. A CI log or a pipe
+ * its time, the mascot beside it. Not verbose: only each step's name, as before. A CI log or a pipe
  * gets plain lines, never a redraw.
  */
 export const terminalProgress = (display: Display, inPlace: boolean): Progress => {

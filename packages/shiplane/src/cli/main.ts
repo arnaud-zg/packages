@@ -49,7 +49,7 @@ const HELP = `${paint("bold", "shiplane")}: detect what changed, version it, tri
   --via github|local              ship through GitHub Actions or this machine, without asking
   --yes                           answer yes to every question (never on production)
   --verbose / --no-verbose        say each thing it reads and runs, with a progress bar (on by default)
-  --mascot / --no-mascot          Pr. Kipik beside it, still in CI or under NO_MOTION=1 (on by default)
+  --mascot / --no-mascot          the mascot beside it, still in CI or under NO_MOTION=1 (on by default)
                                   Both defaults live in shiplane.config.ts: display: { verbose, mascot }
 `;
 

@@ -27,7 +27,7 @@ export const systemClock: Clock = {
 
 const FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
-/** A spinner, or Pr. Kipik waiting, on one line until a listed key is pressed or `ms` pass. Ctrl-C ends the process. */
+/** A spinner, or the mascot waiting, on one line until a listed key is pressed or `ms` pass. Ctrl-C ends the process. */
 const waitForKey = (display: Display, label: string, ms: number, keys: readonly string[]) =>
   new Promise<string | null>((resolve) => {
     const startedAt = Date.now();

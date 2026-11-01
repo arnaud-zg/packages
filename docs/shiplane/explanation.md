@@ -29,9 +29,7 @@ sequenceDiagram
 The core knows what changed, versions, tags, order and safety. Each host is a plugin filling a port,
 so a repository installs only what it ships with, and a new host is a new package, not a new CLI.
 One plugin per provider, not per port: GitHub's code host, Actions and comments share one sign-in.
-The shell adapter stays built in, the fallback for any host. Decision:
-[ADR-011](./decisions/ADR-011-shiplane-core-and-plugin-packages.md), on top of
-[ADR-009](./decisions/ADR-009-release-modules-and-capability-ports.md).
+The shell adapter stays built in, the fallback for any host.
 
 ## The order of `modules` is the release order
 

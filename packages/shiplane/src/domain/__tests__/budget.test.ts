@@ -4,7 +4,7 @@ import { SAMPLE_TYPICAL_MINUTES } from "../../testing/sample";
 import { actionsMinutes, billedMinutes, deployEstimate, minutesBudget } from "../budget";
 
 describe("the GitHub Actions minutes a deploy spends", () => {
-  // October 2026's usage summary for airmelon-studio, trimmed.
+  // October 2026's usage summary for acme, trimmed.
   const OCTOBER = [
     { sku: "actions_linux", grossQuantity: 216, unitType: "minutes" },
     { sku: "actions_storage", grossQuantity: 33.8, unitType: "gigabyte-hours" },

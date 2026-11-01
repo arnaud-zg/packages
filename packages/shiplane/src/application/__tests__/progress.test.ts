@@ -32,7 +32,7 @@ describe("showing where the release is", () => {
     ]);
   });
 
-  it("given a step that throws, when it runs, then Pr. Kipik is worried and says what failed", async () => {
+  it("given a step that throws, when it runs, then the mascot is worried and says what failed", async () => {
     const { context, progress, output } = testContext({ units: [] });
 
     const done = await runSteps(context, [
@@ -68,7 +68,7 @@ describe("showing where the release is", () => {
     ).toBeGreaterThan(0);
   });
 
-  it("given nothing to release, when the release runs, then Pr. Kipik rests and says so", async () => {
+  it("given nothing to release, when the release runs, then the mascot rests and says so", async () => {
     const { context, progress, source, host } = testContext({
       units: [testUnit("api", { version: "0.0.1" })],
     });

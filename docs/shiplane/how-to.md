@@ -102,7 +102,7 @@ environment. Production runs as soon as you start it.
 ## Use it from a script
 
 ```sh
-pnpm -s shiplane:check --json
+pnpm -s shiplane status --json
 ```
 
 Without a terminal every question answers no: pass `--yes` (refused on production) and `--via`.
