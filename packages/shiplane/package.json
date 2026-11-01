@@ -1,7 +1,6 @@
 {
   "name": "shiplane",
   "version": "0.8.1",
-  "private": true,
   "description": "The shiplane CLI: detects what changed, versions it and triggers each app's deploy through the plugins its config composes.",
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane#readme",
   "bugs": {
@@ -33,6 +32,9 @@
   "bin": {
     "shiplane": "./dist/cli.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsdown",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
