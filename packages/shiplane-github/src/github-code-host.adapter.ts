@@ -76,7 +76,7 @@ const DEPLOYMENTS_QUERY = `query($owner: String!, $name: String!) {
   }
 }`;
 
-const githubHost = (root: string, shell: Shell): CodeHostPort => {
+export const githubHost = (root: string, shell: Shell): CodeHostPort => {
   const { must, json } = ghCli(root, shell);
   const graphql = (query: string, variables: string[] = []) =>
     json(["api", "graphql", ...variables, "-f", `query=${query}`]);
@@ -102,6 +102,10 @@ const githubHost = (root: string, shell: Shell): CodeHostPort => {
         .sort((left, right) => left.number - right.number);
     },
     createPr: async ({ base, head, title, body, label }) => {
+      // A fresh repository has none of shiplane's labels: gh refuses a PR with a missing one.
+      await must(["label", "create", label, "--color", "ededed"]).catch((error: unknown) => {
+        if (!(error instanceof Error && /already exists/i.test(error.message))) throw error;
+      });
       await must([
         "pr",
         "create",
