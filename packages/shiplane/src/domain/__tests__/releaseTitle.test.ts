@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { AppBump } from "../changes";
-import { releaseTitle, titleFits } from "../releasePr";
+import { releasePrGroups, releaseTitle, titleFits } from "../releasePr";
 import { cameWithRelease } from "../tags";
 
 const bump = (app: string, to = "0.1.0"): AppBump => ({
@@ -28,7 +28,8 @@ const mobile = (app: string, to?: string) => of("mobile-app", bump(app, to));
 const tool = (app: string, to?: string) => of("internal-tool", bump(app, to));
 of("published-package", ...shiplane(), ...shiplane("0.2.0"));
 
-const titled = (bumps: AppBump[]) => (bumps.length === 0 ? [] : [releaseTitle(bumps, kindOf)]);
+const titled = (bumps: AppBump[]) =>
+  releasePrGroups(bumps, []).map((group) => releaseTitle(group, kindOf));
 
 // Every case: the release PR titles it opens, in order.
 const CASES: [string, AppBump[], string[]][] = [
@@ -41,46 +42,46 @@ const CASES: [string, AppBump[], string[]][] = [
   [
     "a service and a web app",
     [...service("api", "0.0.2"), ...web("admin")],
-    ["chore(release): api v0.0.2 and admin v0.1.0"],
+    ["chore(api): release v0.0.2", "chore(admin): release v0.1.0"],
   ],
   [
     "a mobile app and its widget",
     [...mobile("expo", "2.1.0"), ...mobile("expo-widget", "2.1.0")],
-    ["chore(release): expo v2.1.0 and expo-widget v2.1.0"],
+    ["chore(expo): release v2.1.0"],
   ],
-  [
-    "a package family on one version",
-    shiplane(),
-    ["chore(release): shiplane and 7 plugins v0.1.0"],
-  ],
+  ["a package family on one version", shiplane(), ["chore(shiplane): release v0.1.0"]],
   [
     "a package family on several versions",
     [bump("shiplane", "0.2.0"), ...shiplane().slice(1)],
-    ["chore(release): shiplane v0.2.0 and 7 plugins"],
+    ["chore(shiplane): release v0.2.0"],
   ],
   [
     "a prerelease package family",
     shiplane("1.0.0-beta.12"),
-    ["chore(release): shiplane and 7 plugins v1.0.0-beta.12"],
+    ["chore(shiplane): release v1.0.0-beta.12"],
   ],
   [
     "a service family too long to list",
     ["", "-worker", "-scheduler", "-webhooks", "-exports", "-ledger"].flatMap((end) =>
       service(`billing${end}`, "3.2.0"),
     ),
-    ["chore(release): billing and 5 more services v3.2.0"],
+    ["chore(billing): release v3.2.0"],
   ],
   [
     "web apps sharing a prefix on several versions",
     ["", "-docs", "-blog", "-status", "-careers", "-pricing"].flatMap((end, index) =>
       web(`marketing${end}`, `1.${index}.0`),
     ),
-    ["chore(release): marketing v1.0.0 and 5 more web apps"],
+    ["chore(marketing): release v1.0.0"],
   ],
   [
     "a package family and two apps",
     [...shiplane(), ...web("landing", "1.2.0"), ...mobile("expo", "2.1.0")],
-    ["chore(release): shiplane and 7 plugins v0.1.0, landing v1.2.0 and expo v2.1.0"],
+    [
+      "chore(shiplane): release v0.1.0",
+      "chore(landing): release v1.2.0",
+      "chore(expo): release v2.1.0",
+    ],
   ],
   [
     "two families too long to list",
@@ -90,10 +91,10 @@ const CASES: [string, AppBump[], string[]][] = [
         service(`billing${end}`, "3.2.0"),
       ),
     ],
-    ["chore(release): shiplane and 7 plugins v0.1.0, billing and 3 more services v3.2.0"],
+    ["chore(shiplane): release v0.1.0", "chore(billing): release v3.2.0"],
   ],
   [
-    "a whole fleet of every kind, too many for one title",
+    "a whole fleet of every kind",
     [
       ...service("api", "0.3.0"),
       ...service("api-worker", "0.3.0"),
@@ -107,28 +108,30 @@ const CASES: [string, AppBump[], string[]][] = [
       ...service("notifications", "0.7.0"),
       ...web("design-system-playground", "0.3.0"),
     ],
-    [],
+    [
+      "chore(api): release v0.3.0",
+      "chore(admin): release v1.4.0",
+      "chore(landing): release v1.2.0",
+      "chore(docs): release v0.9.0",
+      "chore(expo): release v2.1.0",
+      "chore(seed): release v0.2.0",
+      "chore(migrate): release v0.5.1",
+      "chore(shiplane): release v0.1.0",
+      "chore(notifications): release v0.7.0",
+      "chore(design-system-playground): release v0.3.0",
+    ],
   ],
 ];
 
 describe("the release PR titles, from best case to worst", () => {
-  it.each(CASES.filter(([name]) => !name.startsWith("a whole fleet")))(
-    "given %s, when titled, then its one PR names its apps",
+  it.each(CASES)(
+    "given %s, when titled, then each app or family gets its own PR",
     (_, bumps, titles) => {
       expect(titled(bumps)).toEqual(titles);
     },
   );
 
-  it("given a whole fleet of every kind, when titled, then its one PR still names every app, past the header limit", () => {
-    const [, fleet] = CASES.at(-1) ?? [];
-    expect(titled(fleet ?? [])).toMatchInlineSnapshot(`
-      [
-        "chore(release): api v0.3.0, api-worker v0.3.0, shiplane and 7 plugins v0.1.0, admin v1.4.0, landing v1.2.0, docs v0.9.0, expo v2.1.0, seed v0.2.0, migrate v0.5.1, notifications v0.7.0 and design-system-playground v0.3.0",
-      ]
-    `);
-  });
-
-  it.each(CASES.filter(([name]) => !name.startsWith("a whole fleet")))(
+  it.each(CASES)(
     "given %s, when squash merged as #12345, then the header stays within commitlint's 100",
     (_, bumps) => {
       titled(bumps).forEach((title) => expect(titleFits(title)).toBe(true));
@@ -136,16 +139,24 @@ describe("the release PR titles, from best case to worst", () => {
   );
 
   it.each(CASES)(
-    "given %s, when merged, then every app it brings is tagged on that commit",
+    "given %s, when each PR merges, then every app it brings is tagged on its commit",
     (_, bumps) => {
-      titled(bumps).forEach((title) => {
-        const commit = { sha: "9a1b2c3", subject: `${title} (#12345)` };
-        bumps.forEach(({ app, to }) => {
+      releasePrGroups(bumps, []).forEach((group) => {
+        const commit = { sha: "9a1b2c3", subject: `${releaseTitle(group, kindOf)} (#12345)` };
+        group.forEach(({ app, to }) => {
           expect(cameWithRelease({ app, version: to, commit })).toBe(true);
         });
       });
     },
   );
+
+  it("given apps one changeset names, when grouped, then they share one PR", () => {
+    const bumps = [...service("api", "0.0.2"), ...web("admin"), ...web("landing", "1.2.0")];
+
+    expect(
+      releasePrGroups(bumps, [["api", "landing"]]).map((group) => releaseTitle(group, kindOf)),
+    ).toEqual(["chore(release): api v0.0.2 and landing v1.2.0", "chore(admin): release v0.1.0"]);
+  });
 
   it("given a family title, when an outsider, a near name or another version is checked, then it is not tagged", () => {
     const commit = {

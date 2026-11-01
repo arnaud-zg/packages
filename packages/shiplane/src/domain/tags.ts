@@ -58,11 +58,18 @@ const inFamily = (app: string, version: string, subject: string) =>
     return app.startsWith(`${root}-`) && (shared === undefined || shared === version);
   });
 
+const familyRelease = (app: string, subject: string) => {
+  const root = /^chore\(([^)]+)\): release v\d/.exec(subject)?.[1];
+  return root !== undefined && root !== "release" && app.startsWith(`${root}-`);
+};
+
 // Older titles named versions without the v ("chore(release): api 0.0.3 brings ..."): both count.
 export const cameWithRelease = ({ app, version, commit }: TagCandidate) => {
   const exact = `${literal(version)}(?![\\w.])`;
   return (
     new RegExp(`^chore\\(${literal(app)}\\): release v${exact}`).test(commit.subject) ||
+    // A family's release names its root alone: each `root-*` came with it, at whatever version.
+    familyRelease(app, commit.subject) ||
     (commit.subject.startsWith("chore(release):") &&
       (new RegExp(`(?:: |, | and )${literal(app)} v?${exact}`).test(commit.subject) ||
         // An early release titled by its count alone: the commit that changed the version is it.

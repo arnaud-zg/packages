@@ -1,5 +1,5 @@
 import type { AppBump } from "../domain/changes";
-import type { OpenPr } from "../domain/releasePr";
+import type { KindOf, OpenPr } from "../domain/releasePr";
 import type { ReleaseContext } from "./context";
 import type { Prepared } from "./prepareRelease";
 import { releaseSource } from "../domain/governance";
@@ -7,9 +7,11 @@ import {
   releaseBranchName,
   releaseCommitBody,
   releasePrBody,
+  releasePrGroups,
   releaseTitle,
   titleFits,
 } from "../domain/releasePr";
+import { prepareRelease } from "./prepareRelease";
 import { confirm, fail, listed, paint } from "./say";
 import { branchStep, openPrStep, pushStep, runSteps } from "./steps";
 import { environmentLabel, moduleOf } from "./targets";
@@ -140,41 +142,92 @@ export const openReleasePr = async (
     );
     return null;
   }
+  const kindOf: KindOf = (app) => {
+    const unit = context.release.units.find(({ name }) => name === app);
+    return unit && moduleOf(context, unit)?.kind;
+  };
+  const groups = prGroupsOf(context, prepared);
+  const titles = groups.map((group) => releaseTitle(group, kindOf));
   const planned = [
-    "Open the release PR, then wait for you to squash merge it",
+    groups.length > 1
+      ? `Open ${groups.length} release PRs from main, one per app, then wait for you to squash merge each:\n${titles
+          .map((title) => `       ${title}`)
+          .join("\n")}`
+      : "Open the release PR, then wait for you to squash merge it",
     "Tag each version and publish its release notes",
     ...Object.values(prepared.contributions).flatMap(({ step }) => (step ? [step] : [])),
   ];
   output.line(paint("dim", "  Steps"));
   planned.forEach((step, index) => output.line(`  ${index + 1}. ${step}`));
   output.line();
+  const where = environmentLabel(
+    context,
+    prepared.bumps.map(({ app }) => app),
+    "preview",
+  );
   if (
-    !(await confirm(
-      context,
-      `Release these ${
-        environmentLabel(
-          context,
-          prepared.bumps.map(({ app }) => app),
-          "preview",
-        ) === "live"
-          ? "live"
-          : "to preview"
-      }?`,
-      true,
-    ))
+    !(await confirm(context, `Release these ${where === "live" ? "live" : "to preview"}?`, true))
   ) {
     output.line(paint("dim", "Nothing ran."));
     return null;
   }
-  const branch = releaseBranchName(clock.now());
-  const title = releaseTitle(prepared.bumps, (app) => {
-    const unit = context.release.units.find(({ name }) => name === app);
-    return unit && moduleOf(context, unit)?.kind;
-  });
-  // One release, one PR: a title naming more apps than a header holds skips the commit hooks
-  // (commitlint's 100 characters) for this commit only.
-  const skipHooks = !titleFits(title);
+  const now = clock.now();
   const prs: OpenPr[] = [];
+  for (const group of groups) {
+    const apps = new Set(group.map(({ app }) => app));
+    const scoped =
+      groups.length > 1 ? await prepareRelease(context, apps, prepared.contributions) : prepared;
+    const [first] = group;
+    const branch = `${releaseBranchName(now)}${groups.length > 1 && first ? `-${first.app}` : ""}`;
+    const pr = await openOne(context, scoped, kindOf, branch);
+    if (!pr) {
+      if (prs.length > 0) {
+        output.line(
+          paint(
+            "dim",
+            `  ${listed(prs.map(({ number }) => `#${number}`))} stay open: merge them, then run shiplane for the rest.`,
+          ),
+        );
+      }
+      return null;
+    }
+    prs.push(pr);
+  }
+  return prs;
+};
+
+/**
+ * The apps each release PR takes: one PR per app, a family as one. Apps one changeset names or
+ * one moving with the other share a PR. A release moving internal packages stays one PR: their
+ * changelog lines have no app to go with.
+ */
+const prGroupsOf = ({ release }: ReleaseContext, prepared: Prepared) => {
+  if (prepared.packages > 0) return [prepared.bumps];
+  const appOf = (packageName: string) =>
+    release.units.find((unit) => unit.packageName === packageName)?.name;
+  const linked = [
+    ...prepared.shipped.map(({ releases }) => releases.map(({ name }) => appOf(name) ?? name)),
+    ...prepared.bumps.map(({ app, movedWith }) => [
+      app,
+      ...movedWith.map((name) => appOf(name) ?? name),
+    ]),
+  ];
+  return releasePrGroups(prepared.bumps, linked);
+};
+
+/** Versions `prepared` on `branch` from main, opens its PR, and goes back to main. */
+const openOne = async (
+  context: ReleaseContext,
+  prepared: Prepared,
+  kindOf: KindOf,
+  branch: string,
+): Promise<OpenPr | null> => {
+  const { services } = context;
+  const title = releaseTitle(prepared.bumps, kindOf);
+  // A title naming more apps than a header holds skips the commit hooks (commitlint's 100
+  // characters) for this commit only.
+  const skipHooks = !titleFits(title);
+  const created: { pr?: OpenPr } = {};
   const done = await runSteps(context, [
     branchStep(context, branch),
     {
@@ -194,17 +247,16 @@ export const openReleasePr = async (
     },
     pushStep(context, branch),
     openPrStep(context, "open the release pull request", async () => {
-      const pr = await services.codeHost.createPr({
+      created.pr = await services.codeHost.createPr({
         base: "main",
         head: branch,
         title,
         body: releasePrBody(prepared.bumps, shipsOnMerge(context, prepared)),
         label: "type: chore",
       });
-      prs.push(pr);
-      return pr;
+      return created.pr;
     }),
     { label: "back to main", run: () => services.sourceControl.switchTo("main") },
   ]);
-  return done ? prs : null;
+  return done && created.pr ? created.pr : null;
 };

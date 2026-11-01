@@ -19,18 +19,25 @@ const HISTORY: PlannedChangeset = {
   releases: [{ name: "@acme/admin", type: "minor" }],
 };
 
-const setUp = () => {
+// One changeset naming both apps: they share a release PR.
+const SHARED: PlannedChangeset = {
+  ...HISTORY,
+  releases: [...HISTORY.releases, { name: "@acme/api", type: "patch" }],
+};
+
+const setUp = ({ linked = true }: { linked?: boolean } = {}) => {
   const units = [testUnit("api", { version: "0.0.1" }), testUnit("admin", { version: "0.1.0" })];
   const world = testContext({ units });
+  const changesets = [PLANT, linked ? SHARED : HISTORY];
   world.versioning.seed({
-    pending: [PLANT, HISTORY].map(({ id, summary, releases }) => ({
+    pending: changesets.map(({ id, summary, releases }) => ({
       id,
       text: changesetText(
         Object.fromEntries(releases.map(({ name, type }) => [name, type])),
         summary,
       ),
     })),
-    plan: planFrom([PLANT, HISTORY], { "@acme/api": "0.0.1", "@acme/admin": "0.1.0" }),
+    plan: planFrom(changesets, { "@acme/api": "0.0.1", "@acme/admin": "0.1.0" }),
   });
   world.source.seed({
     changed: [
@@ -46,6 +53,79 @@ const setUp = () => {
 };
 
 describe("opening the release pull request", () => {
+  it("given api and admin with changesets of their own, when the release opens, then each gets its own release PR from main", async () => {
+    const { context, source, host, versioning, prompter } = setUp({ linked: false });
+    prompter.answer(true);
+
+    const prs = await openReleasePr(
+      context,
+      await prepareRelease(context, new Set(["api", "admin"])),
+    );
+
+    expect(
+      host.received.flatMap((event) => (event.type === "pr" ? [[event.head, event.title]] : [])),
+    ).toEqual([
+      [
+        expect.stringMatching(/^shiplane\/release-2026-10-12-\d{4}-api$/),
+        "chore(api): release v0.0.2",
+      ],
+      [
+        expect.stringMatching(/^shiplane\/release-2026-10-12-\d{4}-admin$/),
+        "chore(admin): release v0.2.0",
+      ],
+    ]);
+    expect(versioning.applied.map(({ held }) => held.map(({ id }) => id))).toEqual([
+      ["admin-history"],
+      ["plant-not-in-catalog"],
+    ]);
+    expect(source.received.map(({ type }) => type)).toEqual([
+      "branch",
+      "commit",
+      "push",
+      "switch",
+      "branch",
+      "commit",
+      "push",
+      "switch",
+    ]);
+    expect(prs).toHaveLength(2);
+  });
+
+  it("given four packages of one family, when the release opens, then the family is one release PR titled by its root", async () => {
+    const units = ["kit", "kit-cli", "kit-react", "kit-vue"].map((name) =>
+      testUnit(name, { version: "1.0.0", module: "published-package" }),
+    );
+    const world = testContext({ units });
+    const changesets: PlannedChangeset[] = units.map(({ name }) => ({
+      id: `${name}-change`,
+      summary: `${name} does more.`,
+      releases: [{ name: `@acme/${name}`, type: "minor" }],
+    }));
+    world.versioning.seed({
+      pending: changesets.map(({ id, summary, releases }) => ({
+        id,
+        text: changesetText(
+          Object.fromEntries(releases.map(({ name, type }) => [name, type])),
+          summary,
+        ),
+      })),
+      plan: planFrom(
+        changesets,
+        Object.fromEntries(units.map(({ packageName }) => [packageName, "1.0.0"])),
+      ),
+    });
+    world.prompter.answer(true);
+
+    await openReleasePr(
+      world.context,
+      await prepareRelease(world.context, new Set(units.map(({ name }) => name))),
+    );
+
+    expect(
+      world.host.received.flatMap((event) => (event.type === "pr" ? [event.title] : [])),
+    ).toEqual(["chore(kit): release v1.1.0"]);
+  });
+
   it("given changesets for api and admin, when the release opens, then both are versioned on one branch with one PR saying what each ships", async () => {
     const { context, source, host, versioning, prompter } = setUp();
     prompter.answer(true);
@@ -297,7 +377,7 @@ describe("the summary before a release", () => {
   });
 });
 
-describe("a release too big for one header", () => {
+describe("the release commit's hooks", () => {
   const NAMES = [
     "customer-billing-gateway",
     "partner-onboarding-portal",
@@ -307,11 +387,14 @@ describe("a release too big for one header", () => {
 
   const setUpMany = () => {
     const units = NAMES.map((name) => testUnit(name, { version: "1.0.0" }));
-    const changesets: PlannedChangeset[] = NAMES.map((name) => ({
-      id: `${name}-change`,
-      summary: `${name} does more.`,
-      releases: [{ name: `@acme/${name}`, type: "minor" }],
-    }));
+    // One changeset naming all four: they must share one release PR.
+    const changesets: PlannedChangeset[] = [
+      {
+        id: "shared-change",
+        summary: "Every app does more.",
+        releases: NAMES.map((name) => ({ name: `@acme/${name}`, type: "minor" as const })),
+      },
+    ];
     const world = testContext({ units });
     world.versioning.seed({
       pending: changesets.map(({ id, summary, releases }) => ({
@@ -329,7 +412,7 @@ describe("a release too big for one header", () => {
     return world;
   };
 
-  it("given four web apps whose names overflow one header, when the release opens, then one PR names them all and its commit skips the hooks", async () => {
+  it("given four apps one changeset ties together, when their names overflow one header, then their one PR names them all and its commit skips the hooks", async () => {
     const { context, host, source, prompter } = setUpMany();
     prompter.answer(true);
 

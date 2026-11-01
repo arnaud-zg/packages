@@ -104,6 +104,29 @@ const familyLabel = ([root, ...members]: AppBump[], kindOf: KindOf) => {
     : `${root.app} v${root.to} and ${rest}`;
 };
 
+/**
+ * The release PRs a release opens, all from main at once: one per app, a family counting as one.
+ * Apps `linked` (one changeset naming both, or one moving with the other) share a PR, so no two
+ * PRs ever touch the same file.
+ */
+export const releasePrGroups = (
+  bumps: AppBump[],
+  linked: readonly (readonly string[])[],
+): AppBump[][] => {
+  const groups = releaseFamilies(bumps).map((family) => new Set(family.map(({ app }) => app)));
+  const merged = linked.reduce((current, apps) => {
+    const touched = current.filter((group) => apps.some((app) => group.has(app)));
+    if (touched.length < 2) return current;
+    const union = new Set(touched.flatMap((group) => [...group]));
+    return [...current.filter((group) => !touched.includes(group)), union];
+  }, groups);
+  // Kept in the release's own order, by each group's first app.
+  const order = (group: Set<string>) => bumps.findIndex(({ app }) => group.has(app));
+  return merged
+    .sort((left, right) => order(left) - order(right))
+    .map((group) => bumps.filter(({ app }) => group.has(app)));
+};
+
 /** Whether a title still fits once a squash merge appends its PR number. */
 export const titleFits = (title: string) => title.length <= MAX_TITLE;
 
@@ -117,12 +140,14 @@ export const releaseTitle = (bumps: AppBump[], kindOf: KindOf = () => undefined)
   const [first, ...others] = bumps;
   if (!first) return "chore(release): package changelogs";
   if (others.length === 0) return releaseCommitTitle(first);
+  // One family is one app's release: `chore(shiplane): release v0.1.0`, its plugins in the body.
+  const families = releaseFamilies(bumps);
+  const [only] = families;
+  if (families.length === 1 && only?.[0]) return releaseCommitTitle(only[0]);
   const every = `chore(release): ${sentence(bumps.map(({ app, to }) => `${app} v${to}`))}`;
   if (titleFits(every)) return every;
   // Families first: their own "and" never runs into the list's last one.
-  const families = releaseFamilies(bumps).sort(
-    (left, right) => Number(right.length > 1) - Number(left.length > 1),
-  );
+  families.sort((left, right) => Number(right.length > 1) - Number(left.length > 1));
   const labels = families.map((family) => familyLabel(family, kindOf));
   // Two families end the list: commas alone keep "a and 2 more and b and 7 plugins" from happening.
   const list = labels.at(-1)?.includes(" and ") ? labels.join(", ") : sentence(labels);
