@@ -61,8 +61,17 @@ export const releaseTitle = (bumps: AppBump[]) => {
   if (!first) return "chore(release): package changelogs";
   if (others.length === 0) return releaseCommitTitle(first);
   const named = `chore(release): ${sentence(bumps.map(({ app, to }) => `${app} v${to}`))}`;
-  // commitlint caps the header at 100: past it, the count stands in and the body names each version.
-  return named.length <= MAX_LINE ? named : `chore(release): ${bumps.length} apps`;
+  if (named.length <= MAX_LINE) return named;
+  // commitlint caps the header at 100: past it, a family sharing one version is named by its root,
+  // anything else by its count. The body names each version either way.
+  const root = bumps.find(({ app }) =>
+    bumps.every((bump) => bump.app === app || bump.app.startsWith(`${app}-`)),
+  );
+  const family =
+    root && bumps.every(({ to }) => to === root.to)
+      ? `chore(release): ${root.app} and ${others.length} plugins v${root.to}`
+      : null;
+  return family && family.length <= MAX_LINE ? family : `chore(release): ${bumps.length} packages`;
 };
 
 /** A bullet wrapped to commitlint's 100-character body lines, continued under its text. */

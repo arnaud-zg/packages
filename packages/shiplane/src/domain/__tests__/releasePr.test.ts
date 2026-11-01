@@ -134,7 +134,7 @@ describe("the release pull request", () => {
     { app: "landing" as const, from: "0.1.0", to: "0.1.1", notes, movedWith: [] },
   ];
 
-  it("given eight packages moving, when titled, then the title counts them within commitlint's 100 characters", () => {
+  it("given eight packages moving, when titled, then the title counts them, unrelated, within commitlint's 100 characters", () => {
     const many = Array.from({ length: 8 }, (_, index) => ({
       app: `shiplane-plugin-${index}`,
       from: "0.0.0",
@@ -143,7 +143,24 @@ describe("the release pull request", () => {
       movedWith: [],
     }));
 
-    expect(releaseTitle(many)).toBe("chore(release): 8 apps");
+    expect(releaseTitle(many)).toBe("chore(release): 8 packages");
+  });
+
+  it("given shiplane and seven shiplane-* plugins all at 0.1.0, when titled, then the family is named with its version", () => {
+    const family = [
+      "shiplane",
+      "changesets",
+      "cloudflare-pages",
+      "eas",
+      "fly",
+      "git",
+      "github",
+      "npm",
+    ]
+      .map((name, index) => (index === 0 ? name : `shiplane-${name}`))
+      .map((app) => ({ app, from: "0.0.0", to: "0.1.0", notes: [], movedWith: [] }));
+
+    expect(releaseTitle(family)).toBe("chore(release): shiplane and 7 plugins v0.1.0");
   });
 
   it("given three apps moving, when titled, then the title names each version", () => {
