@@ -296,3 +296,57 @@ describe("the summary before a release", () => {
     expect(world.output.text).toMatch(/vite-workspace-resolver +0\.1\.0/);
   });
 });
+
+describe("a release too big for one title", () => {
+  const NAMES = [
+    "customer-billing-gateway",
+    "partner-onboarding-portal",
+    "warehouse-inventory-sync",
+    "support-ticket-dashboard",
+  ];
+
+  const setUpMany = () => {
+    const units = NAMES.map((name) => testUnit(name, { version: "1.0.0" }));
+    const changesets: PlannedChangeset[] = NAMES.map((name) => ({
+      id: `${name}-change`,
+      summary: `${name} does more.`,
+      releases: [{ name: `@acme/${name}`, type: "minor" }],
+    }));
+    const world = testContext({ units });
+    world.versioning.seed({
+      pending: changesets.map(({ id, summary, releases }) => ({
+        id,
+        text: changesetText(
+          Object.fromEntries(releases.map(({ name, type }) => [name, type])),
+          summary,
+        ),
+      })),
+      plan: planFrom(
+        changesets,
+        Object.fromEntries(NAMES.map((name) => [`@acme/${name}`, "1.0.0"])),
+      ),
+    });
+    return world;
+  };
+
+  it("given four web apps whose names overflow one title, when the release opens, then the first PR names the apps that fit and the rest wait for the next", async () => {
+    const { context, host, source, versioning, prompter } = setUpMany();
+    prompter.answer(true);
+
+    await openReleasePr(context, await prepareRelease(context, new Set(NAMES)));
+
+    expect(host.received).toEqual([
+      expect.objectContaining({
+        type: "pr",
+        head: expect.stringMatching(/^shiplane\/release-2026-10-12-\d{4}-part-1$/),
+        title:
+          "chore(release): customer-billing-gateway v1.1.0 and partner-onboarding-portal v1.1.0",
+      }),
+    ]);
+    expect(source.received.filter(({ type }) => type === "branch")).toHaveLength(1);
+    expect(versioning.applied[0]?.held.map(({ id }) => id)).toEqual([
+      "warehouse-inventory-sync-change",
+      "support-ticket-dashboard-change",
+    ]);
+  });
+});
