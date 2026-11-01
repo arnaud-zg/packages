@@ -1,0 +1,59 @@
+{
+  "name": "shiplane",
+  "version": "0.8.1",
+  "private": true,
+  "description": "The shiplane CLI: detects what changed, versions it and triggers each app's deploy through the plugins its config composes.",
+  "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane#readme",
+  "bugs": {
+    "url": "https://github.com/arnaud-zg/packages/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnaud-zg/packages.git",
+    "directory": "packages/shiplane"
+  },
+  "license": "MIT",
+  "author": "Arnaud Zheng <arnaud.zg@gmail.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "default": "./dist/testing.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "shiplane": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --write . --cache --cache-location .cache/.prettiercache",
+    "lint": "eslint --cache --cache-location .cache/.eslintcache",
+    "start": "node dist/cli.js",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.typecheck.json"
+  },
+  "dependencies": {
+    "@clack/prompts": "1.7.0",
+    "jiti": "2.7.0",
+    "yaml": "2.9.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@arnaud-zg/configs": "catalog:",
+    "@types/node": "catalog:node",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

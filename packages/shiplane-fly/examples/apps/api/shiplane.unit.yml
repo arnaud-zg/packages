@@ -1,0 +1,10 @@
+module: backend-service
+app:
+  preview: acme-api-preview
+  production: acme-api
+config:
+  preview: fly-preview.toml
+  production: fly-production.toml
+url:
+  preview: https://api-preview.acme.dev
+  production: https://api.acme.dev

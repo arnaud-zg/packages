@@ -1,0 +1,47 @@
+// What an adapter's own tests import: each port's contract suite and its Fake.
+export { serverHostingContract } from "../adapters/server-hosting/server-hosting.contract";
+export { staticHostingContract } from "../adapters/static-hosting/static-hosting.contract";
+export { mobileDistributionContract } from "../adapters/mobile-distribution/mobile-distribution.contract";
+export { packageRegistryContract } from "../adapters/package-registry/package-registry.contract";
+export { sourceControlContract } from "../adapters/source-control/source-control.contract";
+export { codeHostContract } from "../adapters/code-host/code-host.contract";
+export { ciPipelineContract } from "../adapters/ci-pipeline/ci-pipeline.contract";
+export { versioningContract } from "../adapters/versioning/versioning.contract";
+export { serverHostingFake } from "../adapters/server-hosting/__fakes__/server-hosting.fake";
+export { staticHostingFake } from "../adapters/static-hosting/__fakes__/static-hosting.fake";
+export { mobileDistributionFake } from "../adapters/mobile-distribution/__fakes__/mobile-distribution.fake";
+export { packageRegistryFake } from "../adapters/package-registry/__fakes__/package-registry.fake";
+export { sourceControlFake } from "../adapters/source-control/__fakes__/source-control.fake";
+export { codeHostFake } from "../adapters/code-host/__fakes__/code-host.fake";
+export { ciPipelineFake } from "../adapters/ci-pipeline/__fakes__/ci-pipeline.fake";
+export { versioningFake } from "../adapters/versioning/__fakes__/versioning.fake";
+
+// What a plugin's own tests drive: the release's use cases over Fakes, and a real folder to load.
+export type { HostEvent } from "../adapters/code-host/__fakes__/code-host.fake";
+export { RecordingShell } from "../adapters/shell/__fakes__/shell.fake";
+export { MemoryOutput, ScriptedPrompter } from "../adapters/terminal/__fakes__/terminal.fake";
+export { nodeFiles } from "../adapters/files/node-files.adapter";
+export { systemShell } from "../adapters/shell/system-shell.adapter";
+export { addUnit, removeUnit } from "../application/addUnit";
+export { loadRelease } from "../application/config/loadRelease";
+export { docsFor } from "../application/docsFor";
+export { doctor } from "../application/doctor";
+export { initRelease } from "../application/initRelease";
+export { newAdapter } from "../application/newAdapter";
+export { openReleasePr } from "../application/openReleasePr";
+export { planShips } from "../application/planShips";
+export { prepareRelease } from "../application/prepareRelease";
+export { promote } from "../application/promote";
+export { readStatus } from "../application/readStatus";
+export { releaseToPreview } from "../application/releaseToPreview";
+export type { SetupContext } from "../application/setupContext";
+export { refreshEditorSchema } from "../application/setupFiles";
+export { shipTo } from "../application/ship";
+export { SAMPLE_UNITS, SAMPLE_VERSION_FILES } from "./sample";
+export { inSandbox, LIVE, sandbox } from "./live";
+export { planFrom } from "./plans";
+export { changesetText, testContext, testUnit } from "./releaseContext";
+export type { CliRun, ConsumerRepository } from "./consumer";
+export { builtCli, consumerRepository } from "./consumer";
+export type { Workspace } from "./workspace";
+export { createWorkspace, packageJson, SOURCE_ALIASES } from "./workspace";

@@ -1,0 +1,4 @@
+# yaml-language-server: $schema=../../node_modules/.cache/shiplane/schema.json
+# How the release CLI ships: versioned, tagged and given release notes, deployed nowhere.
+# Every key: shiplane docs internal-tool
+module: internal-tool

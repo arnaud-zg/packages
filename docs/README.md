@@ -20,6 +20,7 @@ in the first table, then pick the page that matches what you need right now.
 | [`expo-pnpm-catalog`](./expo-pnpm-catalog/tutorial.md)             | Expo, pnpm         | [Tutorial](./expo-pnpm-catalog/tutorial.md)       | [How-to](./expo-pnpm-catalog/how-to.md)       | [Reference](./expo-pnpm-catalog/reference.md)       | [Explanation](./expo-pnpm-catalog/explanation.md)       |
 | [`vite-workspace-resolver`](./vite-workspace-resolver/tutorial.md) | Vite, Vitest       | [Tutorial](./vite-workspace-resolver/tutorial.md) | [How-to](./vite-workspace-resolver/how-to.md) | [Reference](./vite-workspace-resolver/reference.md) | [Explanation](./vite-workspace-resolver/explanation.md) |
 | [`agent-context-budget`](./agent-context-budget/tutorial.md)       | AI coding agents   | [Tutorial](./agent-context-budget/tutorial.md)    | [How-to](./agent-context-budget/how-to.md)    | [Reference](./agent-context-budget/reference.md)    | [Explanation](./agent-context-budget/explanation.md)    |
+| [`shiplane`](./shiplane/tutorial.md)                               | Releases, CI       | [Tutorial](./shiplane/tutorial.md)                | [How-to](./shiplane/how-to.md)                | [Reference](./shiplane/reference.md)                | [Explanation](./shiplane/explanation.md)                |
 
 ## 🤔 Which package do I need?
 

@@ -50,6 +50,7 @@ bar.
 | [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog)             | Check and sync **Expo SDK** versions in **pnpm catalogs**, like `expo-doctor` and `expo install --fix` for a whole workspace       | `npm install --save-dev expo-pnpm-catalog`       |
 | [`vite-workspace-resolver`](./packages/vite-workspace-resolver) | Resolve workspace packages' **exports-map subpaths** and deep `src/` imports in **Vite/Vitest**, without per-package aliases       | `npm install --save-dev vite-workspace-resolver` |
 | [`agent-context-budget`](./packages/agent-context-budget)       | Score **CLAUDE.md**, **AGENTS.md** and the docs they reference against **token budgets**, and show which sections to cut           | `npm install --save-dev agent-context-budget`    |
+| [`shiplane`](./packages/shiplane)                               | Detect what changed, **version** it and **deploy** each app through plugins (Fly, Cloudflare Pages, EAS, npm)                      | `npm install --save-dev shiplane`                |
 
 More packages will land here over time. ⭐ Star or watch the repo to hear about them.
 
@@ -63,6 +64,8 @@ More packages will land here over time. ⭐ Star or watch the repo to hear about
   [`vite-workspace-resolver`](./packages/vite-workspace-resolver#readme)
 - **"My CLAUDE.md keeps growing and every agent session pays for it."** →
   [`agent-context-budget`](./packages/agent-context-budget#readme)
+- **"Releasing several apps from one repo is a pile of scripts."** →
+  [`shiplane`](./packages/shiplane#readme)
 
 ## 📚 Documentation
 

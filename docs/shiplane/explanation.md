@@ -1,0 +1,81 @@
+[🏠 Home](../../README.md) · [📚 Docs](../README.md) ·
+[`shiplane`](../../packages/shiplane/README.md) · [🚀 Tutorial](./tutorial.md) ·
+[🛠️ How-to](./how-to.md) · [📖 Reference](./reference.md) · [🔌 Plugins](./plugins.md) · **💡
+Explanation**
+
+# 💡 Explanation
+
+## A ship triggers each deploy and returns
+
+A deploy finishes on its own platform, in minutes nobody can act on. So shiplane starts it and
+returns; `shiplane status` reads the outcome later, from any machine. It waits only for what is a
+decision (your merge) or what it must confirm before recording it (a Fly rollout).
+
+```mermaid
+sequenceDiagram
+    participant You
+    participant shiplane
+    participant Host as Fly, EAS, Pages, npm
+    You->>shiplane: shiplane
+    shiplane->>Host: start each deploy
+    shiplane-->>You: Triggered
+    Host-->>Host: builds, rolls out
+    You->>shiplane: shiplane status
+    shiplane->>Host: what runs where?
+```
+
+## The core holds the release, plugins hold the hosts
+
+The core knows what changed, versions, tags, order and safety. Each host is a plugin filling a port,
+so a repository installs only what it ships with, and a new host is a new package, not a new CLI.
+One plugin per provider, not per port: GitHub's code host, Actions and comments share one sign-in.
+The shell adapter stays built in, the fallback for any host. Decision:
+[ADR-011](./decisions/ADR-011-shiplane-core-and-plugin-packages.md), on top of
+[ADR-009](./decisions/ADR-009-release-modules-and-capability-ports.md).
+
+## The order of `modules` is the release order
+
+Versions, tags, deploys and comments follow it, so `plan` shows a reorder before anything ships. An
+app reading another's url comes after it, and loading says so when it does not.
+
+## Changesets decide what ships
+
+A diff says something changed; a changeset says whether it is a fix or a feature, and what to tell
+users. So it drives the version and the changelog. A repository can opt into releasing changed apps
+with no changeset (`commitsWithoutChangeset: "release"`), their changelog written from commits.
+
+## What runs where is read from the platform
+
+GitHub Deployments records each deploy under its tag, so every machine knows what preview and
+production run without a local file. npm and EAS know their own state, so their plugins read it
+there instead.
+
+## A mobile app takes an update unless its native layer changed
+
+An over-the-air update only reaches binaries built from the same native layer and version.
+
+```mermaid
+flowchart TD
+    A["Compare this commit with the newest store build"] --> B{"Native fingerprint or version changed?"}
+    B -->|"yes"| C["Store build"]
+    B -->|"no"| D{"Built from this commit already?"}
+    D -->|"yes"| E["Nothing to ship"]
+    D -->|"no"| F["Over-the-air update"]
+```
+
+One update reaches both platforms, so the stricter verdict wins. A new binary needs a new version,
+which is why production first opens a PR moving its version to the one preview validated.
+
+## CI and your laptop run the same jobs
+
+Through GitHub Actions, shiplane dispatches one workflow, `ship.yml`, which runs `shiplane ship` on
+the runner. Same jobs, same unit files: a url changed once reaches both paths.
+
+## Production makes you type its name
+
+It reaches every user, so it cannot start by reflex or by `--yes`.
+
+## Fakes keep the tests honest
+
+Every port has a Fake and a contract suite. The suite runs on the Fake and on each real adapter, so
+a test passing on Fakes says something true about the real hosts.

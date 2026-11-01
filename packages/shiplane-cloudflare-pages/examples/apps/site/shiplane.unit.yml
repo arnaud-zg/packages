@@ -1,0 +1,7 @@
+module: web-app
+project: acme-site
+build:
+  env:
+    PUBLIC_API_URL:
+      preview: https://api-preview.acme.dev
+      production: https://api.acme.dev
