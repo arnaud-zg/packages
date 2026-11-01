@@ -8,8 +8,8 @@ import tseslint from "typescript-eslint";
  * project when a single `eslint .` invocation from the repo root lints all packages at once.
  */
 export default tseslint.config(
-  // shiplane packages build and test configs sit outside every tsconfig.
-  { ignores: ["packages/shiplane*/*.config.ts"] },
+  // shiplane configs sit outside every tsconfig.
+  { ignores: ["shiplane.config.ts", "packages/shiplane*/*.config.ts"] },
   ...base,
   {
     files: ["**/*.{ts,tsx}"],
