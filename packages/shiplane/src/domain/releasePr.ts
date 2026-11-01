@@ -88,7 +88,9 @@ export const releaseFamilies = (bumps: AppBump[]): AppBump[][] => {
 /** One family as a title names it: `api v0.0.4`, `shiplane and 7 plugins v0.1.0`, `api v0.3.0 and 2 more services`. */
 const familyLabel = ([root, ...members]: AppBump[], kindOf: KindOf) => {
   if (!root) return "";
-  if (members.length === 0) return `${root.app} v${root.to}`;
+  // One member is clearer named than counted: `api v0.3.0, api-worker v0.3.0`.
+  if (members.length < 2)
+    return [root, ...members].map(({ app, to }) => `${app} v${to}`).join(", ");
   const kinds = new Set([root, ...members].map(({ app }) => kindOf(app)));
   const [kind] = kinds;
   const noun = (kinds.size === 1 && kind && NOUN[kind]) || "app";
@@ -108,8 +110,8 @@ export const titleFits = (title: string) => title.length <= MAX_TITLE;
 /**
  * Conventional, and naming every app it brings, never a bare count: `chore(api): release v0.0.4`,
  * `chore(release): api v0.0.2 and admin v0.1.0`, or, when listing each one is too long, families
- * by their root: `chore(release): shiplane and 7 plugins v0.1.0 and landing v1.2.0`. A release
- * too big even then is split by `releaseGroups`; the commit body names every version either way.
+ * by their root: `chore(release): shiplane and 7 plugins v0.1.0, landing v1.2.0 and expo v2.1.0`.
+ * One release is one PR: a title too long even then stays whole, see `titleFits`.
  */
 export const releaseTitle = (bumps: AppBump[], kindOf: KindOf = () => undefined) => {
   const [first, ...others] = bumps;
@@ -126,19 +128,6 @@ export const releaseTitle = (bumps: AppBump[], kindOf: KindOf = () => undefined)
   const list = labels.at(-1)?.includes(" and ") ? labels.join(", ") : sentence(labels);
   return `chore(release): ${list}`;
 };
-
-/**
- * The release PRs a release takes, in order: one when its title fits, else as few as keep each
- * title within the header, a family never split. A family too long alone gets a PR of its own.
- */
-export const releaseGroups = (bumps: AppBump[], kindOf: KindOf = () => undefined): AppBump[][] =>
-  releaseFamilies(bumps).reduce<AppBump[][]>((groups, family) => {
-    const last = groups.at(-1);
-    if (last && titleFits(releaseTitle([...last, ...family], kindOf))) {
-      return [...groups.slice(0, -1), [...last, ...family]];
-    }
-    return [...groups, family];
-  }, []);
 
 /** A bullet wrapped to commitlint's 100-character body lines, continued under its text. */
 const bullet = (text: string) =>

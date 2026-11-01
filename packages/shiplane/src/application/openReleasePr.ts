@@ -1,16 +1,15 @@
 import type { AppBump } from "../domain/changes";
-import type { KindOf, OpenPr } from "../domain/releasePr";
+import type { OpenPr } from "../domain/releasePr";
 import type { ReleaseContext } from "./context";
 import type { Prepared } from "./prepareRelease";
 import { releaseSource } from "../domain/governance";
 import {
   releaseBranchName,
   releaseCommitBody,
-  releaseGroups,
   releasePrBody,
   releaseTitle,
+  titleFits,
 } from "../domain/releasePr";
-import { prepareRelease } from "./prepareRelease";
 import { confirm, fail, listed, paint } from "./say";
 import { branchStep, openPrStep, pushStep, runSteps } from "./steps";
 import { environmentLabel, moduleOf } from "./targets";
@@ -110,16 +109,14 @@ export const printSummary = (context: ReleaseContext, prepared: Prepared) => {
 
 /**
  * Versions what `prepared` covers on one branch from main, opens its PR, and goes back to main.
- * Too many apps for one title, it opens the first group's PR only: run again once it merges, and
- * the next group's opens, `confirmed` so the plan is not asked twice. Null when it must not run.
+ * Null, with what to do, when it must not run.
  */
 export const openReleasePr = async (
   context: ReleaseContext,
   prepared: Prepared,
-  { confirmed = false, part = 1 }: { confirmed?: boolean; part?: number } = {},
 ): Promise<OpenPr[] | null> => {
   const { output, services, clock } = context;
-  if (!confirmed) printSummary(context, prepared);
+  printSummary(context, prepared);
   const blocked = Object.values(prepared.contributions).find((entry) => entry.blocked)?.blocked;
   if (blocked) {
     fail(context, blocked.title, blocked.detail, blocked.commands);
@@ -143,62 +140,40 @@ export const openReleasePr = async (
     );
     return null;
   }
-  const kindOf = kindsOf(context);
-  const groups = releaseGroups(prepared.bumps, kindOf);
-  if (!confirmed) {
-    const planned = [
-      groups.length > 1
-        ? `Open ${groups.length} release PRs, one after the other, so each title names its apps:\n${groups
-            .map((group) => `       ${releaseTitle(group, kindOf)}`)
-            .join("\n")}\n     and wait for you to squash merge each one`
-        : "Open the release PR, then wait for you to squash merge it",
-      "Tag each version and publish its release notes",
-      ...Object.values(prepared.contributions).flatMap(({ step }) => (step ? [step] : [])),
-    ];
-    output.line(paint("dim", "  Steps"));
-    planned.forEach((step, index) => output.line(`  ${index + 1}. ${step}`));
-    output.line();
-    const where = environmentLabel(
+  const planned = [
+    "Open the release PR, then wait for you to squash merge it",
+    "Tag each version and publish its release notes",
+    ...Object.values(prepared.contributions).flatMap(({ step }) => (step ? [step] : [])),
+  ];
+  output.line(paint("dim", "  Steps"));
+  planned.forEach((step, index) => output.line(`  ${index + 1}. ${step}`));
+  output.line();
+  if (
+    !(await confirm(
       context,
-      prepared.bumps.map(({ app }) => app),
-      "preview",
-    );
-    if (
-      !(await confirm(context, `Release these ${where === "live" ? "live" : "to preview"}?`, true))
-    ) {
-      output.line(paint("dim", "Nothing ran."));
-      return null;
-    }
+      `Release these ${
+        environmentLabel(
+          context,
+          prepared.bumps.map(({ app }) => app),
+          "preview",
+        ) === "live"
+          ? "live"
+          : "to preview"
+      }?`,
+      true,
+    ))
+  ) {
+    output.line(paint("dim", "Nothing ran."));
+    return null;
   }
-  // Too many apps for one title: this PR takes the first group; the next opens once it merges.
-  const [first] = groups;
-  const scoped =
-    groups.length > 1 && first
-      ? await prepareRelease(context, new Set(first.map(({ app }) => app)))
-      : prepared;
-  return openOne(context, scoped, kindOf, clock.now(), groups.length > 1 || part > 1 ? part : null);
-};
-
-/** Each app's module kind, as the release names it. */
-export const kindsOf =
-  (context: ReleaseContext): KindOf =>
-  (app) => {
+  const branch = releaseBranchName(clock.now());
+  const title = releaseTitle(prepared.bumps, (app) => {
     const unit = context.release.units.find(({ name }) => name === app);
     return unit && moduleOf(context, unit)?.kind;
-  };
-
-/** Versions `prepared` on its own branch from main, opens its PR, and goes back to main. */
-const openOne = async (
-  context: ReleaseContext,
-  prepared: Prepared,
-  kindOf: KindOf,
-  now: Date,
-  part: number | null,
-): Promise<OpenPr[] | null> => {
-  const { services } = context;
-  // Parts of one release can open within a minute: each names its own branch.
-  const branch = `${releaseBranchName(now)}${part === null ? "" : `-part-${part}`}`;
-  const title = releaseTitle(prepared.bumps, kindOf);
+  });
+  // One release, one PR: a title naming more apps than a header holds skips the commit hooks
+  // (commitlint's 100 characters) for this commit only.
+  const skipHooks = !titleFits(title);
   const prs: OpenPr[] = [];
   const done = await runSteps(context, [
     branchStep(context, branch),
@@ -214,6 +189,7 @@ const openOne = async (
           await services.sourceControl.changedFiles(),
           title,
           releaseCommitBody(prepared.bumps) || undefined,
+          { skipHooks },
         ),
     },
     pushStep(context, branch),

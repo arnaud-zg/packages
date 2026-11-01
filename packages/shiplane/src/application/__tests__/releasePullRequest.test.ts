@@ -297,7 +297,7 @@ describe("the summary before a release", () => {
   });
 });
 
-describe("a release too big for one title", () => {
+describe("a release too big for one header", () => {
   const NAMES = [
     "customer-billing-gateway",
     "partner-onboarding-portal",
@@ -329,24 +329,26 @@ describe("a release too big for one title", () => {
     return world;
   };
 
-  it("given four web apps whose names overflow one title, when the release opens, then the first PR names the apps that fit and the rest wait for the next", async () => {
-    const { context, host, source, versioning, prompter } = setUpMany();
+  it("given four web apps whose names overflow one header, when the release opens, then one PR names them all and its commit skips the hooks", async () => {
+    const { context, host, source, prompter } = setUpMany();
     prompter.answer(true);
 
     await openReleasePr(context, await prepareRelease(context, new Set(NAMES)));
 
-    expect(host.received).toEqual([
-      expect.objectContaining({
-        type: "pr",
-        head: expect.stringMatching(/^shiplane\/release-2026-10-12-\d{4}-part-1$/),
-        title:
-          "chore(release): customer-billing-gateway v1.1.0 and partner-onboarding-portal v1.1.0",
-      }),
+    const title =
+      "chore(release): customer-billing-gateway v1.1.0, partner-onboarding-portal v1.1.0, warehouse-inventory-sync v1.1.0 and support-ticket-dashboard v1.1.0";
+    expect(host.received).toEqual([expect.objectContaining({ type: "pr", title })]);
+    expect(source.received.filter(({ type }) => type === "commit")).toEqual([
+      expect.objectContaining({ title, skipHooks: true }),
     ]);
-    expect(source.received.filter(({ type }) => type === "branch")).toHaveLength(1);
-    expect(versioning.applied[0]?.held.map(({ id }) => id)).toEqual([
-      "warehouse-inventory-sync-change",
-      "support-ticket-dashboard-change",
-    ]);
+  });
+
+  it("given a title that fits, when the release opens, then its commit runs the hooks", async () => {
+    const { context, source, prompter } = setUp();
+    prompter.answer(true);
+
+    await openReleasePr(context, await prepareRelease(context, new Set(["api", "admin"])));
+
+    expect(source.received.find(({ type }) => type === "commit")).not.toHaveProperty("skipHooks");
   });
 });

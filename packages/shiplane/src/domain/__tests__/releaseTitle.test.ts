@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { AppBump } from "../changes";
-import { releaseGroups, releaseTitle } from "../releasePr";
+import { releaseTitle, titleFits } from "../releasePr";
 import { cameWithRelease } from "../tags";
 
 const bump = (app: string, to = "0.1.0"): AppBump => ({
@@ -28,8 +28,7 @@ const mobile = (app: string, to?: string) => of("mobile-app", bump(app, to));
 const tool = (app: string, to?: string) => of("internal-tool", bump(app, to));
 of("published-package", ...shiplane(), ...shiplane("0.2.0"));
 
-const titled = (bumps: AppBump[]) =>
-  releaseGroups(bumps, kindOf).map((group) => releaseTitle(group, kindOf));
+const titled = (bumps: AppBump[]) => (bumps.length === 0 ? [] : [releaseTitle(bumps, kindOf)]);
 
 // Every case: the release PR titles it opens, in order.
 const CASES: [string, AppBump[], string[]][] = [
@@ -114,43 +113,34 @@ const CASES: [string, AppBump[], string[]][] = [
 
 describe("the release PR titles, from best case to worst", () => {
   it.each(CASES.filter(([name]) => !name.startsWith("a whole fleet")))(
-    "given %s, when titled, then each PR names its apps",
+    "given %s, when titled, then its one PR names its apps",
     (_, bumps, titles) => {
       expect(titled(bumps)).toEqual(titles);
     },
   );
 
-  it("given a whole fleet of every kind, when titled, then it splits into PRs that each name their apps, no family split", () => {
+  it("given a whole fleet of every kind, when titled, then its one PR still names every app, past the header limit", () => {
     const [, fleet] = CASES.at(-1) ?? [];
     expect(titled(fleet ?? [])).toMatchInlineSnapshot(`
       [
-        "chore(release): api v0.3.0, api-worker v0.3.0, admin v1.4.0, landing v1.2.0 and docs v0.9.0",
-        "chore(release): shiplane and 7 plugins v0.1.0, expo v2.1.0, seed v0.2.0 and migrate v0.5.1",
-        "chore(release): notifications v0.7.0 and design-system-playground v0.3.0",
+        "chore(release): api v0.3.0, api-worker v0.3.0, shiplane and 7 plugins v0.1.0, admin v1.4.0, landing v1.2.0, docs v0.9.0, expo v2.1.0, seed v0.2.0, migrate v0.5.1, notifications v0.7.0 and design-system-playground v0.3.0",
       ]
     `);
   });
 
-  it.each(CASES)(
-    "given %s, when squash merged as #12345, then each header stays within commitlint's 100",
+  it.each(CASES.filter(([name]) => !name.startsWith("a whole fleet")))(
+    "given %s, when squash merged as #12345, then the header stays within commitlint's 100",
     (_, bumps) => {
-      titled(bumps).forEach((title) => expect(`${title} (#12345)`.length).toBeLessThanOrEqual(100));
+      titled(bumps).forEach((title) => expect(titleFits(title)).toBe(true));
     },
   );
 
   it.each(CASES)(
-    "given %s, when merged, then every app is in exactly one PR and tagged by it",
+    "given %s, when merged, then every app it brings is tagged on that commit",
     (_, bumps) => {
-      const groups = releaseGroups(bumps, kindOf);
-      expect(
-        groups
-          .flat()
-          .map(({ app }) => app)
-          .sort(),
-      ).toEqual(bumps.map(({ app }) => app).sort());
-      groups.forEach((group) => {
-        const commit = { sha: "9a1b2c3", subject: `${releaseTitle(group, kindOf)} (#12345)` };
-        group.forEach(({ app, to }) => {
+      titled(bumps).forEach((title) => {
+        const commit = { sha: "9a1b2c3", subject: `${title} (#12345)` };
+        bumps.forEach(({ app, to }) => {
           expect(cameWithRelease({ app, version: to, commit })).toBe(true);
         });
       });
@@ -168,5 +158,15 @@ describe("the release PR titles, from best case to worst", () => {
     expect(cameWithRelease({ app: "shiplane-npm", version: "0.2.0", commit })).toBe(false);
     expect(cameWithRelease({ app: "shiplanex", version: "0.1.0", commit })).toBe(false);
     expect(cameWithRelease({ app: "landing", version: "1.2.0", commit })).toBe(true);
+  });
+
+  it("given an app named inside another's name, when a release names only the other, then it is not tagged there", () => {
+    const commit = {
+      sha: "9a1b2c3",
+      subject: "chore(release): shiplane-api v0.1.0 and expo v2.1.0 (#30)",
+    };
+
+    expect(cameWithRelease({ app: "api", version: "0.1.0", commit })).toBe(false);
+    expect(cameWithRelease({ app: "shiplane-api", version: "0.1.0", commit })).toBe(true);
   });
 });

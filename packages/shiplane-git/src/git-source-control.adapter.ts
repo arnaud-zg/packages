@@ -114,13 +114,20 @@ const gitSource = (root: string, shell: Shell, options: GitOptions): SourceContr
     switchTo: async (branch) => {
       await must(["switch", "--quiet", branch]);
     },
-    commit: async (files, title, body) => {
+    commit: async (files, title, body, { skipHooks = false } = {}) => {
       const [command, ...args] = options.format ?? [];
       if (command && files.length > 0) {
         await shell.capture(command, [...args, ...files], { cwd: root });
       }
       await must(["add", "--", ...files]);
-      await must(["commit", "--quiet", "-m", title, ...(body ? ["-m", body] : [])]);
+      await must([
+        "commit",
+        "--quiet",
+        ...(skipHooks ? ["--no-verify"] : []),
+        "-m",
+        title,
+        ...(body ? ["-m", body] : []),
+      ]);
     },
     push: async (branch) => {
       await network([...PUSH, "-u", "origin", branch]);

@@ -11,9 +11,6 @@ import { runSteps } from "./steps";
 import { missingTags, tagRelease } from "./tagRelease";
 import { waitForMerge } from "./waitForMerge";
 
-// A guard against a release that never runs out of PRs to open.
-const MAX_RELEASE_PRS = 20;
-
 const STAGES = ["What to release", "Versions", "Release PR", "Merge", "Tags", "Ship"] as const;
 
 /**
@@ -65,35 +62,24 @@ export const releaseToPreview = async (context: ReleaseContext): Promise<boolean
   } else if (step.step === "wait-merge") {
     prs = step.prs;
   }
-  // A release too big for one title goes out as several release PRs: each opens once the one
-  // before it merges, so every changeset it versions is already on main.
-  let merged = false;
-  for (let round = 0; prs.length > 0 && round < MAX_RELEASE_PRS; round++) {
-    stage("Merge");
-    for (const pr of prs) {
-      output.line();
-      if (!(await waitForMerge(context, pr))) {
-        fail(context, `#${pr.number} was closed without a merge`, "nothing shipped.", ["shiplane"]);
-        return false;
-      }
-      progress.say("happy", `${paint("green", "✓")} Release PR #${pr.number} merged`);
+  if (prs.length > 0) stage("Merge");
+  for (const pr of prs) {
+    output.line();
+    if (!(await waitForMerge(context, pr))) {
+      fail(context, `#${pr.number} was closed without a merge`, "nothing shipped.", ["shiplane"]);
+      return false;
     }
+    progress.say("happy", `${paint("green", "✓")} Release PR #${pr.number} merged`);
+  }
+  if (prs.length > 0) {
     const pulled = await runSteps(context, [
       { label: "switch to main", run: () => services.sourceControl.switchTo("main") },
       { label: "pull main", run: () => services.sourceControl.pull() },
     ]);
     if (!pulled) return false;
-    merged = true;
     current = { ...context, release: await context.load() };
-    if (step.step !== "release-pr") break;
-    const next = await prepareRelease(current, picked.scope);
-    if (next.bumps.length === 0) break;
-    stage("Release PR");
-    const opened = await openReleasePr(current, next, { confirmed: true, part: round + 2 });
-    if (!opened) return false;
-    prs = opened;
   }
-  const tags = merged ? await missingTags(current) : missing;
+  const tags = prs.length > 0 ? await missingTags(current) : missing;
   if (tags.length > 0) stage("Tags");
   if (!(await tagRelease(current, tags))) return false;
   stage("Ship");

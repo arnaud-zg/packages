@@ -24,7 +24,13 @@ export interface SourceControlPort {
   tags: () => Promise<Set<string>>;
   createBranch: (name: string) => Promise<void>;
   switchTo: (branch: string) => Promise<void>;
-  commit: (files: string[], title: string, body?: string) => Promise<void>;
+  /** `skipHooks` commits without the repository's hooks: a release title longer than they allow. */
+  commit: (
+    files: string[],
+    title: string,
+    body?: string,
+    options?: { skipHooks?: boolean },
+  ) => Promise<void>;
   push: (branch: string) => Promise<void>;
   pull: () => Promise<void>;
   tag: (name: string, sha: string, message: string) => Promise<void>;

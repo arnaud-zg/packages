@@ -64,7 +64,7 @@ export const cameWithRelease = ({ app, version, commit }: TagCandidate) => {
   return (
     new RegExp(`^chore\\(${literal(app)}\\): release v${exact}`).test(commit.subject) ||
     (commit.subject.startsWith("chore(release):") &&
-      (new RegExp(`\\b${literal(app)} v?${exact}`).test(commit.subject) ||
+      (new RegExp(`(?:: |, | and )${literal(app)} v?${exact}`).test(commit.subject) ||
         // An early release titled by its count alone: the commit that changed the version is it.
         /^chore\(release\): \d+ (?:(?:web |mobile )?apps?|packages?|services?|tools?)(?: \(#\d+\))?$/.test(
           commit.subject,
