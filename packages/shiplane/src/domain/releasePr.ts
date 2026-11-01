@@ -55,14 +55,103 @@ const MAX_LINE = 100;
 /** One app's release commit: `chore(api): release v0.0.4`. */
 export const releaseCommitTitle = ({ app, to }: AppBump) => `chore(${app}): release v${to}`;
 
-/** Conventional and short: `chore(api): release v0.0.4`, or `chore(release): ...` for several apps. */
-export const releaseTitle = (bumps: AppBump[]) => {
+// commitlint caps a header at 100; a squash merge appends " (#12345)", so a title keeps 9 spare.
+export const MAX_TITLE = MAX_LINE - " (#12345)".length;
+
+const counted = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
+
+/** Each app's module kind, so a title calls services services and packages plugins. */
+export type KindOf = (app: string) => string | undefined;
+
+/** What a title calls a unit of each module kind; several kinds at once are apps. */
+const NOUN: Record<string, string> = {
+  "published-package": "package",
+  "backend-service": "service",
+  "web-app": "web app",
+  "mobile-app": "mobile app",
+  "internal-tool": "tool",
+};
+
+/**
+ * The apps, gathered into families in their own order: a root moving with its `root-*` apps
+ * (`shiplane`, `shiplane-npm`) is one family; any other app is a family of one.
+ */
+export const releaseFamilies = (bumps: AppBump[]): AppBump[][] => {
+  const roots = bumps.filter(
+    ({ app }) => !bumps.some((other) => other.app !== app && app.startsWith(`${other.app}-`)),
+  );
+  return roots.map((root) =>
+    bumps.filter(({ app }) => app === root.app || app.startsWith(`${root.app}-`)),
+  );
+};
+
+/** One family as a title names it: `api v0.0.4`, `shiplane and 7 plugins v0.1.0`, `api v0.3.0 and 2 more services`. */
+const familyLabel = ([root, ...members]: AppBump[], kindOf: KindOf) => {
+  if (!root) return "";
+  // One member is clearer named than counted: `api v0.3.0, api-worker v0.3.0`.
+  if (members.length < 2)
+    return [root, ...members].map(({ app, to }) => `${app} v${to}`).join(", ");
+  const kinds = new Set([root, ...members].map(({ app }) => kindOf(app)));
+  const [kind] = kinds;
+  const noun = (kinds.size === 1 && kind && NOUN[kind]) || "app";
+  // A package's siblings extend it: plugins. Siblings of anything else are more of it.
+  const rest =
+    noun === "package"
+      ? counted(members.length, "plugin")
+      : `${members.length} more ${counted(members.length, noun).replace(/^\d+ /, "")}`;
+  return members.every(({ to }) => to === root.to)
+    ? `${root.app} and ${rest} v${root.to}`
+    : `${root.app} v${root.to} and ${rest}`;
+};
+
+/**
+ * The release PRs a release opens, all from main at once: one per app, a family counting as one.
+ * Apps `linked` (one changeset naming both, or one moving with the other) share a PR, so no two
+ * PRs ever touch the same file.
+ */
+export const releasePrGroups = (
+  bumps: AppBump[],
+  linked: readonly (readonly string[])[],
+): AppBump[][] => {
+  const groups = releaseFamilies(bumps).map((family) => new Set(family.map(({ app }) => app)));
+  const merged = linked.reduce((current, apps) => {
+    const touched = current.filter((group) => apps.some((app) => group.has(app)));
+    if (touched.length < 2) return current;
+    const union = new Set(touched.flatMap((group) => [...group]));
+    return [...current.filter((group) => !touched.includes(group)), union];
+  }, groups);
+  // Kept in the release's own order, by each group's first app.
+  const order = (group: Set<string>) => bumps.findIndex(({ app }) => group.has(app));
+  return merged
+    .sort((left, right) => order(left) - order(right))
+    .map((group) => bumps.filter(({ app }) => group.has(app)));
+};
+
+/** Whether a title still fits once a squash merge appends its PR number. */
+export const titleFits = (title: string) => title.length <= MAX_TITLE;
+
+/**
+ * Conventional, and naming every app it brings, never a bare count: `chore(api): release v0.0.4`,
+ * `chore(release): api v0.0.2 and admin v0.1.0`, or, when listing each one is too long, families
+ * by their root: `chore(release): shiplane and 7 plugins v0.1.0, landing v1.2.0 and expo v2.1.0`.
+ * One release is one PR: a title too long even then stays whole, see `titleFits`.
+ */
+export const releaseTitle = (bumps: AppBump[], kindOf: KindOf = () => undefined) => {
   const [first, ...others] = bumps;
   if (!first) return "chore(release): package changelogs";
   if (others.length === 0) return releaseCommitTitle(first);
-  const named = `chore(release): ${sentence(bumps.map(({ app, to }) => `${app} v${to}`))}`;
-  // commitlint caps the header at 100: past it, the count stands in and the body names each version.
-  return named.length <= MAX_LINE ? named : `chore(release): ${bumps.length} apps`;
+  // One family is one app's release: `chore(shiplane): release v0.1.0`, its plugins in the body.
+  const families = releaseFamilies(bumps);
+  const [only] = families;
+  if (families.length === 1 && only?.[0]) return releaseCommitTitle(only[0]);
+  const every = `chore(release): ${sentence(bumps.map(({ app, to }) => `${app} v${to}`))}`;
+  if (titleFits(every)) return every;
+  // Families first: their own "and" never runs into the list's last one.
+  families.sort((left, right) => Number(right.length > 1) - Number(left.length > 1));
+  const labels = families.map((family) => familyLabel(family, kindOf));
+  // Two families end the list: commas alone keep "a and 2 more and b and 7 plugins" from happening.
+  const list = labels.at(-1)?.includes(" and ") ? labels.join(", ") : sentence(labels);
+  return `chore(release): ${list}`;
 };
 
 /** A bullet wrapped to commitlint's 100-character body lines, continued under its text. */

@@ -45,10 +45,17 @@ const contributionsOf = async (
   context: ReleaseContext,
   scope: ReadonlySet<string>,
   bumps: readonly AppBump[],
+  known: Readonly<Record<string, VersionContribution>> = {},
 ) => {
   const { head } = await context.services.sourceControl.position();
   const contributions: Record<string, VersionContribution> = {};
   for (const unit of context.release.units.filter(({ name }) => scope.has(name))) {
+    // Already answered for the whole release: one release PR of several never asks twice.
+    const answered = known[unit.name];
+    if (answered) {
+      contributions[unit.name] = answered;
+      continue;
+    }
     const module = moduleOf(context, unit);
     const version = module?.version?.bind(module);
     if (!module || !version) continue;
@@ -72,6 +79,7 @@ const contributionsOf = async (
 export const prepareRelease = async (
   context: ReleaseContext,
   scope: ReadonlySet<string>,
+  known: Readonly<Record<string, VersionContribution>> = {},
 ): Promise<Prepared> => {
   const { release, services } = context;
   const refs = unitRefs(release.units);
@@ -98,7 +106,12 @@ export const prepareRelease = async (
     held.length > 0 || adopted.length > 0
       ? await services.versioning.plan(adopted, split.waits)
       : base;
-  const contributions = await contributionsOf(context, scope, appBumps(picked, dependencies, refs));
+  const contributions = await contributionsOf(
+    context,
+    scope,
+    appBumps(picked, dependencies, refs),
+    known,
+  );
   const contributed = Object.values(contributions).flatMap(({ added }) => added);
   const added = [...adopted, ...contributed];
   const plan = contributed.length > 0 ? await services.versioning.plan(added, split.waits) : picked;

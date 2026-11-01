@@ -94,8 +94,13 @@ export class SourceControlFake implements SourceControlPort {
     this.state.position = { ...this.state.position, branch };
   };
 
-  commit = async (files: string[], title: string, body?: string) => {
-    await this.record({ type: "commit", files, title, body });
+  commit = async (
+    files: string[],
+    title: string,
+    body?: string,
+    { skipHooks = false }: { skipHooks?: boolean } = {},
+  ) => {
+    await this.record({ type: "commit", files, title, body, ...(skipHooks ? { skipHooks } : {}) });
     this.state.changed = this.state.changed.filter((file) => !files.includes(file));
   };
 
