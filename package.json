@@ -13,12 +13,10 @@
     "lint:md": "remark . --frail --quiet",
     "prepare": "lefthook install",
     "release": "pnpm build && shiplane",
-    "release:notes": "node scripts/release-notes.mjs",
     "shiplane": "shiplane",
     "test": "pnpm -r run test",
     "typecheck": "pnpm -r run typecheck",
-    "verify": "pnpm typecheck && pnpm lint && pnpm lint:md && pnpm format:check && pnpm test && pnpm build",
-    "version": "changeset version"
+    "verify": "pnpm typecheck && pnpm lint && pnpm lint:md && pnpm format:check && pnpm test && pnpm build"
   },
   "prettier": "@arnaud-zg/configs/prettier",
   "devDependencies": {
