@@ -6,6 +6,7 @@ export default defineLibraryConfig({
     index: "src/index.ts",
     cli: "src/cli.ts",
     plugin: "src/plugin.ts",
+    memory: "src/memory.ts",
     testing: "src/testing/public.ts",
   },
   // The testing kit runs inside its importer's vitest.

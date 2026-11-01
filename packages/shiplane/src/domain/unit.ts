@@ -10,6 +10,8 @@ export interface ReleaseUnit {
   version: string;
   /** The module that ships it, as its unit file names it. */
   module: string;
+  /** Its `buildCommand:`, when its unit file says one; else its package.json "build" script. */
+  buildCommand?: string;
   /** As written: per-environment maps and references are resolved by `optionsFor`. */
   options: Record<string, unknown>;
   /** Units whose values it reads: they are dispatched before it. */

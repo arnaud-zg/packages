@@ -73,12 +73,27 @@ export const composeContext = (
 };
 
 /** What init, add, doctor and the rest need: the repository on disk and the adapters installed. */
-export const composeSetup = async (root: string): Promise<SetupContext> => ({
-  root,
-  files: nodeFiles(root),
-  shell: systemShell,
-  prompter: terminalPrompter(),
-  output: terminalOutput,
-  adapters: await installedAdapters(root),
-  load: () => loadRelease(root),
-});
+export const composeSetup = async (root: string): Promise<SetupContext> => {
+  const ci = onGitHubActions() || systemShell.env("CI") === "true";
+  const tty = Boolean(process.stdout.isTTY);
+  const display = resolveDisplay(
+    {},
+    { mascot: false },
+    {
+      tty,
+      ci,
+      noMotion: Boolean(systemShell.env("NO_MOTION")),
+    },
+  );
+  return {
+    root,
+    files: nodeFiles(root),
+    shell: systemShell,
+    prompter: terminalPrompter(),
+    output: terminalOutput,
+    adapters: await installedAdapters(root),
+    load: () => loadRelease(root),
+    progress: terminalProgress(display, tty && !ci),
+    compose: (release) => composeContext(release, { yes: true, display: { mascot: false } }),
+  };
+};

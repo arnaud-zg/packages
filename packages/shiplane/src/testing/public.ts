@@ -34,6 +34,7 @@ export { prepareRelease } from "../application/prepareRelease";
 export { promote } from "../application/promote";
 export { readStatus } from "../application/readStatus";
 export { releaseToPreview } from "../application/releaseToPreview";
+export { setup } from "../application/setup";
 export type { SetupContext } from "../application/setupContext";
 export { refreshEditorSchema } from "../application/setupFiles";
 export { shipTo } from "../application/ship";

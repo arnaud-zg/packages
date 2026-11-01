@@ -317,6 +317,7 @@ export const loadRelease = async (root: string, options: LoadOptions = {}): Prom
         packageName: manifest.name,
         version: manifest.version,
         module: result.unit.module,
+        ...(result.unit.buildCommand ? { buildCommand: result.unit.buildCommand } : {}),
         options: result.unit.options,
         after: [],
       };

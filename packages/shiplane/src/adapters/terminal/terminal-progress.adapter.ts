@@ -2,7 +2,7 @@ import { styleText } from "node:util";
 
 import type { Display, Mood } from "../../domain/display";
 import type { Progress, StepPlace } from "../../ports/terminal.port";
-import { mascotFrame, progressBar } from "../../domain/display";
+import { mascotFrame, mascotFrames, progressBar } from "../../domain/display";
 import { liveLine } from "./live-line";
 
 const MASCOT_WIDTH = 13;
@@ -61,22 +61,28 @@ export const terminalProgress = (display: Display, inPlace: boolean): Progress =
       return work();
     }
     const started = Date.now();
+    const time = () => styleText("dim", elapsed(started));
+    const moving = display.mascot && display.motion;
     liveLine.show(
-      (tick) => `  ${mascot(mood, tick)}${counter}${text} ${styleText("dim", elapsed(started))}`,
+      {
+        ...(display.mascot
+          ? {
+              frames: moving
+                ? mascotFrames(mood).map((_, tick) => paintMascot(mood, tick))
+                : [paintMascot(mood, 0)],
+            }
+          : {}),
+        text: `${counter}${text}`,
+        suffix: time,
+      },
       true,
     );
     try {
       const result = await work();
-      liveLine.clear();
-      liveLine.above(
-        `  ${styleText("green", "✓")} ${counter}${text} ${styleText("dim", elapsed(started))}`,
-      );
+      liveLine.finish(`  ${styleText("green", "✓")}`, `${counter}${text} ${time()}`);
       return result;
     } catch (error) {
-      liveLine.clear();
-      liveLine.above(
-        `  ${styleText("red", "✗")} ${counter}${text} ${styleText("dim", elapsed(started))}`,
-      );
+      liveLine.finish(`  ${styleText("red", "✗")}`, `${counter}${text} ${time()}`);
       throw error;
     }
   };
