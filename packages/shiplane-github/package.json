@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/github",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "GitHub for shiplane: pull requests, releases and deploy records, the ship workflow on Actions, and comments on what shipped.",
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-github#readme",
   "bugs": {
