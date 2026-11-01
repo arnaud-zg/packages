@@ -54,10 +54,20 @@ Source: `src/cli/main.ts`. Here, `pnpm shiplane` builds the CLI first when its s
 ```ts
 import { changesetsVersioning } from "@shiplane/changesets";
 import { cloudflarePagesStaticHosting } from "@shiplane/cloudflare-pages";
+import { easMobileDistribution } from "@shiplane/eas";
 import { flyServerHosting } from "@shiplane/fly";
 import { gitSourceControl } from "@shiplane/git";
 import { gitHubActionsCiPipeline, gitHubCodeHost } from "@shiplane/github";
-import { backendService, defineRelease, releaseFlow, webApp } from "shiplane";
+import { npmPackageRegistry } from "@shiplane/npm";
+import {
+  backendService,
+  defineRelease,
+  internalTool,
+  mobileApp,
+  publishedPackage,
+  releaseFlow,
+  webApp,
+} from "shiplane";
 
 export default defineRelease({
   flow: releaseFlow({
@@ -69,6 +79,9 @@ export default defineRelease({
   modules: [
     backendService({ serverHosting: flyServerHosting() }),
     webApp({ staticHosting: cloudflarePagesStaticHosting() }),
+    mobileApp({ mobileDistribution: easMobileDistribution() }),
+    publishedPackage({ packageRegistry: npmPackageRegistry() }),
+    internalTool(),
   ],
 });
 ```
@@ -91,7 +104,8 @@ saying to rename it.
 
 ## `shiplane.unit.yml`
 
-One per app, next to its `package.json`, which gives its name and version.
+One per app, next to its `package.json`, which gives its name and version. Every module has one;
+[`examples/repository`](../../packages/shiplane/examples/repository) holds one of each.
 
 ```yaml
 module: backend-service # a module of shiplane.config.ts

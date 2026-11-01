@@ -1,0 +1,9 @@
+{
+  "name": "@acme/mobile",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "eas:update:preview": "eas update --channel preview --auto",
+    "eas:update:production": "eas update --channel production --auto"
+  }
+}
