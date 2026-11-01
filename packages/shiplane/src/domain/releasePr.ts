@@ -55,23 +55,41 @@ const MAX_LINE = 100;
 /** One app's release commit: `chore(api): release v0.0.4`. */
 export const releaseCommitTitle = ({ app, to }: AppBump) => `chore(${app}): release v${to}`;
 
-/** Conventional and short: `chore(api): release v0.0.4`, or `chore(release): ...` for several apps. */
+// commitlint caps a header at 100; a squash merge appends " (#12345)", so a title keeps 9 spare.
+const MAX_TITLE = MAX_LINE - " (#12345)".length;
+
+const counted = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
+
+/** The app every other one is named after (`shiplane` for `shiplane-npm`), when there is one. */
+const familyRoot = (bumps: AppBump[]) =>
+  bumps.find(({ app }) =>
+    bumps.every((bump) => bump.app === app || bump.app.startsWith(`${app}-`)),
+  );
+
+/**
+ * Conventional and always within 91 characters, tried from most to least telling:
+ * `chore(api): release v0.0.4`, `chore(release): api v0.0.2 and admin v0.1.0`,
+ * `chore(release): shiplane and 7 plugins v0.1.0`, `chore(release): shiplane v0.2.0 and 7 plugins`,
+ * then `chore(release): 8 packages`. The commit body names every version either way.
+ */
 export const releaseTitle = (bumps: AppBump[]) => {
   const [first, ...others] = bumps;
   if (!first) return "chore(release): package changelogs";
-  if (others.length === 0) return releaseCommitTitle(first);
-  const named = `chore(release): ${sentence(bumps.map(({ app, to }) => `${app} v${to}`))}`;
-  if (named.length <= MAX_LINE) return named;
-  // commitlint caps the header at 100: past it, a family sharing one version is named by its root,
-  // anything else by its count. The body names each version either way.
-  const root = bumps.find(({ app }) =>
-    bumps.every((bump) => bump.app === app || bump.app.startsWith(`${app}-`)),
+  const root = familyRoot(bumps);
+  const plugins = counted(others.length, "plugin");
+  const tries = [
+    others.length === 0
+      ? releaseCommitTitle(first)
+      : `chore(release): ${sentence(bumps.map(({ app, to }) => `${app} v${to}`))}`,
+    root && others.length > 0 && bumps.every(({ to }) => to === root.to)
+      ? `chore(release): ${root.app} and ${plugins} v${root.to}`
+      : null,
+    root && others.length > 0 ? `chore(release): ${root.app} v${root.to} and ${plugins}` : null,
+  ];
+  return (
+    tries.find((title): title is string => title !== null && title.length <= MAX_TITLE) ??
+    `chore(release): ${counted(bumps.length, "package")}`
   );
-  const family =
-    root && bumps.every(({ to }) => to === root.to)
-      ? `chore(release): ${root.app} and ${others.length} plugins v${root.to}`
-      : null;
-  return family && family.length <= MAX_LINE ? family : `chore(release): ${bumps.length} packages`;
 };
 
 /** A bullet wrapped to commitlint's 100-character body lines, continued under its text. */

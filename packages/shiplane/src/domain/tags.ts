@@ -45,12 +45,16 @@ const literal = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 export const isReleaseSubject = (subject: string) =>
   subject.startsWith("chore(release):") || /^chore\([^)]+\): release v\d/.test(subject);
 
-/** `chore(release): shiplane and 7 plugins v0.1.0` brings shiplane and every shiplane-* at that version. */
+/**
+ * A family title brings its root and every `root-*`: `shiplane and 7 plugins v0.1.0` at that version,
+ * `shiplane v0.2.0 and 7 plugins` with the root at its own and each plugin at whichever it moved to.
+ */
+const FAMILY = /^chore\(release\): (\S+)(?: v(\S+))? and \d+ plugins?(?: v(\S+?))?(?: \(#\d+\))?$/;
 const inFamily = (app: string, version: string, subject: string) => {
-  const match = /^chore\(release\): (\S+) and \d+ plugins v(\S+?)(?: \(#\d+\))?$/.exec(subject);
-  return (
-    match !== null && match[2] === version && (app === match[1] || app.startsWith(`${match[1]}-`))
-  );
+  const [, root, rootVersion, shared] = FAMILY.exec(subject) ?? [];
+  if (!root) return false;
+  if (app === root) return (rootVersion ?? shared) === version;
+  return app.startsWith(`${root}-`) && (shared === undefined || shared === version);
 };
 
 // Older titles named versions without the v ("chore(release): api 0.0.3 brings ..."): both count.
@@ -61,7 +65,7 @@ export const cameWithRelease = ({ app, version, commit }: TagCandidate) => {
     (commit.subject.startsWith("chore(release):") &&
       (new RegExp(`\\b${literal(app)} v?${exact}`).test(commit.subject) ||
         // Too many apps for one header: the commit that changed the version is it.
-        /^chore\(release\): \d+ (apps|packages)\b/.test(commit.subject) ||
+        /^chore\(release\): \d+ (apps?|packages?)\b/.test(commit.subject) ||
         inFamily(app, version, commit.subject)))
   );
 };
