@@ -1,6 +1,6 @@
 {
   "name": "shiplane",
-  "version": "0.8.1",
+  "version": "0.0.0",
   "description": "The shiplane CLI: detects what changed, versions it and triggers each app's deploy through the plugins its config composes.",
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane#readme",
   "bugs": {
