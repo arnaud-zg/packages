@@ -412,7 +412,10 @@ export const shipTo = async (
   if (runs.length > 0) {
     output.line(`    ${paint("cyan", "gh run list --limit 5")}`);
   }
-  output.line(`    ${paint("cyan", `shiplane status --channel ${environment}`)}`);
+  // A package has no channel to read, so status has nothing to show for one.
+  if (going.some(({ module }) => module.kind !== "published-package")) {
+    output.line(`    ${paint("cyan", `shiplane status --channel ${environment}`)}`);
+  }
   output.line();
   return !stuck;
 };
