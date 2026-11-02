@@ -1,16 +1,20 @@
 import { styleText } from "node:util";
 
-import type { Display, Mood } from "../../domain/display";
+import type { Display, MascotDrawing, MascotMoment, Mood } from "../../domain/display";
 import type { Progress, StepPlace } from "../../ports/terminal.port";
-import { mascotFrame, mascotFrames, progressBar } from "../../domain/display";
+import { progressBar } from "../../domain/display";
 import { liveLine } from "./live-line";
 
-const MASCOT_WIDTH = 13;
-
-/** The mascot in colour: spines, face, then what he holds; red when worried, green when happy. */
-export const paintMascot = (mood: Mood, tick: number) => {
-  const frame = [...mascotFrame(mood, tick)];
-  if (mood === "worried") return styleText("red", frame.join(""));
+/**
+ * The mascot in colour: red when worried, green when happy. The hedgehog is coloured part by part,
+ * spines, face, then what he holds; any other mascot as a whole.
+ */
+export const paintMascot = (mascot: MascotDrawing, moment: MascotMoment) => {
+  const { mood } = moment;
+  const text = mascot.draw(moment);
+  if (mood === "worried") return styleText("red", text);
+  if (!mascot.hedgehog) return mood === "happy" ? styleText("green", text) : text;
+  const frame = [...text];
   const face = frame.slice(5, 10).join("");
   return `${styleText("yellow", frame.slice(0, 5).join(""))}${styleText(mood === "happy" ? ["bold", "green"] : "bold", face)}${styleText("cyan", frame.slice(10).join(""))}`;
 };
@@ -36,10 +40,12 @@ const counterOf = (step?: StepPlace) => (step ? `${step.index + 1}/${step.total}
  * gets plain lines, never a redraw.
  */
 export const terminalProgress = (display: Display, inPlace: boolean): Progress => {
-  const mascot = (mood: Mood, tick: number) =>
-    display.mascot ? `${paintMascot(mood, display.motion ? tick : 0)} ` : "";
+  const mascot = (mood: Mood, tick: number, label = "") =>
+    display.mascot
+      ? `${paintMascot(display.mascot, { mood, tick: display.motion ? tick : 0, label })} `
+      : "";
   const taken = (step?: StepPlace) =>
-    2 + (display.mascot ? MASCOT_WIDTH + 1 : 0) + counterOf(step).length + 8;
+    2 + (display.mascot ? display.mascot.width + 1 : 0) + counterOf(step).length + 8;
 
   const during = async <T>(
     label: string,
@@ -57,19 +63,19 @@ export const terminalProgress = (display: Display, inPlace: boolean): Progress =
     }
     const text = fit(label, taken(step));
     if (!inPlace || liveLine.busy) {
-      liveLine.above(`  ${mascot(mood, 0)}${counter}${text}`);
+      liveLine.above(`  ${mascot(mood, 0, label)}${counter}${text}`);
       return work();
     }
     const started = Date.now();
     const time = () => styleText("dim", elapsed(started));
-    const moving = display.mascot && display.motion;
+    const drawing = display.mascot;
     liveLine.show(
       {
-        ...(display.mascot
+        ...(drawing
           ? {
-              frames: moving
-                ? mascotFrames(mood).map((_, tick) => paintMascot(mood, tick))
-                : [paintMascot(mood, 0)],
+              frames: Array.from({ length: display.motion ? drawing.frames(mood) : 1 }, (_, tick) =>
+                paintMascot(drawing, { mood, tick, label }),
+              ),
             }
           : {}),
         text: `${counter}${text}`,
@@ -97,6 +103,7 @@ export const terminalProgress = (display: Display, inPlace: boolean): Progress =
       );
     },
     during,
-    say: (mood, text) => liveLine.above(display.mascot ? `  ${mascot(mood, 0)}${text}` : text),
+    say: (mood, text) =>
+      liveLine.above(display.mascot ? `  ${mascot(mood, 0, text)}${text}` : text),
   };
 };

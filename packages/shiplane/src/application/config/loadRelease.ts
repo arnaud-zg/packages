@@ -205,10 +205,21 @@ const readConfig = async (file: string, aliases: Record<string, string>): Promis
     modules,
     features,
     units,
-    display: { verbose: flag(display.verbose), mascot: flag(display.mascot) },
+    display: { verbose: flag(display.verbose), mascot: mascotOf(display.mascot) },
     tagFormat: tagFormatOf(loaded.tag),
     releasesCommits: releasesCommitsOf(loaded.commitsWithoutChangeset),
   };
+};
+
+/** A config's mascot: true, false, frames per mood, or a function; anything else is ignored. */
+const mascotOf = (value: unknown): DisplayChoice["mascot"] => {
+  if (typeof value === "boolean" || typeof value === "function")
+    return value as DisplayChoice["mascot"];
+  if (!isRecord(value)) return undefined;
+  const frames = Object.entries(value).filter(
+    ([, list]) => Array.isArray(list) && list.every((frame) => typeof frame === "string"),
+  );
+  return frames.length > 0 ? Object.fromEntries(frames) : undefined;
 };
 
 interface Read {

@@ -37,23 +37,25 @@ describe("how much the release says while it runs", () => {
   const terminal = { tty: true, ci: false, noMotion: false };
 
   it("given nothing configured, when resolved, then it says what it does and the mascot moves", () => {
-    expect(resolveDisplay({}, {}, terminal)).toEqual({ verbose: true, mascot: true, motion: true });
+    const display = resolveDisplay({}, {}, terminal);
+
+    expect(display).toMatchObject({ verbose: true, motion: true });
+    expect(display.mascot?.hedgehog).toBe(true);
   });
 
   it("given the config turns both off, when resolved, then the release is terse and has no mascot", () => {
     expect(resolveDisplay({ verbose: false, mascot: false }, {}, terminal)).toEqual({
       verbose: false,
-      mascot: false,
+      mascot: null,
       motion: false,
     });
   });
 
   it("given the config turns the mascot off and a flag turns it on, when resolved, then the flag wins", () => {
-    expect(resolveDisplay({ mascot: false }, { mascot: true }, terminal)).toEqual({
-      verbose: true,
-      mascot: true,
-      motion: true,
-    });
+    const display = resolveDisplay({ mascot: false }, { mascot: true }, terminal);
+
+    expect(display.mascot?.hedgehog).toBe(true);
+    expect(display.motion).toBe(true);
   });
 
   it("given a CI log, a pipe or NO_MOTION, when resolved, then the mascot stays still", () => {
