@@ -25,11 +25,13 @@
 <a href="https://www.npmjs.com/package/expo-native-guard"><img src="https://img.shields.io/npm/v/expo-native-guard.svg?label=expo-native-guard" alt="expo-native-guard npm version"></a>
 <a href="https://www.npmjs.com/package/vite-workspace-resolver"><img src="https://img.shields.io/npm/v/vite-workspace-resolver.svg?label=vite-workspace-resolver" alt="vite-workspace-resolver npm version"></a>
 <a href="https://www.npmjs.com/package/agent-context-budget"><img src="https://img.shields.io/npm/v/agent-context-budget.svg?label=agent-context-budget" alt="agent-context-budget npm version"></a>
+<a href="https://www.npmjs.com/package/shiplane"><img src="https://img.shields.io/npm/v/shiplane.svg?label=shiplane" alt="shiplane npm version"></a>
 <br/>
 <a href="https://npm-stat.com/charts.html?package=expo-pnpm-catalog"><img src="https://img.shields.io/npm/dm/expo-pnpm-catalog.svg?label=expo-pnpm-catalog" alt="expo-pnpm-catalog npm downloads"></a>
 <a href="https://npm-stat.com/charts.html?package=expo-native-guard"><img src="https://img.shields.io/npm/dm/expo-native-guard.svg?label=expo-native-guard" alt="expo-native-guard npm downloads"></a>
 <a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver"><img src="https://img.shields.io/npm/dm/vite-workspace-resolver.svg?label=vite-workspace-resolver" alt="vite-workspace-resolver npm downloads"></a>
 <a href="https://npm-stat.com/charts.html?package=agent-context-budget"><img src="https://img.shields.io/npm/dm/agent-context-budget.svg?label=agent-context-budget" alt="agent-context-budget npm downloads"></a>
+<a href="https://npm-stat.com/charts.html?package=shiplane"><img src="https://img.shields.io/npm/dm/shiplane.svg?label=shiplane" alt="shiplane npm downloads"></a>
 
 </div>
 
@@ -50,7 +52,7 @@ bar.
 | [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog)             | Check and sync **Expo SDK** versions in **pnpm catalogs**, like `expo-doctor` and `expo install --fix` for a whole workspace       | `npm install --save-dev expo-pnpm-catalog`       |
 | [`vite-workspace-resolver`](./packages/vite-workspace-resolver) | Resolve workspace packages' **exports-map subpaths** and deep `src/` imports in **Vite/Vitest**, without per-package aliases       | `npm install --save-dev vite-workspace-resolver` |
 | [`agent-context-budget`](./packages/agent-context-budget)       | Score **CLAUDE.md**, **AGENTS.md** and the docs they reference against **token budgets**, and show which sections to cut           | `npm install --save-dev agent-context-budget`    |
-| [`shiplane`](./packages/shiplane)                               | Detect what changed, **version** it and **deploy** each app through plugins (Fly, Cloudflare Pages, EAS, npm)                      | `npm install --save-dev shiplane`                |
+| [`shiplane`](./packages/shiplane)                               | Detect what changed, **version** it and **deploy** each app through plugins; `npx shiplane setup` sets it up in one command        | `npm install --save-dev shiplane`                |
 
 More packages will land here over time. ⭐ Star or watch the repo to hear about them.
 

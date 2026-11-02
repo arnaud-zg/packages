@@ -16,6 +16,8 @@ export const UNIT_FILES = [UNIT_FILE, LEGACY_UNIT_FILE];
 export interface UnitFile {
   /** The module that ships it. */
   module: string;
+  /** Its `buildCommand:`, when it says one. */
+  buildCommand?: string;
   options: Record<string, unknown>;
   /** The line a key path sits on, for problems found after reading. */
   lineOf: (at: readonly string[]) => number | undefined;
@@ -121,6 +123,17 @@ export const readUnitFile = (
       problems: parsed.error.issues.flatMap((issue) => describeIssue(issue, file, module, lineAt)),
     };
   }
-  const options = Object.fromEntries(Object.entries(data).filter(([key]) => key !== "module"));
-  return { unit: { module: named, options, lineOf: (at) => lineAt(at) }, problems: [] };
+  const options = Object.fromEntries(
+    Object.entries(data).filter(([key]) => key !== "module" && key !== "buildCommand"),
+  );
+  const buildCommand = typeof data.buildCommand === "string" ? data.buildCommand : undefined;
+  return {
+    unit: {
+      module: named,
+      ...(buildCommand ? { buildCommand } : {}),
+      options,
+      lineOf: (at) => lineAt(at),
+    },
+    problems: [],
+  };
 };

@@ -16,7 +16,8 @@ import { planShips } from "../application/planShips";
 import { prepareRelease } from "../application/prepareRelease";
 import { promote } from "../application/promote";
 import { releaseToPreview } from "../application/releaseToPreview";
-import { refreshEditorSchema } from "../application/setupFiles";
+import { setup } from "../application/setup";
+import { CONFIG_FILE, refreshEditorSchema } from "../application/setupFiles";
 import { shipTo } from "../application/ship";
 import { missingTags, tagRelease } from "../application/tagRelease";
 import { ENVIRONMENTS } from "../domain/environment";
@@ -37,7 +38,8 @@ const HELP = `${paint("bold", "shiplane")}: detect what changed, version it, tri
   shiplane plan                   every command a ship would run, run nothing
   shiplane plugins [--json]       the flow, the modules in release order and who uses each, the features
 
-  shiplane init [--yes|--blank]   find what ships, write a unit file per app, then doctor
+  shiplane setup [--yes]          set up or check releases: asks only what it can't tell, rehearses, then writes
+  shiplane init [--yes|--blank]   the older setup: a unit file per app, then doctor
   shiplane add <folder>           init's questions for one folder
   shiplane remove <unit>          stop shipping a unit; it stays versioned
   shiplane doctor                 check the config, tools and sign-ins, offer each fix
@@ -96,7 +98,12 @@ export const runCli = async (argv: string[], cwd: string, io: ContextIo = {}): P
     string,
     (context: Awaited<ReturnType<typeof composeSetup>>) => Promise<boolean>
   > = {
-    init: (context) => initRelease(context, { yes: values.yes, blank: values.blank }),
+    setup: (context) => setup(context, { yes: values.yes }),
+    init: (context) => {
+      if (values.blank) return initRelease(context, { yes: values.yes, blank: true });
+      out(paint("dim", "init is now shiplane setup"));
+      return setup(context, { yes: values.yes });
+    },
     add: (context) => addUnit(context, first),
     remove: (context) => removeUnit(context, first),
     doctor: (context) => doctor(context),
@@ -108,9 +115,12 @@ export const runCli = async (argv: string[], cwd: string, io: ContextIo = {}): P
     docs: (context) => docsFor(context, first),
   };
 
+  const root = findRoot(cwd);
+  const files = io.setup?.files ?? nodeFiles(root);
+  const firstRun = command === "next" && !files.exists(CONFIG_FILE);
   const run = commands[command];
-  const setup = setupCommands[command];
-  if (setup) return (await setup(await composeSetup(findRoot(cwd)))) ? 0 : 1;
+  const setUp = setupCommands[firstRun ? "setup" : command];
+  if (setUp) return (await setUp(await composeSetup(root, io.setup))) ? 0 : 1;
   if (command === "help") {
     out(HELP);
     return 0;
@@ -120,7 +130,7 @@ export const runCli = async (argv: string[], cwd: string, io: ContextIo = {}): P
     out(HELP);
     return 1;
   }
-  const release = await loadRelease(findRoot(cwd), { aliases: io.aliases });
+  const release = await loadRelease(root, { aliases: io.aliases });
   if (release.problems.length > 0) {
     printProblems(release.problems);
     return 2;

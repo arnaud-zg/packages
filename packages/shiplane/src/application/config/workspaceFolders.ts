@@ -10,14 +10,41 @@ const PackageWorkspacesSchema = z.object({
     .optional(),
 });
 
-const readText = (file: string) => (fs.existsSync(file) ? fs.readFileSync(file, "utf8") : null);
+/** What reading a workspace needs, by path relative to its root: a disk, or files in memory. */
+export interface WorkspaceReader {
+  read: (file: string) => string | null;
+  /** The folders directly inside `dir`, by name. */
+  folders: (dir: string) => string[];
+  exists: (file: string) => boolean;
+}
+
+/** The repository on disk, under `root`, as a workspace reader. */
+export const diskReader = (root: string): WorkspaceReader => ({
+  read: (file) => {
+    const absolute = path.join(root, file);
+    return fs.existsSync(absolute) ? fs.readFileSync(absolute, "utf8") : null;
+  },
+  folders: (dir) => {
+    const absolute = path.join(root, dir);
+    if (!fs.existsSync(absolute)) return [];
+    return fs
+      .readdirSync(absolute, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
+  },
+  exists: (file) => fs.existsSync(path.join(root, file)),
+});
+
+const readerOf = (from: string | WorkspaceReader) =>
+  typeof from === "string" ? diskReader(from) : from;
 
 /** The folders the workspace file lists: pnpm's first, then package.json, else the root alone. */
-export const workspacePatterns = (root: string): string[] => {
-  const pnpm = readText(path.join(root, "pnpm-workspace.yaml"));
+export const workspacePatterns = (from: string | WorkspaceReader): string[] => {
+  const reader = readerOf(from);
+  const pnpm = reader.read("pnpm-workspace.yaml");
   const fromPnpm = pnpm === null ? undefined : PnpmWorkspaceSchema.parse(parse(pnpm))?.packages;
   if (fromPnpm && fromPnpm.length > 0) return fromPnpm;
-  const manifest = readText(path.join(root, "package.json"));
+  const manifest = reader.read("package.json");
   const { workspaces } =
     manifest === null
       ? { workspaces: undefined }
@@ -26,27 +53,25 @@ export const workspacePatterns = (root: string): string[] => {
   return ["."];
 };
 
-const childFolders = (root: string, parent: string) => {
-  const absolute = path.join(root, parent);
-  if (!fs.existsSync(absolute)) return [];
-  return fs
-    .readdirSync(absolute, { withFileTypes: true })
-    .filter(
-      (entry) =>
-        entry.isDirectory() && !entry.name.startsWith(".") && entry.name !== "node_modules",
-    )
-    .map((entry) => path.posix.join(parent, entry.name));
-};
-
 /** Folders matching `dir/*` or an exact path, sorted. Negations and deeper globs are skipped. */
-export const expandPatterns = (root: string, patterns: readonly string[]): string[] => {
+export const expandPatterns = (
+  from: string | WorkspaceReader,
+  patterns: readonly string[],
+): string[] => {
+  const reader = readerOf(from);
   const folders = patterns
     .filter((pattern) => !pattern.startsWith("!"))
     .map((pattern) => pattern.replace(/\/+$/, ""))
     .flatMap((pattern) => {
-      if (pattern.endsWith("/*")) return childFolders(root, pattern.slice(0, -2));
+      if (pattern.endsWith("/*")) {
+        const parent = pattern.slice(0, -2);
+        return reader
+          .folders(parent)
+          .filter((name) => !name.startsWith(".") && name !== "node_modules")
+          .map((name) => path.posix.join(parent, name));
+      }
       if (pattern.includes("*")) return [];
-      return fs.existsSync(path.join(root, pattern)) ? [path.posix.normalize(pattern)] : [];
+      return reader.exists(pattern) ? [path.posix.normalize(pattern)] : [];
     });
   return [...new Set(folders)].sort();
 };

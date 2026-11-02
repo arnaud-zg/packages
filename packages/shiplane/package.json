@@ -23,6 +23,10 @@
       "types": "./dist/plugin.d.ts",
       "default": "./dist/plugin.js"
     },
+    "./memory": {
+      "types": "./dist/memory.d.ts",
+      "default": "./dist/memory.js"
+    },
     "./testing": {
       "types": "./dist/testing.d.ts",
       "default": "./dist/testing.js"
@@ -47,6 +51,7 @@
   "dependencies": {
     "@clack/prompts": "1.7.0",
     "jiti": "2.7.0",
+    "ora": "9.4.1",
     "yaml": "2.9.0",
     "zod": "catalog:"
   },

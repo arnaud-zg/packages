@@ -77,6 +77,10 @@ export const unitSchema = (module: ReleaseModule) =>
     module: z
       .literal(module.name)
       .describe(`The module that ships this app, with ${module.provider}`),
+    buildCommand: z
+      .string()
+      .optional()
+      .describe('How to build this app, when its package.json has no "build" script'),
     ...mapShape(module.settings.shape, deepStrict),
   });
 

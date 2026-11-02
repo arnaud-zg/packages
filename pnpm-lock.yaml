@@ -291,6 +291,9 @@ importers:
       jiti:
         specifier: 2.7.0
         version: 2.7.0
+      ora:
+        specifier: 9.4.1
+        version: 9.4.1
       yaml:
         specifier: 2.9.0
         version: 2.9.0

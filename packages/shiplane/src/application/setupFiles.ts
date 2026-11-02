@@ -86,39 +86,65 @@ export const releasePackage = (files: Files) => {
   return "shiplane" in deps ? "shiplane" : INSTALLED;
 };
 
-/** The flow init writes: git, GitHub, GitHub Actions and changesets, each from its plugin. */
-export const FLOW_PLUGINS: Record<string, string[]> = {
-  git: ["gitSourceControl"],
-  github: ["gitHubActionsCiPipeline", "gitHubCodeHost"],
-  changesets: ["changesetsVersioning"],
-};
-
 const importLine = (names: Iterable<string>, from: string) =>
   `import { ${[...new Set(names)].sort().join(", ")} } from "${from}";`;
 
-/** A root config with today's flow and these modules, in the order given. */
-export const renderConfig = (entries: readonly ModuleEntry[], pkg: string = INSTALLED) => {
-  const byPlugin = new Map<string, string[]>(
-    Object.entries(FLOW_PLUGINS).map(([plugin, names]) => [pluginPackage(plugin), [...names]]),
-  );
+/** Which adapter fills a flow port in the config: its factory and where it is imported from. */
+export interface FlowChoice {
+  factory: string;
+  from: string;
+}
+
+export type FlowPort = "sourceControl" | "codeHost" | "ciPipeline" | "versioning";
+
+export const FLOW_PORTS: readonly FlowPort[] = [
+  "sourceControl",
+  "codeHost",
+  "ciPipeline",
+  "versioning",
+];
+
+/** The flow init writes when nothing else is chosen: git, GitHub, GitHub Actions, changesets. */
+export const DEFAULT_FLOW: Record<FlowPort, FlowChoice> = {
+  sourceControl: { factory: "gitSourceControl", from: pluginPackage("git") },
+  codeHost: { factory: "gitHubCodeHost", from: pluginPackage("github") },
+  ciPipeline: { factory: "gitHubActionsCiPipeline", from: pluginPackage("github") },
+  versioning: { factory: "changesetsVersioning", from: pluginPackage("changesets") },
+};
+
+/** A root config with this flow (today's by default) and these modules, in the order given. */
+export const renderConfig = (
+  entries: readonly ModuleEntry[],
+  pkg: string = INSTALLED,
+  flow: Record<FlowPort, FlowChoice> = DEFAULT_FLOW,
+  units?: readonly string[],
+) => {
+  const byPlugin = new Map<string, string[]>();
+  const add = (from: string, name: string) =>
+    byPlugin.set(from, [...(byPlugin.get(from) ?? []), name]);
+  FLOW_PORTS.forEach((port) => add(flow[port].from, flow[port].factory));
   const own = ["defineRelease", "releaseFlow", ...entries.map(({ factory }) => factory)];
   entries.forEach(({ adapter, from }) => {
     if (from === pkg) own.push(adapter);
-    else byPlugin.set(from, [...(byPlugin.get(from) ?? []), adapter]);
+    else add(from, adapter);
   });
+  const local = (from: string) => from.startsWith(".");
   return [
     importLine(own, pkg),
     ...[...byPlugin]
+      .filter(([from]) => !local(from))
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([from, names]) => importLine(names, from)),
+    ...[...byPlugin]
+      .filter(([from]) => local(from))
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([from, names]) => importLine(names, from)),
     "",
     "export default defineRelease({",
     "  flow: releaseFlow({",
-    "    sourceControl: gitSourceControl(),",
-    "    codeHost: gitHubCodeHost(),",
-    "    ciPipeline: gitHubActionsCiPipeline(),",
-    "    versioning: changesetsVersioning(),",
+    ...FLOW_PORTS.map((port) => `    ${port}: ${flow[port].factory}(),`),
     "  }),",
+    ...(units ? [`  units: [${units.map((unit) => JSON.stringify(unit)).join(", ")}],`] : []),
     "  // What gets released, in this order. The first app is the repository's Latest release.",
     "  modules: [",
     ...entries.map((entry) => `    ${moduleCall(entry)},`),

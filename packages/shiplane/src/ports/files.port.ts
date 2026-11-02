@@ -6,4 +6,6 @@ export interface Files {
   remove: (file: string) => void;
   /** Entries directly in a folder; empty when it does not exist. */
   list: (dir: string) => string[];
+  /** The folders directly in a folder, by name; empty when it does not exist. */
+  folders: (dir: string) => string[];
 }
