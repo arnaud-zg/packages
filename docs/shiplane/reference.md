@@ -106,14 +106,15 @@ saying to rename it.
 
 `display.mascot` in `shiplane.config.ts`:
 
-| Value                  | Draws                                                    |
-| ---------------------- | -------------------------------------------------------- |
-| `true` (default)       | the hedgehog                                             |
-| `false`                | nothing                                                  |
-| `{ [mood]: string[] }` | your frames, looped by tick; missing moods: the hedgehog |
-| `(moment) => string`   | what the function returns for each moment                |
+| Value                  | Draws                                                |
+| ---------------------- | ---------------------------------------------------- |
+| `true` (default)       | the built-in mascot                                  |
+| `false`                | nothing                                              |
+| `{ [mood]: string[] }` | your frames, looped by tick; missing moods: built-in |
+| `(moment) => string`   | what the function returns for each moment            |
 
-`--no-mascot` hides any of them for one run; `--mascot` shows the configured one, or the hedgehog.
+`--no-mascot` hides any of them for one run; `--mascot` shows the configured one, or the built-in
+one.
 
 | Mood       | When                                    |
 | ---------- | --------------------------------------- |

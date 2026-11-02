@@ -202,8 +202,8 @@ writes anything.
 
 ## Bring your own mascot
 
-The hedgehog beside the live line is the default. Give `display.mascot` frames for the moods you
-want; any mood you leave out stays the hedgehog's:
+A built-in mascot sits beside the live line by default. Give `display.mascot` frames for the moods
+you want; any mood you leave out uses the built-in frames:
 
 ```ts
 // shiplane.config.ts
