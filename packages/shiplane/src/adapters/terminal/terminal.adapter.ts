@@ -36,7 +36,11 @@ const waitForKey = (display: Display, label: string, ms: number, keys: readonly 
       const seconds = Math.round((Date.now() - startedAt) / 1000);
       const tick = frame++;
       const glyph = display.mascot
-        ? paintMascot("waiting", display.motion ? Math.floor(tick / 5) : 0)
+        ? paintMascot(display.mascot, {
+            mood: "waiting",
+            tick: display.motion ? Math.floor(tick / 5) : 0,
+            label,
+          })
         : styleText("cyan", FRAMES[tick % FRAMES.length] ?? "");
       process.stdout.write(`\r  ${glyph} ${label} ${styleText("dim", `${seconds}s`)}`);
     };
@@ -73,7 +77,7 @@ const asOptions = <Value extends string>(choices: Choice<Value>[]) =>
 
 const orNull = <Value>(answer: Value | symbol): Value | null => (isCancel(answer) ? null : answer);
 
-const NO_MASCOT: Display = { verbose: false, mascot: false, motion: false };
+const NO_MASCOT: Display = { verbose: false, mascot: null, motion: false };
 
 /** Questions through @clack/prompts, each owning the terminal; without one, every answer is no. */
 export const terminalPrompter = (display: Display = NO_MASCOT): Prompter => {

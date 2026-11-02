@@ -86,21 +86,48 @@ export default defineRelease({
 });
 ```
 
-| Key                       | Means                                                                           |
-| ------------------------- | ------------------------------------------------------------------------------- |
-| `flow`                    | **Required.** One adapter per port: source control, code host, CI, versioning   |
-| `modules`                 | What ships, in release order. The first app is the GitHub Latest release        |
-| `features`                | What runs after a ship, in order, such as `releaseComments()`                   |
-| `units`                   | Folders to look in. Default: the pnpm workspace, then `package.json` workspaces |
-| `tag`                     | Tag format. Default `{name}@{version}`; or `v{version}`, `{name}--v{version}`   |
-| `commitsWithoutChangeset` | `"ignore"` (default): only changesets release. `"release"`: commits do too      |
-| `display`                 | `{ verbose, mascot }` defaults for the flags                                    |
+| Key                       | Means                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------ |
+| `flow`                    | **Required.** One adapter per port: source control, code host, CI, versioning              |
+| `modules`                 | What ships, in release order. The first app is the GitHub Latest release                   |
+| `features`                | What runs after a ship, in order, such as `releaseComments()`                              |
+| `units`                   | Folders to look in. Default: the pnpm workspace, then `package.json` workspaces            |
+| `tag`                     | Tag format. Default `{name}@{version}`; or `v{version}`, `{name}--v{version}`              |
+| `commitsWithoutChangeset` | `"ignore"` (default): only changesets release. `"release"`: commits do too                 |
+| `display`                 | `{ verbose, mascot }` defaults for the flags; `mascot` may be your own ([Mascot](#mascot)) |
 
 Source: `src/application/config/defineRelease.ts`. A `release.config.ts` still loads, with a line
 saying to rename it.
 
 **Release order:** by module in `modules` order, then by name. An app reading another's value
 (`${units.api.url}`) must come after it, or loading fails and names the module to move.
+
+## Mascot
+
+`display.mascot` in `shiplane.config.ts`:
+
+| Value                  | Draws                                                |
+| ---------------------- | ---------------------------------------------------- |
+| `true` (default)       | the built-in mascot                                  |
+| `false`                | nothing                                              |
+| `{ [mood]: string[] }` | your frames, looped by tick; missing moods: built-in |
+| `(moment) => string`   | what the function returns for each moment            |
+
+`--no-mascot` hides any of them for one run; `--mascot` shows the configured one, or the built-in
+one.
+
+| Mood       | When                                    |
+| ---------- | --------------------------------------- |
+| `thinking` | reading: git, the code host, the config |
+| `working`  | something runs: a build, a deploy       |
+| `waiting`  | on a person, a merge or CI              |
+| `happy`    | done                                    |
+| `worried`  | failed                                  |
+| `resting`  | nothing to do                           |
+
+A moment is `{ mood, tick, label }`: `tick` counts frames from 0 and stays 0 when motion is off;
+`label` is what runs, such as `deploy api@1.2.0 to production`. Every frame is padded to the widest
+one. Type: `Mascot` from `shiplane`. Source: `src/domain/display.ts`.
 
 ## `shiplane.unit.yml`
 

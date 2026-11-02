@@ -2,6 +2,7 @@
 export { z } from "zod";
 
 export type { Environment } from "./domain/environment";
+export type { Mascot, MascotMoment } from "./domain/display";
 export type { ReleaseUnit } from "./domain/unit";
 export type { PerEnv } from "./application/config/perEnv";
 export { perEnv } from "./application/config/perEnv";
