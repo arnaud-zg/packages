@@ -36,3 +36,7 @@ export const listed = (names: readonly string[]) =>
   names.length < 2
     ? names.join("")
     : `${names.slice(0, -1).join(", ")} and ${names.slice(-1).join("")}`;
+
+/** The keys a screen offers, each the same way: `d see the diff   o open it on GitHub`. */
+export const keyHints = (hints: readonly { key: string; label: string }[]) =>
+  hints.map(({ key, label }) => `${paint("cyan", key)} ${paint("dim", label)}`).join("   ");

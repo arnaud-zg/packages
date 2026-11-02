@@ -67,9 +67,22 @@ export class CodeHostFake implements CodeHostPort {
         .map(({ pr }) => pr),
     );
 
+  private createError: Error | null = null;
+
+  /** Every pull request open throws `error`. */
+  failCreate(error: Error) {
+    this.createError = error;
+    return this;
+  }
+
   createPr = (pr: { base: string; head: string; title: string; body: string; label: string }) => {
+    if (this.createError) return Promise.reject(this.createError);
     const number = this.state.nextPrNumber++;
-    const created = { number, url: `https://github.com/acme/repo/pull/${number}` };
+    const created = {
+      number,
+      url: `https://github.com/acme/repo/pull/${number}`,
+      head: `sha-${number}`,
+    };
     this.received.push({ type: "pr", pr: created, ...pr });
     this.state.openPrs.push({ branch: pr.head, pr: created });
     return Promise.resolve(created);

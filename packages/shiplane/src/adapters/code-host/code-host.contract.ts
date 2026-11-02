@@ -29,6 +29,7 @@ export const codeHostContract = (name: string, subject: () => Promise<CodeHostSu
         label: "release",
       });
 
+      expect(pr.head).toEqual(expect.any(String));
       expect(await port.openPrsFrom("release/contract-open")).toContainEqual(pr);
       expect(await port.prState(pr)).toBe("OPEN");
     });

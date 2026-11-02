@@ -9,7 +9,7 @@ const EXISTS: ShellResult = {
   stdout: "",
   stderr: 'label with name "type: chore" already exists; use `--force` to update its color',
 };
-const PR = ok('{"number":24,"url":"https://github.com/o/r/pull/24"}');
+const PR = ok('{"number":24,"url":"https://github.com/o/r/pull/24","headRefOid":"abc123"}');
 
 const replying = (...results: ShellResult[]) => {
   const calls: string[][] = [];

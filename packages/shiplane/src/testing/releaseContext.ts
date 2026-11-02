@@ -1,5 +1,6 @@
 import type { Release } from "../application/config/loadRelease";
 import type { ReleaseContext } from "../application/context";
+import type { Approval } from "../domain/releasePr";
 import type { ReleaseUnit } from "../domain/unit";
 import type { Feature, ReleaseModule } from "../modules/module";
 import { ciPipelineFake } from "../adapters/ci-pipeline/__fakes__/ci-pipeline.fake";
@@ -49,6 +50,7 @@ export const testContext = ({
   root = "/repo",
   tagFormat = DEFAULT_TAG_FORMAT,
   commitsWithoutChangeset = "release",
+  approval,
 }: {
   units: ReleaseUnit[];
   modules?: ReleaseModule[];
@@ -60,6 +62,8 @@ export const testContext = ({
   tagFormat?: string;
   /** A release skips commits no changeset names; the config default ignores them. */
   commitsWithoutChangeset?: "release" | "ignore";
+  /** Whether someone else approves the release PR; the config default when absent. */
+  approval?: Approval;
 }) => {
   const sourceControl = sourceControlFake();
   const codeHost = codeHostFake();
@@ -70,7 +74,7 @@ export const testContext = ({
   const progress = new RecordingProgress(output);
   const shell = new RecordingShell();
   const fakes = { sourceControl, codeHost, ciPipeline, versioning };
-  const flow = releaseFlow(fakes);
+  const flow = releaseFlow({ ...fakes, approval });
   const release: Release = {
     root,
     flow,

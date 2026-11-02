@@ -116,6 +116,8 @@ export const printSummary = (context: ReleaseContext, prepared: Prepared) => {
 export const openReleasePr = async (
   context: ReleaseContext,
   prepared: Prepared,
+  /** Release PRs this one takes the place of, named at the top of its description. */
+  replaces: readonly OpenPr[] = [],
 ): Promise<OpenPr[] | null> => {
   const { output, services, clock } = context;
   printSummary(context, prepared);
@@ -179,7 +181,7 @@ export const openReleasePr = async (
       groups.length > 1 ? await prepareRelease(context, apps, prepared.contributions) : prepared;
     const [first] = group;
     const branch = `${releaseBranchName(now)}${groups.length > 1 && first ? `-${first.app}` : ""}`;
-    const pr = await openOne(context, scoped, kindOf, branch);
+    const pr = await openOne(context, scoped, kindOf, branch, replaces);
     if (!pr) {
       if (prs.length > 0) {
         output.line(
@@ -215,12 +217,19 @@ const prGroupsOf = ({ release }: ReleaseContext, prepared: Prepared) => {
   return releasePrGroups(prepared.bumps, linked);
 };
 
+/** The line a release PR opens with when it takes the place of release PRs main moved past. */
+const replacedLine = (replaces: readonly OpenPr[]) =>
+  replaces.length === 0
+    ? ""
+    : `Replaces ${listed(replaces.map(({ number }) => `#${number}`))}, which went out of date when main moved.\n\n`;
+
 /** Versions `prepared` on `branch` from main, opens its PR, and goes back to main. */
 const openOne = async (
   context: ReleaseContext,
   prepared: Prepared,
   kindOf: KindOf,
   branch: string,
+  replaces: readonly OpenPr[],
 ): Promise<OpenPr | null> => {
   const { services } = context;
   const title = releaseTitle(prepared.bumps, kindOf);
@@ -251,7 +260,8 @@ const openOne = async (
         base: "main",
         head: branch,
         title,
-        body: releasePrBody(prepared.bumps, shipsOnMerge(context, prepared)),
+        body:
+          replacedLine(replaces) + releasePrBody(prepared.bumps, shipsOnMerge(context, prepared)),
         label: "type: chore",
       });
       return created.pr;

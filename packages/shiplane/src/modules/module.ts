@@ -2,6 +2,7 @@ import type { z } from "zod";
 
 import type { AppBump } from "../domain/changes";
 import type { Environment } from "../domain/environment";
+import type { Approval } from "../domain/releasePr";
 import type { DecidedBy } from "../domain/scope";
 import type { ReleaseUnit } from "../domain/unit";
 import type { Adapter, ServiceAdapter } from "../ports/adapter.port";
@@ -121,4 +122,6 @@ export interface ReleaseFlow {
   readonly codeHost: ServiceAdapter<CodeHostPort>;
   readonly ciPipeline: ServiceAdapter<CiPipelinePort>;
   readonly versioning: ServiceAdapter<VersioningPort>;
+  /** "required": someone else approves the release PR, so shiplane never merges it itself. */
+  readonly approval: Approval;
 }

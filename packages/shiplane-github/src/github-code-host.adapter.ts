@@ -4,9 +4,19 @@ import { deployRunTitle, deployState, z } from "shiplane/plugin";
 import { ghCli, sleep } from "./gh-cli";
 
 const OpenPrsSchema = z.array(
-  z.object({ number: z.number(), url: z.string(), headRefName: z.string() }),
+  z.object({
+    number: z.number(),
+    url: z.string(),
+    headRefName: z.string(),
+    headRefOid: z.string(),
+  }),
 );
-const PrSchema = z.object({ number: z.number(), url: z.string() });
+const PrSchema = z.object({ number: z.number(), url: z.string(), headRefOid: z.string() });
+const toOpenPr = ({ number, url, headRefOid }: z.infer<typeof PrSchema>) => ({
+  number,
+  url,
+  head: headRefOid,
+});
 const PrStateSchema = z.object({ state: z.enum(["OPEN", "MERGED", "CLOSED"]) });
 const METHOD = { MERGE: "--merge", SQUASH: "--squash", REBASE: "--rebase" } as const;
 const RepoMergeSchema = z.object({
@@ -93,12 +103,12 @@ export const githubHost = (root: string, shell: Shell): CodeHostPort => {
           "--limit",
           "100",
           "--json",
-          "number,url,headRefName",
+          "number,url,headRefName,headRefOid",
         ]),
       );
       return prs
         .filter(({ headRefName }) => headRefName.startsWith(branchPrefix))
-        .map(({ number, url }) => ({ number, url }))
+        .map(toOpenPr)
         .sort((left, right) => left.number - right.number);
     },
     createPr: async ({ base, head, title, body, label }) => {
@@ -120,7 +130,9 @@ export const githubHost = (root: string, shell: Shell): CodeHostPort => {
         "--label",
         label,
       ]);
-      return PrSchema.parse(await json(["pr", "view", head, "--json", "number,url"]));
+      return toOpenPr(
+        PrSchema.parse(await json(["pr", "view", head, "--json", "number,url,headRefOid"])),
+      );
     },
     closePr: async (pr, comment) => {
       await must(["pr", "close", String(pr.number), "--comment", comment]);
