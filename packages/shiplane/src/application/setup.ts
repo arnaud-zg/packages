@@ -189,11 +189,11 @@ const chooseFolders = async (
   yes: boolean,
   needsPerson: string[],
 ): Promise<string[] | null> => {
-  const { root, prompter, output } = context;
-  const known = workspacePatterns(root).filter(
-    (pattern) => pattern.startsWith("!") || expandPatterns(root, [pattern]).length > 0,
+  const { prompter, output, files } = context;
+  const known = workspacePatterns(files).filter(
+    (pattern) => pattern.startsWith("!") || expandPatterns(files, [pattern]).length > 0,
   );
-  const found = expandPatterns(root, known).filter((dir) => dir !== ".");
+  const found = expandPatterns(files, known).filter((dir) => dir !== ".");
   output.line();
   output.line(paint("bold", "  Apps"));
   if (found.length > 0) {
@@ -217,7 +217,7 @@ const chooseFolders = async (
       .split(",")
       .map((part) => part.trim())
       .filter(Boolean);
-    const empty = patterns.filter((pattern) => expandPatterns(root, [pattern]).length === 0);
+    const empty = patterns.filter((pattern) => expandPatterns(files, [pattern]).length === 0);
     if (patterns.length > 0 && empty.length === 0) return patterns;
     output.line(
       `  ${paint("red", "✗")} ${empty.join(", ") || "nothing typed"} matches no folder: try again`,
@@ -227,7 +227,7 @@ const chooseFolders = async (
 
 /** Folders under these patterns with a manifest and no unit file yet. */
 const newFolders = (context: SetupContext, patterns: readonly string[]): FolderView[] =>
-  expandPatterns(context.root, patterns)
+  expandPatterns(context.files, patterns)
     .filter((dir) => dir !== "." && context.files.exists(path.posix.join(dir, "package.json")))
     .filter((dir) => !UNIT_FILES.some((name) => context.files.exists(path.posix.join(dir, name))))
     .map((dir) => folderView(context.files, dir));
@@ -394,7 +394,7 @@ export const setup = async (context: SetupContext, { yes }: { yes: boolean }): P
 
   const patterns = existing
     ? existing.units.length > 0
-      ? workspacePatterns(context.root)
+      ? workspacePatterns(files)
       : await chooseFolders(context, yes, needsPerson)
     : await chooseFolders(context, yes, needsPerson);
   if (!patterns && needsPerson.length === 0) return cancelled(context);
@@ -437,7 +437,7 @@ export const setup = async (context: SetupContext, { yes }: { yes: boolean }): P
 
   if (!existing) {
     const units =
-      patterns && patterns.join() !== workspacePatterns(context.root).join() ? patterns : undefined;
+      patterns && patterns.join() !== workspacePatterns(files).join() ? patterns : undefined;
     writes.unshift({
       file: CONFIG_FILE,
       text: renderConfig(entries, pkg, flow ?? DEFAULT_FLOW, units),
@@ -463,7 +463,10 @@ export const setup = async (context: SetupContext, { yes }: { yes: boolean }): P
   }
 
   // Written to rehearse on, put back as they were unless it passes.
-  const before = writes.map(({ file }) => ({ file, text: files.read(file) }));
+  const before = [...writes.map(({ file }) => file), SCHEMA_FILE].map((file) => ({
+    file,
+    text: files.read(file),
+  }));
   writes.forEach(({ file, text }) => files.write(file, text));
   if (existing === null || entries.length > 0) {
     const release = await context.load();

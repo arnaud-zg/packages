@@ -15,5 +15,12 @@ export const nodeFiles = (root: string): Files => {
     },
     remove: (file) => fs.rmSync(at(file), { force: true }),
     list: (dir) => (fs.existsSync(at(dir)) ? fs.readdirSync(at(dir)) : []),
+    folders: (dir) =>
+      fs.existsSync(at(dir))
+        ? fs
+            .readdirSync(at(dir), { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+        : [],
   };
 };

@@ -1,5 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
 import { parseArgs } from "node:util";
 import { z } from "zod";
 
@@ -118,10 +116,11 @@ export const runCli = async (argv: string[], cwd: string, io: ContextIo = {}): P
   };
 
   const root = findRoot(cwd);
-  const firstRun = command === "next" && !fs.existsSync(path.join(root, CONFIG_FILE));
+  const files = io.setup?.files ?? nodeFiles(root);
+  const firstRun = command === "next" && !files.exists(CONFIG_FILE);
   const run = commands[command];
   const setUp = setupCommands[firstRun ? "setup" : command];
-  if (setUp) return (await setUp(await composeSetup(root))) ? 0 : 1;
+  if (setUp) return (await setUp(await composeSetup(root, io.setup))) ? 0 : 1;
   if (command === "help") {
     out(HELP);
     return 0;

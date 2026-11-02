@@ -40,6 +40,8 @@ export interface ContextIo {
   shell?: Shell;
   /** Where `shiplane` resolves from inside the config. */
   aliases?: Record<string, string>;
+  /** What setup runs on instead of this machine's: files, adapters, the release loader. */
+  setup?: Partial<SetupContext>;
 }
 
 /** A context wired to this machine: its shell, its terminal, its clock, unless `io` says otherwise. */
@@ -73,7 +75,10 @@ export const composeContext = (
 };
 
 /** What init, add, doctor and the rest need: the repository on disk and the adapters installed. */
-export const composeSetup = async (root: string): Promise<SetupContext> => {
+export const composeSetup = async (
+  root: string,
+  io: Partial<SetupContext> = {},
+): Promise<SetupContext> => {
   const ci = onGitHubActions() || systemShell.env("CI") === "true";
   const tty = Boolean(process.stdout.isTTY);
   const display = resolveDisplay(
@@ -91,9 +96,10 @@ export const composeSetup = async (root: string): Promise<SetupContext> => {
     shell: systemShell,
     prompter: terminalPrompter(),
     output: terminalOutput,
-    adapters: await installedAdapters(root),
+    adapters: io.adapters ?? (await installedAdapters(root)),
     load: () => loadRelease(root),
     progress: terminalProgress(display, tty && !ci),
     compose: (release) => composeContext(release, { yes: true, display: { mascot: false } }),
+    ...io,
   };
 };
