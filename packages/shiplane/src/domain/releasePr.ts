@@ -3,7 +3,12 @@ import type { AppBump } from "./changes";
 export interface OpenPr {
   number: number;
   url: string;
+  /** The commit the PR's branch stands on, when the host says: main moving past it makes the PR stale. */
+  head?: string;
 }
+
+/** Whether a release PR merges from the terminal, or waits for someone else to approve it. */
+export type Approval = "none" | "required";
 
 export type MergeMethod = "--squash" | "--merge" | "--rebase";
 

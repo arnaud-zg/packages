@@ -1,3 +1,4 @@
+import type { Approval } from "../domain/releasePr";
 import type { ReleaseFlow } from "../modules/module";
 import type { ServiceAdapter } from "../ports/adapter.port";
 import type { CiPipelinePort } from "../ports/ci-pipeline.port";
@@ -11,4 +12,6 @@ export const releaseFlow = (ports: {
   codeHost: ServiceAdapter<CodeHostPort>;
   ciPipeline: ServiceAdapter<CiPipelinePort>;
   versioning: ServiceAdapter<VersioningPort>;
-}): ReleaseFlow => ({ type: "flow", ...ports });
+  /** "required" when someone else approves the release PR; "none", the default, merges it here. */
+  approval?: Approval;
+}): ReleaseFlow => ({ type: "flow", ...ports, approval: ports.approval ?? "none" });

@@ -80,14 +80,14 @@ describe("waiting for the release pull request", () => {
     const { context, host } = setUp();
     host.seed({ prStates: { 1790: ["OPEN", "OPEN", "MERGED"] } });
 
-    expect(await waitForMerge(context, { number: 1790, url: "u" })).toBe(true);
+    expect(await waitForMerge(context, { number: 1790, url: "u" })).toBe("merged");
   });
 
   it("given the PR is closed without a merge, when waiting, then nothing ships", async () => {
     const { context, host } = setUp();
     host.seed({ prStates: { 1790: ["OPEN", "CLOSED"] } });
 
-    expect(await waitForMerge(context, { number: 1790, url: "u" })).toBe(false);
+    expect(await waitForMerge(context, { number: 1790, url: "u" })).toBe("closed");
   });
 
   it("given the person presses m and keeps the method the PR page preselects, when waiting, then the PR is merged from the terminal with it", async () => {
@@ -95,7 +95,7 @@ describe("waiting for the release pull request", () => {
     host.seed({ merges: { allowed: ["--squash", "--rebase"], preselected: "--rebase" } });
     prompter.press("m").answer("--rebase");
 
-    expect(await waitForMerge(context, { number: 1790, url: "u" })).toBe(true);
+    expect(await waitForMerge(context, { number: 1790, url: "u" })).toBe("merged");
     expect(prompter.initials[MERGE_1790]).toBe("--rebase");
     expect(prompter.choices[MERGE_1790]?.map(({ label }) => label)).toEqual([
       "Squash and merge",
