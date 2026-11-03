@@ -1,5 +1,26 @@
+/** Tag formats a config can name instead of writing one out. */
+export const TAG_FORMATS = {
+  /** `api@1.2.0`: one tag per unit, as changesets tags a monorepo. */
+  package: "{name}@{version}",
+  /**
+   * `my-plugin--v1.2.0`: an agent plugin's tag. Claude Code resolves versions from it; Gemini CLI and
+   * Codex install from any tag, so one tag serves all three.
+   */
+  plugin: "{name}--v{version}",
+  /** `v1.2.0`: a repository that releases one unit, the most common tag there is. */
+  single: "v{version}",
+  /** `api/v1.2.0`: a tag per folder, as Go requires for a module below the repository root. */
+  module: "{name}/v{version}",
+} as const;
+
+export type TagFormatName = keyof typeof TAG_FORMATS;
+
 /** How a tag names a unit's version unless the config says otherwise. */
-export const DEFAULT_TAG_FORMAT = "{name}@{version}";
+export const DEFAULT_TAG_FORMAT = TAG_FORMATS.package;
+
+/** A format's name resolved to the format; anything else is a format already. */
+export const tagFormatNamed = (format: string): string =>
+  Object.hasOwn(TAG_FORMATS, format) ? TAG_FORMATS[format as TagFormatName] : format;
 
 /** A unit's tag for a version, through a format like `v{version}` or `{name}--v{version}`. */
 export const tagName = (app: string, version: string, format = DEFAULT_TAG_FORMAT) =>

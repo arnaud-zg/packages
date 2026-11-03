@@ -1,4 +1,5 @@
 import type { DisplayChoice } from "../../domain/display";
+import type { TagFormatName } from "../../domain/tags";
 import type { Feature, ReleaseFlow, ReleaseModule } from "../../modules/module";
 
 /** How a repository releases: the flow, what gets released in order, and what happens around it. */
@@ -11,8 +12,10 @@ export interface ReleaseConfig {
   modules: ReleaseModule[];
   /** What happens around a release, after the ship, in this order. */
   features?: Feature[];
-  /** How a tag names a version: `{name}@{version}` when absent, or e.g. `v{version}`, `{name}--v{version}`. */
-  tag?: string;
+  /**
+   * How a tag names a version: `"package"` (`{name}@{version}`, the default), `"plugin"` (`{name}--v{version}`), `"single"` (`v{version}`, one unit only), `"module"` (`{name}/v{version}`), or a format of your own.
+   */
+  tag?: TagFormatName | (string & {});
   /**
    * A unit whose folder changed with no changeset naming it: `"ignore"` (the default, as changesets
    * does) leaves it, `"release"` offers it with a changelog from its commits.

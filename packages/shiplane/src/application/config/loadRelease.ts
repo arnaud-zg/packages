@@ -11,7 +11,7 @@ import type { ManifestReader } from "../../ports/manifest.port";
 import type { ConfigProblem } from "./problem";
 import type { UnitFile } from "./readUnitFile";
 import { packageJsonManifest } from "../../adapters/manifest/package-json-manifest.adapter";
-import { DEFAULT_TAG_FORMAT } from "../../domain/tags";
+import { DEFAULT_TAG_FORMAT, TAG_FORMATS, tagFormatNamed } from "../../domain/tags";
 import { releaseFlow } from "../releaseFlow";
 import { sortProblems } from "./problem";
 import { readUnitFile, UNIT_FILE, UNIT_FILES } from "./readUnitFile";
@@ -169,10 +169,14 @@ const checkModules = (modules: readonly ReleaseModule[], features: readonly Feat
 
 const tagFormatOf = (tag: unknown) => {
   if (tag === undefined) return DEFAULT_TAG_FORMAT;
-  if (typeof tag !== "string" || !tag.includes("{version}")) {
-    throw new Error('tag must name the version, such as tag: "v{version}"');
+  const format = typeof tag === "string" ? tagFormatNamed(tag) : undefined;
+  if (!format?.includes("{version}")) {
+    const names = Object.keys(TAG_FORMATS)
+      .map((name) => `"${name}"`)
+      .join(", ");
+    throw new Error(`tag is one of ${names}, or a format naming the version, such as "v{version}"`);
   }
-  return tag;
+  return format;
 };
 
 const releasesCommitsOf = (choice: unknown) => {
@@ -351,6 +355,14 @@ export const loadRelease = async (root: string, options: LoadOptions = {}): Prom
       ...new Set(referencesIn(entry.unit.options).map(({ unit }) => unit)),
     ].filter((name) => name !== entry.unit.name && ordered.some(({ unit }) => unit.name === name));
   });
+
+  if (ordered.length > 1 && !config.tagFormat.includes("{name}")) {
+    problems.push({
+      file: path.basename(configFile),
+      message: `tag "${config.tagFormat}" names no unit, so ${ordered.length} units would share each tag`,
+      hint: 'add {name} to the format, such as "{name}--v{version}", or release one unit',
+    });
+  }
 
   return {
     root,

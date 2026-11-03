@@ -218,6 +218,52 @@ describe("values that differ per environment", () => {
   });
 });
 
+describe("how tags are named", () => {
+  it("given a tag format named by its kind, when the release loads, then the tag uses that format", async () => {
+    const { root } = setUp({
+      "shiplane.config.ts": MODULE_CONFIG.replace("modules: [", 'tag: "plugin",\n  modules: ['),
+    });
+
+    const release = await load(root);
+
+    expect(release.tagFormat).toBe("{name}--v{version}");
+  });
+
+  it("given no tag in the config, when the release loads, then tags use the package format", async () => {
+    const { root } = setUp({});
+
+    const release = await load(root);
+
+    expect(release.tagFormat).toBe("{name}@{version}");
+  });
+
+  it("given a tag that is neither a known name nor a format, when the release loads, then it lists the names", async () => {
+    const { root } = setUp({
+      "shiplane.config.ts": MODULE_CONFIG.replace("modules: [", 'tag: "plugins",\n  modules: ['),
+    });
+
+    const release = await load(root);
+
+    expect(release.problems[0]?.message).toContain('"plugin"');
+  });
+});
+
+describe("tags that would collide", () => {
+  it("given a tag format without the name and two units, when the release loads, then it says their tags would collide", async () => {
+    const { root } = setUp({
+      "shiplane.config.ts": MODULE_CONFIG.replace("modules: [", 'tag: "single",\n  modules: ['),
+      "apps/api/shiplane.unit.yml": SERVER_UNIT,
+      "apps/admin/shiplane.unit.yml": ADMIN_UNIT,
+    });
+
+    const release = await load(root);
+
+    expect(release.problems.map(({ message }) => message)).toContainEqual(
+      expect.stringContaining("would share each tag"),
+    );
+  });
+});
+
 describe("how the release talks", () => {
   it("given the config turns the mascot off and stays verbose, when the release loads, then it keeps both choices", async () => {
     const { root } = setUp({
