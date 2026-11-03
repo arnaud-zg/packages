@@ -40,7 +40,9 @@ app reading another's url comes after it, and loading says so when it does not.
 
 A diff says something changed; a changeset says whether it is a fix or a feature, and what to tell
 users. So it drives the version and the changelog. A repository can opt into releasing changed apps
-with no changeset (`commitsWithoutChangeset: "release"`), their changelog written from commits.
+with no changeset (`commitsWithoutChangeset: "release"`). Its Conventional Commits then say the same
+two things: the type sets the bump, and the subject becomes the changelog line. shiplane reads
+subjects only, so a breaking change is marked with `!`; a `BREAKING CHANGE:` footer is not seen.
 
 ## What runs where is read from the platform
 

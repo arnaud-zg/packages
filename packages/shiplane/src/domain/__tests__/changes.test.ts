@@ -225,13 +225,46 @@ describe("apps changed with no changeset", () => {
     ).toEqual([
       {
         id: "admin-0.1.1-1",
-        releases: [{ name: "@acme/admin", type: "patch" }],
+        releases: [{ name: "@acme/admin", type: "minor" }],
         summary: "The dashboard says whether anything is wrong before you read it.",
       },
       {
         id: "admin-0.1.1-2",
         releases: [{ name: "@acme/admin", type: "patch" }],
         summary: "Plant status reads correctly in both themes.",
+      },
+    ]);
+  });
+
+  it("given a commit marked breaking with !, when picked, then it moves a major, whatever its type", () => {
+    const commits = [
+      "chore(ci): baseline",
+      "refactor(api)!: every endpoint moved under /v2 (#1700)",
+      "fix(api): the health check answers again (#1690)",
+      "feat!: sign-in needs a passkey (#1680)",
+    ];
+
+    expect(
+      unreleasedChangesets({ name: "admin", packageName: "@acme/admin" }, "0.1.0", commits).map(
+        ({ releases, summary }) => [releases[0]?.type, summary],
+      ),
+    ).toEqual([
+      ["major", "Every endpoint moved under /v2."],
+      ["patch", "The health check answers again."],
+      ["major", "Sign-in needs a passkey."],
+    ]);
+  });
+
+  it("given a performance fix, when picked, then it moves a patch and keeps its line", () => {
+    const commits = ["perf(admin): the plant list opens in half the time (#1720)"];
+
+    expect(
+      unreleasedChangesets({ name: "admin", packageName: "@acme/admin" }, "0.1.0", commits),
+    ).toEqual([
+      {
+        id: "admin-0.1.1-1",
+        releases: [{ name: "@acme/admin", type: "patch" }],
+        summary: "The plant list opens in half the time.",
       },
     ]);
   });

@@ -237,7 +237,7 @@ describe("opening the release pull request", () => {
     expect(versioning.applied[0]?.added).toEqual([
       {
         id: "admin-0.1.1-1",
-        releases: [{ name: "@acme/admin", type: "patch" }],
+        releases: [{ name: "@acme/admin", type: "minor" }],
         summary: "The user page lists every identification.",
       },
     ]);

@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+import type { PlannedChangeset } from "../../domain/changes";
 import { planFrom } from "../../testing/plans";
-import { testContext, testUnit } from "../../testing/releaseContext";
+import { changesetText, testContext, testUnit } from "../../testing/releaseContext";
+import { prepareRelease } from "../prepareRelease";
 import { readStatus } from "../readStatus";
 
 const setUp = (commitsWithoutChangeset?: "release" | "ignore") => {
@@ -43,4 +45,41 @@ describe("commits no changeset names", () => {
       }),
     ]);
   });
+
+  it("given a changeset names the unit too, when the release is prepared, then it alone sets the move and the commits are skipped", async () => {
+    const REDESIGN: PlannedChangeset = {
+      id: "redesign",
+      summary: "The site has a new look.",
+      releases: [{ name: "@acme/site", type: "patch" }],
+    };
+    const { context, source, versioning } = setUp("release");
+    source.seed({ subjects: { "t1:apps/site": ["feat(site): the search finds plants (#12)"] } });
+    versioning.seed({
+      pending: [
+        { id: REDESIGN.id, text: changesetText({ "@acme/site": "patch" }, REDESIGN.summary) },
+      ],
+      plan: planFrom([REDESIGN], { "@acme/site": "0.1.1" }),
+    });
+
+    const { bumps, added } = await prepareRelease(context, new Set(["site"]));
+
+    expect(added).toEqual([]);
+    expect(bumps).toEqual([expect.objectContaining({ app: "site", to: "0.1.2" })]);
+  });
+
+  it.each([
+    ["fix(site): the footer links work again (#11)", "0.1.2"],
+    ["feat(site): the search finds plants by photo (#12)", "0.2.0"],
+    ["feat(site)!: every page moved under /plants (#13)", "1.0.0"],
+  ])(
+    "given only %s, when the release is prepared, then the unit moves to %s",
+    async (commit, to) => {
+      const { context, source } = setUp("release");
+      source.seed({ subjects: { "t1:apps/site": [commit] } });
+
+      const { bumps } = await prepareRelease(context, new Set(["site"]));
+
+      expect(bumps).toEqual([expect.objectContaining({ app: "site", from: "0.1.1", to })]);
+    },
+  );
 });

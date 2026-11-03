@@ -12,7 +12,8 @@
 [Promote to production](#promote-to-production) ·
 [Widen a production rollout](#widen-a-production-rollout) ·
 [Choose GitHub Actions or this machine](#choose-github-actions-or-this-machine) ·
-[Ship with no laptop](#ship-with-no-laptop) · [Use it from a script](#use-it-from-a-script)
+[Ship with no laptop](#ship-with-no-laptop) · [Use it from a script](#use-it-from-a-script) ·
+[Release with no changesets](#release-with-no-changesets)
 
 **Hosts:** [Publish a package to npm](#publish-a-package-to-npm) ·
 [Release Claude Code plugins](#release-claude-code-plugins) ·
@@ -109,6 +110,31 @@ pnpm -s shiplane status --json
 ```
 
 Without a terminal every question answers no: pass `--yes` (refused on production) and `--via`.
+
+## Release with no changesets
+
+```ts
+// shiplane.config.ts
+export default defineRelease({
+  commitsWithoutChangeset: "release",
+  // flow, modules…
+});
+```
+
+`pnpm shiplane` then offers every unit changed since its tag, and each commit's Conventional Commits
+subject sets the release:
+
+| Subject                         | Moves | Changelog line       |
+| ------------------------------- | ----- | -------------------- |
+| `fix(api): …`, `perf: …`        | patch | yes                  |
+| `feat(api): …`                  | minor | yes                  |
+| `feat(api)!: …`, `refactor!: …` | major | yes                  |
+| `chore`, `docs`, `test`…        | patch | only if nothing else |
+
+The biggest move wins, and you see the new version before anything runs. Mark a breaking change with
+`!` in the subject: a `BREAKING CHANGE:` footer is not read. A pending changeset takes over for the
+units it names: they release from it alone and their commits are skipped, so add one when a release
+needs better words or another bump than its commits give.
 
 ## Publish a package to npm
 

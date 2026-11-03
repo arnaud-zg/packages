@@ -125,6 +125,14 @@ export const unreleasedApps = (
     .filter(({ app, commits }) => commits.length > 0 && !named.has(app));
 
 const USER_FACING = /^(feat|fix|perf)(\(.+?\))?!?:/;
+const FEATURE = /^feat(\(.+?\))?:/;
+const BREAKING = /^\w+(\(.+?\))?!:/;
+
+/** How far a commit moves its unit, from its Conventional Commits subject. */
+const bumpOf = (subject: string): BumpType => {
+  if (BREAKING.test(subject)) return "major";
+  return FEATURE.test(subject) ? "minor" : "patch";
+};
 
 // Commit subjects here are written as user value already: drop the type, scope and PR number.
 const asSentence = (subject: string) => {
@@ -137,19 +145,20 @@ const asSentence = (subject: string) => {
 };
 
 /**
- * The patch changesets the release writes for an unreleased app the person picked: one changelog
- * line per feature or fix since its release, or its latest commit when there are only chores.
+ * The changesets the release writes for an unreleased app the person picked: one changelog line per
+ * feature, fix or breaking change since its release, or its latest commit when there are only
+ * chores. A feature moves a minor, a commit marked `!` a major, anything else a patch.
  */
 export const unreleasedChangesets = (
   { name: app, packageName }: UnitRef,
   version: string,
   commits: string[],
 ): PlannedChangeset[] => {
-  const userFacing = commits.filter((commit) => USER_FACING.test(commit));
+  const userFacing = commits.filter((commit) => USER_FACING.test(commit) || BREAKING.test(commit));
   const lines = userFacing.length > 0 ? userFacing : commits.slice(0, 1);
   return lines.map((subject, index) => ({
     id: `${app}-${nextPatch(version)}-${index + 1}`,
-    releases: [{ name: packageName, type: "patch" }],
+    releases: [{ name: packageName, type: bumpOf(subject) }],
     summary: asSentence(subject),
   }));
 };

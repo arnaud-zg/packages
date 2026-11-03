@@ -18,7 +18,8 @@ export interface ReleaseConfig {
   tag?: TagFormatName | (string & {});
   /**
    * A unit whose folder changed with no changeset naming it: `"ignore"` (the default, as changesets
-   * does) leaves it, `"release"` offers it with a changelog from its commits.
+   * does) leaves it, `"release"` offers it with a changelog from its commits, a `feat` moving a
+   * minor, a subject marked `!` a major and anything else a patch.
    */
   commitsWithoutChangeset?: "release" | "ignore";
   /** How much the release says while it runs; `--verbose` and `--mascot` (or `--no-…`) override. */
