@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/fly",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "description": "Server hosting for shiplane: any Dockerfile on Fly.io.",
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-fly#readme",
   "bugs": {
