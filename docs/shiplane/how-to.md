@@ -127,7 +127,7 @@ version: merge it, then run `pnpm shiplane`.
 ```ts
 export default defineRelease({
   units: ["plugins/*"],
-  tag: "{name}--v{version}",
+  tag: "plugin",
   flow: releaseFlow({
     sourceControl: gitSourceControl(),
     codeHost: gitHubCodeHost(),

@@ -86,15 +86,15 @@ export default defineRelease({
 });
 ```
 
-| Key                       | Means                                                                                      |
-| ------------------------- | ------------------------------------------------------------------------------------------ |
-| `flow`                    | **Required.** One adapter per port: source control, code host, CI, versioning              |
-| `modules`                 | What ships, in release order. The first app is the GitHub Latest release                   |
-| `features`                | What runs after a ship, in order, such as `releaseComments()`                              |
-| `units`                   | Folders to look in. Default: the pnpm workspace, then `package.json` workspaces            |
-| `tag`                     | Tag format. Default `{name}@{version}`; or `v{version}`, `{name}--v{version}`              |
-| `commitsWithoutChangeset` | `"ignore"` (default): only changesets release. `"release"`: commits do too                 |
-| `display`                 | `{ verbose, mascot }` defaults for the flags; `mascot` may be your own ([Mascot](#mascot)) |
+| Key                       | Means                                                                                                                                                                                                                                                           |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `flow`                    | **Required.** One adapter per port: source control, code host, CI, versioning                                                                                                                                                                                   |
+| `modules`                 | What ships, in release order. The first app is the GitHub Latest release                                                                                                                                                                                        |
+| `features`                | What runs after a ship, in order, such as `releaseComments()`                                                                                                                                                                                                   |
+| `units`                   | Folders to look in. Default: the pnpm workspace, then `package.json` workspaces                                                                                                                                                                                 |
+| `tag`                     | Tag format: `"package"` (`{name}@{version}`, default), `"plugin"` (`{name}--v{version}`, for Claude Code, Gemini CLI and Codex), `"single"` (`v{version}`), `"module"` (`{name}/v{version}`, Go modules), or your own. A format without `{name}` takes one unit |
+| `commitsWithoutChangeset` | `"ignore"` (default): only changesets release. `"release"`: commits do too                                                                                                                                                                                      |
+| `display`                 | `{ verbose, mascot }` defaults for the flags; `mascot` may be your own ([Mascot](#mascot))                                                                                                                                                                      |
 
 Source: `src/application/config/defineRelease.ts`. A `release.config.ts` still loads, with a line
 saying to rename it.
