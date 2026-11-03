@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/cloudflare-pages",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Static hosting for shiplane: a static build on Cloudflare Pages.",
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-cloudflare-pages#readme",
   "bugs": {
