@@ -60,7 +60,7 @@ Source: `GitOptions` in `src/git-source-control.adapter.ts`.
 `pnpm shiplane status` in [`examples/`](./examples), on `trunk`, with its one tool never tagged:
 
 ```text
-  Release status  ·  preview
+  Release status  ·  live
 
   Unit      Version     Target            Where it stands
   scripts   1.0.0       release-only      ↑ 1.0.0 first release

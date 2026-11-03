@@ -15,6 +15,7 @@ import { deployedOn } from "./readScope";
 import { confirm, fail, paint } from "./say";
 import {
   decideContext,
+  destination,
   dispatchShip,
   environmentLabel,
   jobInput,
@@ -119,10 +120,11 @@ const decideAll = async (
         : webDecision(context, module, input, recorded);
       return { input, decision };
     };
+    const checked = module.kind === "published-package" ? module.provider : environment;
     let { input, decision } = await context.progress.during(
-      module.kind === "published-package"
-        ? `Checking what ${tag} needs on ${module.provider}`
-        : `Checking what ${tag} needs on ${environment}`,
+      module.releaseOnly
+        ? `Checking what ${tag} needs`
+        : `Checking what ${tag} needs on ${checked}`,
       "thinking",
       decide,
     );
@@ -304,7 +306,10 @@ export const shipTo = async (
   const ready = await decideAll(context, environment, scope);
   if (!ready) return false;
   if (ready.length === 0) {
-    context.progress.say("resting", paint("dim", `Nothing to ship to ${environment}.`));
+    context.progress.say(
+      "resting",
+      paint("dim", `Nothing to ship ${destination(context, scope ?? [], environment)}.`),
+    );
     return true;
   }
   // On a CI runner, dispatching another workflow would pay for two: this runner ships.
@@ -402,10 +407,15 @@ export const shipTo = async (
     }
   }
   const names = going.map(({ input }) => input.tag).join(", ");
+  const where = destination(
+    context,
+    going.map(({ unit }) => unit.name),
+    environment,
+  );
   output.line();
   context.progress.say(
     "happy",
-    `${paint(["bold", "green"], "✓ Triggered.")} ${paint("dim", `${names}, shipping to ${environment} on their own.`)}`,
+    `${paint(["bold", "green"], "✓ Triggered.")} ${paint("dim", `${names}, shipping ${where} on their own.`)}`,
   );
   await runFollowUps(
     context,

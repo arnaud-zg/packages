@@ -27,11 +27,14 @@ export default defineRelease({
 let repository: ConsumerRepository | undefined;
 afterEach(() => repository?.remove());
 
-const install = (unitFile = "module: backend-service\ndeploy: [./deploy.sh, --fast]\n") => {
+const install = (
+  unitFile = "module: backend-service\ndeploy: [./deploy.sh, --fast]\n",
+  config = CONFIG,
+) => {
   repository = consumerRepository({
     files: {
       "package.json": JSON.stringify({ name: "acme", private: true, workspaces: ["apps/*"] }),
-      "shiplane.config.ts": CONFIG,
+      "shiplane.config.ts": config,
       "apps/api/package.json": JSON.stringify({ name: "@acme/api", version: "1.0.0" }),
       "apps/api/shiplane.unit.yml": unitFile,
     },
@@ -55,6 +58,17 @@ describe("the built shiplane CLI, installed in a repository", () => {
     expect(status).toBe(1);
     expect(output).toContain('no command "deploy"');
     expect(output).toContain("shiplane plan");
+  });
+
+  it("given a config still setting commitsWithoutChangeset, when a command runs, then it warns only changesets release and carries on", () => {
+    const { status, output } = install(
+      undefined,
+      CONFIG.replace("defineRelease({", 'defineRelease({\n  commitsWithoutChangeset: "release",'),
+    ).shiplane(["plan"]);
+
+    expect(status).toBe(0);
+    expect(output).toContain("commitsWithoutChangeset is deprecated and ignored");
+    expect(output).toContain("pnpm changeset");
   });
 
   it("given a host no plugin covers, when the plan is asked, then it prints the unit file's own command and runs nothing", () => {

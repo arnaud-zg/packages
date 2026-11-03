@@ -147,7 +147,10 @@ The release PR writes each plugin's new version into every agent manifest it has
 (`.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `.cursor-plugin/plugin.json`,
 `gemini-extension.json`), one line each. After the merge, `reviewer--v0.8.0` is tagged with its
 changelog as notes. Nothing deploys a plugin: agents install it from the repository, so the merge
-ships it. A manifest with no `version` is left alone.
+ships it, and a run names no environment: it asks `Release these live?`, as for a package on npm. A
+manifest with no `version` is left alone.
+
+Queue each release with `pnpm changeset`, as for any unit: a commit alone releases nothing.
 
 ## Ship a host with no plugin
 

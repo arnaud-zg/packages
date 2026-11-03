@@ -39,8 +39,15 @@ app reading another's url comes after it, and loading says so when it does not.
 ## Changesets decide what ships
 
 A diff says something changed; a changeset says whether it is a fix or a feature, and what to tell
-users. So it drives the version and the changelog. A repository can opt into releasing changed apps
-with no changeset (`commitsWithoutChangeset: "release"`), their changelog written from commits.
+users. So it drives the version and the changelog, and only a changeset releases a unit: a change
+with none stays unreleased. `commitsWithoutChangeset` once released from commits as well. It is
+deprecated: a config that still sets it loads, warns and releases from changesets alone.
+
+## A package or a plugin has no environment
+
+Preview and production are places an app runs. A package goes straight to its registry, and a plugin
+ships when its release PR merges, so neither stops anywhere on the way to its users. A run says
+`live` for them, and `preview` only when something released with them does deploy there.
 
 ## What runs where is read from the platform
 

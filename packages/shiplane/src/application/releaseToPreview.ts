@@ -9,6 +9,7 @@ import { listed, paint } from "./say";
 import { shipTo } from "./ship";
 import { runSteps } from "./steps";
 import { missingTags, tagRelease } from "./tagRelease";
+import { destination } from "./targets";
 import { waitForMerge } from "./waitForMerge";
 
 const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
@@ -85,7 +86,6 @@ export const releaseToPreview = async (context: ReleaseContext): Promise<boolean
     pending: covered.reduce((sum, { changesets }) => sum + changesets, 0),
     releasePrs,
     untagged: missing.length,
-    unreleased: covered.filter(({ changesets, commits }) => changesets === 0 && commits > 0).length,
   });
   let prs: OpenPr[] = [];
   let current = context;
@@ -122,7 +122,14 @@ export const releaseToPreview = async (context: ReleaseContext): Promise<boolean
   } else if (missing.length > 0) {
     progress.say("thinking", `↻ Picking up a merged release`);
     output.line(
-      paint("dim", `    Left to do: tag ${plural(missing.length, "version")} → ship to preview`),
+      paint(
+        "dim",
+        `    Left to do: tag ${plural(missing.length, "version")} → ship ${destination(
+          context,
+          missing.map(({ app }) => app),
+          "preview",
+        )}`,
+      ),
     );
   }
   if (prs.length > 0) stage("Merge");

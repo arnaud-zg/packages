@@ -200,7 +200,7 @@ describe("where a package stands, read from npm", () => {
       expect.objectContaining({
         unit: "agent-context-budget",
         pending: true,
-        hint: "0.1.0 released, not on preview yet",
+        hint: "0.1.0 released, not live yet",
       }),
     ]);
   });

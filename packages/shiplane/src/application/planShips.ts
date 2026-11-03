@@ -5,7 +5,7 @@ import { tagName } from "../domain/tags";
 import { planFollowUps } from "./followUps";
 import { releaseOrder } from "./releaseOrder";
 import { paint } from "./say";
-import { commandLine, jobInput, moduleOf, shipPlanOf } from "./targets";
+import { commandLine, environmentLabel, jobInput, moduleOf, shipPlanOf } from "./targets";
 
 /**
  * `shiplane plan`: every command shipping the current tags would run, both ways, in release order,
@@ -17,7 +17,7 @@ export const planShips = async (context: ReleaseContext, environment: Environmen
   const { head } = await services.sourceControl.position();
   output.line();
   output.line(
-    `  ${paint("bold", "Plan")}  ${paint("dim", "·")}  ${environment}  ${paint("dim", "· nothing runs")}`,
+    `  ${paint("bold", "Plan")}  ${paint("dim", "·")}  ${environmentLabel(context, [], environment)}  ${paint("dim", "· nothing runs")}`,
   );
   output.line(`  ${paint("bold", "Order")}  ${releaseOrder(release.units)}`);
   const shipped: Shipped[] = [];

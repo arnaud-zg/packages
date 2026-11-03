@@ -1,6 +1,3 @@
-import { isReleaseSubject } from "./tags";
-import { nextPatch } from "./versions";
-
 /** A unit as changesets know it: its name here, its package name there. */
 export interface UnitRef {
   name: string;
@@ -102,54 +99,4 @@ export const changesetApps = (text: string, units: readonly UnitRef[]): string[]
   return units
     .filter(({ packageName }) => frontmatter.includes(`"${packageName}":`))
     .map(({ name }) => name);
-};
-
-export interface UnreleasedApp {
-  /** The unit's name. */
-  app: string;
-  version: string;
-  /** Subjects of the commits that touched it since its current version, newest first. */
-  commits: string[];
-}
-
-/** Apps that changed since their current version came out, with no changeset to ship it. */
-export const unreleasedApps = (
-  history: UnreleasedApp[],
-  named: ReadonlySet<string>,
-): UnreleasedApp[] =>
-  history
-    .map((entry) => ({
-      ...entry,
-      commits: entry.commits.filter((subject) => !isReleaseSubject(subject)),
-    }))
-    .filter(({ app, commits }) => commits.length > 0 && !named.has(app));
-
-const USER_FACING = /^(feat|fix|perf)(\(.+?\))?!?:/;
-
-// Commit subjects here are written as user value already: drop the type, scope and PR number.
-const asSentence = (subject: string) => {
-  const text = subject
-    .replace(/^\w+(\(.+?\))?!?:\s*/, "")
-    .replace(/\s*\(#\d+\)$/, "")
-    .trim();
-  const sentence = `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
-  return /[.!?]$/.test(sentence) ? sentence : `${sentence}.`;
-};
-
-/**
- * The patch changesets the release writes for an unreleased app the person picked: one changelog
- * line per feature or fix since its release, or its latest commit when there are only chores.
- */
-export const unreleasedChangesets = (
-  { name: app, packageName }: UnitRef,
-  version: string,
-  commits: string[],
-): PlannedChangeset[] => {
-  const userFacing = commits.filter((commit) => USER_FACING.test(commit));
-  const lines = userFacing.length > 0 ? userFacing : commits.slice(0, 1);
-  return lines.map((subject, index) => ({
-    id: `${app}-${nextPatch(version)}-${index + 1}`,
-    releases: [{ name: packageName, type: "patch" }],
-    summary: asSentence(subject),
-  }));
 };

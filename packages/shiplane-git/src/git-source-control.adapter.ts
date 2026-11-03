@@ -78,17 +78,6 @@ const gitSource = (root: string, shell: Shell, options: GitOptions): SourceContr
       const [sha = "", subject = ""] = (found ?? "").split("\0");
       return sha ? { sha, subject } : null;
     },
-    subjectsSince: async (sha, dir, ignore = []) =>
-      lines(
-        await maybe([
-          "log",
-          "--format=%s",
-          `${sha}..HEAD`,
-          "--",
-          dir,
-          ...ignore.map((file) => `:(exclude)${dir}/${file}`),
-        ]),
-      ),
     commitsBetween: async (from, to) =>
       (await must(["log", "--format=%x00%s", "--name-only", `${from}..${to}`]))
         .split("\0")

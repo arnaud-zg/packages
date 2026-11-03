@@ -16,8 +16,6 @@ export interface ScopeInfo {
   version: string;
   /** Pending changesets naming it. */
   changesets: number;
-  /** Commits since its current version, when no changeset names it. */
-  commits: number;
   /** Its current version has a release tag. */
   tagged: boolean;
   /** A merged release PR brought its current version: untagged, that release is unfinished. */
@@ -31,6 +29,8 @@ export interface ScopeInfo {
   decidedBy?: DecidedBy;
   /** Nothing deploys it: once tagged, every environment has it. */
   releaseOnly?: boolean;
+  /** It has no environment to be on, such as a package: a person reads it as live or not. */
+  noEnvironment?: boolean;
 }
 
 export interface ScopeChoice {
@@ -45,22 +45,16 @@ const plural = (count: number, word: string) => `${count} ${word}${count === 1 ?
 const previewChoice = ({
   version,
   changesets,
-  commits,
   tagged,
   versioned,
   firstRelease,
   onChannel,
   decidedBy,
   releaseOnly,
+  noEnvironment,
 }: ScopeInfo) => {
   const later = decidedBy ? ` · ${decidedBy.platform} decides ${decidedBy.choice} once picked` : "";
   if (changesets > 0) return { pending: true, hint: `${plural(changesets, "changeset")}${later}` };
-  if (commits > 0) {
-    return {
-      pending: true,
-      hint: `${plural(commits, "commit")} since ${version}, changelog from its commits${later}`,
-    };
-  }
   if (!tagged) {
     if (versioned) return { pending: true, hint: `${version} versioned, not tagged yet${later}` };
     return firstRelease
@@ -75,9 +69,10 @@ const previewChoice = ({
       hint: `${version} released, nothing new (${decidedBy.check} shows its builds)`,
     };
   }
+  const where = noEnvironment ? "live" : "on preview";
   return onChannel
-    ? { pending: false, hint: `${version} is on preview, nothing new` }
-    : { pending: true, hint: `${version} released, not on preview yet` };
+    ? { pending: false, hint: `${version} is ${where}, nothing new` }
+    : { pending: true, hint: `${version} released, not ${where} yet` };
 };
 
 const productionChoice = ({

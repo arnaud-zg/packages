@@ -1,12 +1,22 @@
 import { describe, expect, it } from "vitest";
 
+import type { PlannedChangeset } from "../../../domain/changes";
 import { readUnitFile } from "../../../application/config/readUnitFile";
+import { openReleasePr } from "../../../application/openReleasePr";
+import { prepareRelease } from "../../../application/prepareRelease";
 import { readStatus } from "../../../application/readStatus";
 import { shipTo } from "../../../application/ship";
-import { testContext, testUnit } from "../../../testing/releaseContext";
+import { planFrom } from "../../../testing/plans";
+import { changesetText, testContext, testUnit } from "../../../testing/releaseContext";
 import { internalTool } from "../internal-tool.module";
 
 const RELEASE = testUnit("release", { version: "0.3.0", module: "internal-tool" });
+
+const FLAG: PlannedChangeset = {
+  id: "flag",
+  summary: "Add a flag.",
+  releases: [{ name: "@acme/release", type: "patch" }],
+};
 
 const setUp = () => {
   const world = testContext({ units: [RELEASE], modules: [internalTool()] });
@@ -47,6 +57,20 @@ describe("an app released but never deployed, like the release CLI", () => {
     expect(shell.calls).toEqual([]);
     expect(host.received).toEqual([]);
     expect(output.text).toContain("release@0.3.0  released, nothing deploys it");
+  });
+
+  it("given a changeset, when the release is offered, then it asks to release it live: no environment gets it", async () => {
+    const { context, versioning, prompter, output } = setUp();
+    versioning.seed({
+      pending: [{ id: FLAG.id, text: changesetText({ "@acme/release": "patch" }, FLAG.summary) }],
+      plan: planFrom([FLAG], { "@acme/release": "0.3.0" }),
+    });
+    prompter.answer(false);
+
+    await openReleasePr(context, await prepareRelease(context, new Set(["release"])));
+
+    expect(prompter.asked).toEqual(["Release these live?"]);
+    expect(output.text).not.toContain("preview");
   });
 
   it("given release@0.3.0 tagged with nothing new, when the status is read, then nothing is pending on preview or production", async () => {

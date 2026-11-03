@@ -67,7 +67,7 @@ The seed script skips rows it already wrote.
 `pnpm shiplane status` in that repository counts it:
 
 ```text
-  Release status  ·  preview
+  Release status  ·  live
 
   Unit      Version     Target            Where it stands
   scripts   1.0.0       release-only      ↑ 1 changeset

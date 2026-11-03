@@ -13,8 +13,6 @@ export interface SourceControlPort {
     manifest: string,
     version: string,
   ) => Promise<{ sha: string; subject: string } | null>;
-  /** Subjects of the commits that touched a folder since a commit, newest first, `ignore` aside. */
-  subjectsSince: (sha: string, dir: string, ignore?: readonly string[]) => Promise<string[]>;
   /** The commits after `from` up to `to`, newest first: each subject and the files it touched. */
   commitsBetween: (from: string, to: string) => Promise<{ subject: string; files: string[] }[]>;
   /** Modified and untracked files, relative to the root. */

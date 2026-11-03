@@ -148,9 +148,13 @@ export const afterShipContext = (context: ReleaseContext): AfterShipContext => (
   },
 });
 
+/** A package registry has no staging and nothing deploys a release-only unit: no environment. */
+export const hasNoEnvironment = ({ kind, releaseOnly }: ReleaseModule) =>
+  kind === "published-package" || releaseOnly === true;
+
 /**
- * What the person reads for an environment: a package registry has no staging, so when every unit
- * is a published package, preview is where users install it — it reads "live".
+ * What the person reads for an environment: when no unit has one, preview is where users get them,
+ * so it reads "live". Naming no unit asks about the whole repository.
  */
 export const environmentLabel = (
   context: ReleaseContext,
@@ -158,12 +162,24 @@ export const environmentLabel = (
   environment: string,
 ) => {
   if (environment !== "preview") return environment;
-  const names = [...units];
-  const allPackages =
+  const named = [...units];
+  const names = named.length > 0 ? named : context.release.units.map(({ name }) => name);
+  const noneHasOne =
     names.length > 0 &&
     names.every((name) => {
       const unit = context.release.units.find((candidate) => candidate.name === name);
-      return unit !== undefined && moduleOf(context, unit)?.kind === "published-package";
+      const module = unit && moduleOf(context, unit);
+      return module !== undefined && hasNoEnvironment(module);
     });
-  return allPackages ? "live" : environment;
+  return noneHasOne ? "live" : environment;
+};
+
+/** Where a sentence sends units: "to preview", or "live" when none of them has an environment. */
+export const destination = (
+  context: ReleaseContext,
+  units: Iterable<string>,
+  environment: string,
+) => {
+  const label = environmentLabel(context, units, environment);
+  return label === "live" ? label : `to ${label}`;
 };

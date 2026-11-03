@@ -93,7 +93,7 @@ export default defineRelease({
 | `features`                | What runs after a ship, in order, such as `releaseComments()`                                                                                                                                                                                                   |
 | `units`                   | Folders to look in. Default: the pnpm workspace, then `package.json` workspaces                                                                                                                                                                                 |
 | `tag`                     | Tag format: `"package"` (`{name}@{version}`, default), `"plugin"` (`{name}--v{version}`, for Claude Code, Gemini CLI and Codex), `"single"` (`v{version}`), `"module"` (`{name}/v{version}`, Go modules), or your own. A format without `{name}` takes one unit |
-| `commitsWithoutChangeset` | `"ignore"` (default): only changesets release. `"release"`: commits do too                                                                                                                                                                                      |
+| `commitsWithoutChangeset` | Deprecated and ignored: only changesets release. Every run warns until it is removed                                                                                                                                                                            |
 | `display`                 | `{ verbose, mascot }` defaults for the flags; `mascot` may be your own ([Mascot](#mascot))                                                                                                                                                                      |
 
 Source: `src/application/config/defineRelease.ts`. A `release.config.ts` still loads, with a line
@@ -164,6 +164,10 @@ manifest in its folder that has one: `.claude-plugin/plugin.json`, `.codex-plugi
 `.cursor-plugin/plugin.json`, `gemini-extension.json`. Then it is tagged; nothing deploys it. Pair
 it with `tag: "plugin"`.
 
+A published package, an agent plugin and an internal tool have no environment, so a run names none:
+it asks `Release these live?`, not `Release these to preview?`. A repository mixing them with an app
+that deploys reads `preview`, since the app does go there.
+
 Each takes an optional `name`, for two modules of one kind:
 `backendService({ name: "workers", ... })` then `module: workers`. Source: `src/modules/`.
 
@@ -194,7 +198,6 @@ From `pnpm -s shiplane status --json`, trimmed to one unit:
       "tag": "api@0.0.12",
       "tagged": true,
       "changesets": 3,
-      "commits": 0,
       "pending": true,
       "hint": "3 changesets"
     }

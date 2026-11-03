@@ -138,6 +138,7 @@ export const runCli = async (argv: string[], cwd: string, io: ContextIo = {}): P
   (release.renames ?? []).forEach(({ from, to }) =>
     out(`${paint("yellow", "!")}  rename ${from} to ${to}: the old name still works for now`),
   );
+  (release.deprecations ?? []).forEach((message) => out(`${paint("yellow", "!")}  ${message}`));
   refreshEditorSchema(nodeFiles(release.root), release);
   const context = composeContext(
     release,

@@ -92,33 +92,27 @@ describe("the next step", () => {
   const pr = { number: 1701, url: "https://github.com/acme/app/pull/1701" };
 
   it("given an open release pull request, when resumed, then it waits for the merge", () => {
-    expect(nextStep({ pending: 0, releasePrs: [pr], untagged: 0, unreleased: 0 })).toEqual({
+    expect(nextStep({ pending: 0, releasePrs: [pr], untagged: 0 })).toEqual({
       step: "wait-merge",
       prs: [pr],
     });
   });
 
   it("given changesets pending and no release pull request, when run, then it opens one", () => {
-    expect(nextStep({ pending: 4, releasePrs: [], untagged: 0, unreleased: 0 })).toEqual({
+    expect(nextStep({ pending: 4, releasePrs: [], untagged: 0 })).toEqual({
       step: "release-pr",
     });
   });
 
   it("given a merged release not tagged yet and new changesets, when run, then it finishes that release first", () => {
-    expect(nextStep({ pending: 2, releasePrs: [], untagged: 3, unreleased: 1 })).toEqual({
+    expect(nextStep({ pending: 2, releasePrs: [], untagged: 3 })).toEqual({
       step: "ship",
     });
   });
 
   it("given nothing pending, when run, then it goes on to ship what main has", () => {
-    expect(nextStep({ pending: 0, releasePrs: [], untagged: 0, unreleased: 0 })).toEqual({
+    expect(nextStep({ pending: 0, releasePrs: [], untagged: 0 })).toEqual({
       step: "ship",
-    });
-  });
-
-  it("given no changeset but an app changed since its release, when run, then it offers a release", () => {
-    expect(nextStep({ pending: 0, releasePrs: [], untagged: 0, unreleased: 1 })).toEqual({
-      step: "release-pr",
     });
   });
 });
@@ -187,6 +181,7 @@ describe("the release pull request", () => {
         app === "expo"
           ? "Build iOS and Android, submitted when done"
           : `Deploy preview${movedWith.length > 0 ? ` (moved with ${movedWith.join(", ")})` : ""}`,
+      "to preview",
     );
 
     expect(body).toContain(

@@ -16,7 +16,6 @@ export interface UnitStatus {
   tag: string;
   tagged: boolean;
   changesets: number;
-  commits: number;
   /** Something to release to this environment. */
   pending: boolean;
   hint: string;
@@ -71,7 +70,6 @@ export const readStatus = async (
         tag: tagName(entry.app, entry.version, context.release.tagFormat),
         tagged: entry.tagged,
         changesets: entry.changesets,
-        commits: entry.commits,
         pending: choice?.pending ?? false,
         hint: choice?.hint ?? "",
         ...(await live(entry.app)),
@@ -87,7 +85,6 @@ export const readStatus = async (
       pending: info.reduce((sum, { changesets }) => sum + changesets, 0),
       releasePrs,
       untagged: untagged.length,
-      unreleased: info.filter(({ changesets, commits }) => changesets === 0 && commits > 0).length,
     }),
   };
 };

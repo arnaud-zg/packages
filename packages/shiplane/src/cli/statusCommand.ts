@@ -1,6 +1,7 @@
 import type { ReleaseContext } from "../application/context";
 import type { Environment } from "../domain/environment";
 import { readStatus } from "../application/readStatus";
+import { environmentLabel } from "../application/targets";
 import { out, paint } from "./output";
 
 const NEXT: Record<string, string> = {
@@ -35,7 +36,8 @@ export const statusCommand = async (
   }
   const dot = paint("dim", "·");
   out();
-  out(`  ${paint("bold", "Release status")}  ${dot}  ${environment}`);
+  const label = environmentLabel(context, [], environment);
+  out(`  ${paint("bold", "Release status")}  ${dot}  ${label}`);
   out();
   const width = Math.max(8, ...status.units.map(({ unit }) => unit.length)) + 2;
   out(

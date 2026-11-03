@@ -6,7 +6,6 @@ import { scopeChoices } from "../scope";
 describe("what the release covers, asked before anything runs", () => {
   const base = {
     changesets: 0,
-    commits: 0,
     tagged: false,
     versioned: false,
     onChannel: false,
@@ -21,20 +20,10 @@ describe("what the release covers, asked before anything runs", () => {
     )[0];
 
   it("given expo has changesets, when asked, then it is offered and says EAS decides build or update later", () => {
-    expect(
-      choose({ app: "expo", version: "0.1.115", changesets: 2, commits: 30, tagged: true }),
-    ).toEqual({
+    expect(choose({ app: "expo", version: "0.1.115", changesets: 2, tagged: true })).toEqual({
       app: "expo",
       pending: true,
       hint: "2 changesets · EAS decides build or update once picked",
-    });
-  });
-
-  it("given admin changed with no changeset, when asked, then it is offered with its changelog from commits", () => {
-    expect(choose({ app: "admin", version: "0.1.0", commits: 152 })).toEqual({
-      app: "admin",
-      pending: true,
-      hint: "152 commits since 0.1.0, changelog from its commits",
     });
   });
 
@@ -52,6 +41,15 @@ describe("what the release covers, asked before anything runs", () => {
       pending: false,
       hint: "0.1.1 is on preview, nothing new",
     });
+  });
+
+  it("given a package with no environment, when asked, then it reads live or not, never preview", () => {
+    const package_ = { ...base, app: "cli", version: "1.0.0", tagged: true, noEnvironment: true };
+
+    expect(scopeChoices([{ ...package_, onChannel: true }], "preview")[0]?.hint).toBe(
+      "1.0.0 is live, nothing new",
+    );
+    expect(scopeChoices([package_], "preview")[0]?.hint).toBe("1.0.0 released, not live yet");
   });
 
   it("given expo released with nothing new, when asked, then it is greyed out and points to its build check", () => {
