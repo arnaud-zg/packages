@@ -1,5 +1,23 @@
 # shiplane
 
+## 0.3.0
+
+### Minor Changes
+
+- [#34](https://github.com/arnaud-zg/packages/pull/34) [`05c2051`](https://github.com/arnaud-zg/packages/commit/05c2051489560eeae03cbd70b00d962ee7048a25) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - `tag` takes a format's name: `"package"` (`{name}@{version}`, still the default), `"plugin"`
+  (`{name}--v{version}`, the tag Claude Code resolves plugin versions from, which Gemini CLI and Codex
+  install from too), `"single"` (`v{version}`) or `"module"` (`{name}/v{version}`, as Go tags a module
+  in a folder). A format without `{name}` used for more than one unit is now a config problem, since
+  their tags would collide.
+
+### Patch Changes
+
+- [#33](https://github.com/arnaud-zg/packages/pull/33) [`e8ca313`](https://github.com/arnaud-zg/packages/commit/e8ca313e3127073b3cbbb9c5ed54f23f69d15887) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - shiplane and every `@shiplane/*` adapter now share one version, so the adapter that goes with a
+  given shiplane is the one with the same number.
+
+- [#32](https://github.com/arnaud-zg/packages/pull/32) [`3e5e052`](https://github.com/arnaud-zg/packages/commit/3e5e0520b223dd4d97958872e6648dca2575b09e) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - Ship no longer suggests `shiplane status --channel` after shipping only npm packages: a package has
+  no channel to read.
+
 ## 0.2.0
 
 ### Minor Changes

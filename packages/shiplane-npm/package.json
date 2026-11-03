@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/npm",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "description": "Package registry for shiplane: a package on npm.",
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-npm#readme",
   "bugs": {

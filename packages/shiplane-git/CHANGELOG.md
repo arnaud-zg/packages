@@ -1,5 +1,12 @@
 # @shiplane/git
 
+## 0.3.0
+
+### Patch Changes
+
+- Updated dependencies [[`e8ca313`](https://github.com/arnaud-zg/packages/commit/e8ca313e3127073b3cbbb9c5ed54f23f69d15887), [`3e5e052`](https://github.com/arnaud-zg/packages/commit/3e5e0520b223dd4d97958872e6648dca2575b09e), [`05c2051`](https://github.com/arnaud-zg/packages/commit/05c2051489560eeae03cbd70b00d962ee7048a25)]:
+  - shiplane@0.3.0
+
 ## 0.1.1
 
 ### Patch Changes
