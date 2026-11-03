@@ -120,7 +120,9 @@ const decideAll = async (
       return { input, decision };
     };
     let { input, decision } = await context.progress.during(
-      `Checking what ${tag} needs on ${environment}`,
+      module.kind === "published-package"
+        ? `Checking what ${tag} needs on ${module.provider}`
+        : `Checking what ${tag} needs on ${environment}`,
       "thinking",
       decide,
     );
