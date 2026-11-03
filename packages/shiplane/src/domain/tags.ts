@@ -23,7 +23,7 @@ export const tagFormatNamed = (format: string): string =>
   Object.hasOwn(TAG_FORMATS, format) ? TAG_FORMATS[format as TagFormatName] : format;
 
 /** A unit's tag for a version, through a format like `v{version}` or `{name}--v{version}`. */
-export const tagName = (app: string, version: string, format = DEFAULT_TAG_FORMAT) =>
+export const tagName = (app: string, version: string, format: string = DEFAULT_TAG_FORMAT) =>
   format.replaceAll("{name}", app).replaceAll("{version}", version);
 
 export interface TagCandidate {
@@ -44,7 +44,7 @@ export const firstRelease = (
   app: string,
   version: string,
   tags: ReadonlySet<string>,
-  format = DEFAULT_TAG_FORMAT,
+  format: string = DEFAULT_TAG_FORMAT,
 ) => {
   const prefix = tagName(app, "", format);
   return version !== "0.0.0" && ![...tags].some((tag) => tag.startsWith(prefix));
@@ -106,7 +106,7 @@ export const releaseTags = (
   candidates: TagCandidate[],
   tags: Set<string>,
   notes: Set<string>,
-  format = DEFAULT_TAG_FORMAT,
+  format: string = DEFAULT_TAG_FORMAT,
 ): ReleaseTag[] =>
   candidates
     .filter((candidate) => candidate.first === true || cameWithRelease(candidate))
