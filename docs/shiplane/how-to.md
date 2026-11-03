@@ -132,15 +132,22 @@ export default defineRelease({
     sourceControl: gitSourceControl(),
     codeHost: gitHubCodeHost(),
     ciPipeline: gitHubActionsCiPipeline(),
-    versioning: changesetsVersioning({
-      version: ["sh", "-c", "pnpm exec changeset version && node scripts/sync-versions.mjs"],
-    }),
+    versioning: changesetsVersioning(),
   }),
-  modules: [internalTool()],
+  modules: [agentPlugin()],
 });
 ```
 
-Each plugin gets `module: internal-tool`: versioned, tagged and given notes, deployed nowhere.
+```yaml
+# plugins/reviewer/shiplane.unit.yml, next to a private package.json changesets versions
+module: agent-plugin
+```
+
+The release PR writes each plugin's new version into every agent manifest it has
+(`.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `.cursor-plugin/plugin.json`,
+`gemini-extension.json`), one line each. After the merge, `reviewer--v0.8.0` is tagged with its
+changelog as notes. Nothing deploys a plugin: agents install it from the repository, so the merge
+ships it. A manifest with no `version` is left alone.
 
 ## Ship a host with no plugin
 
