@@ -1,5 +1,18 @@
 # shiplane
 
+## 0.4.0
+
+### Minor Changes
+
+- [#38](https://github.com/arnaud-zg/packages/pull/38) [`503ca62`](https://github.com/arnaud-zg/packages/commit/503ca62b69995ca00ab033aa8530c79dac68450b) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - Release Claude Code, Codex, Cursor and Gemini CLI plugins with no script of your own:
+  `agentPlugin()` writes each plugin's new version into every agent manifest it has, in the release
+  PR, then tags it.
+
+### Patch Changes
+
+- [#37](https://github.com/arnaud-zg/packages/pull/37) [`0c3b562`](https://github.com/arnaud-zg/packages/commit/0c3b56299fa348ee7912c6438593432ae2b77a73) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - `ship` no longer says a published package is checked "on preview": its check names the registry
+  instead ("Checking what shiplane@0.3.0 needs on npm").
+
 ## 0.3.0
 
 ### Minor Changes

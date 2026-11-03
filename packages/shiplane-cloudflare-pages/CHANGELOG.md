@@ -1,5 +1,12 @@
 # @shiplane/cloudflare-pages
 
+## 0.4.0
+
+### Patch Changes
+
+- Updated dependencies [[`503ca62`](https://github.com/arnaud-zg/packages/commit/503ca62b69995ca00ab033aa8530c79dac68450b), [`0c3b562`](https://github.com/arnaud-zg/packages/commit/0c3b56299fa348ee7912c6438593432ae2b77a73)]:
+  - shiplane@0.4.0
+
 ## 0.3.0
 
 ### Patch Changes

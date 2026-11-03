@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/changesets",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Versioning for shiplane: versions and changelogs from changesets.",
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-changesets#readme",
   "bugs": {
