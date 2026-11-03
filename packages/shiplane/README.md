@@ -41,13 +41,14 @@ Source: `src/ports/*.port.ts`.
 
 A module is a kind of app. Each app's `shiplane.unit.yml` names its module.
 
-| Module                                  | `module:`           | Takes                |
-| --------------------------------------- | ------------------- | -------------------- |
-| `backendService({ serverHosting })`     | `backend-service`   | Server hosting       |
-| `webApp({ staticHosting })`             | `web-app`           | Static hosting       |
-| `mobileApp({ mobileDistribution })`     | `mobile-app`        | Mobile distribution  |
-| `publishedPackage({ packageRegistry })` | `published-package` | Package registry     |
-| `internalTool()`                        | `internal-tool`     | Nothing: tagged only |
+| Module                                  | `module:`           | Takes                                          |
+| --------------------------------------- | ------------------- | ---------------------------------------------- |
+| `backendService({ serverHosting })`     | `backend-service`   | Server hosting                                 |
+| `webApp({ staticHosting })`             | `web-app`           | Static hosting                                 |
+| `mobileApp({ mobileDistribution })`     | `mobile-app`        | Mobile distribution                            |
+| `publishedPackage({ packageRegistry })` | `published-package` | Package registry                               |
+| `agentPlugin()`                         | `agent-plugin`      | Nothing: tagged, its agent manifests versioned |
+| `internalTool()`                        | `internal-tool`     | Nothing: tagged only                           |
 
 Source: `src/modules/`.
 

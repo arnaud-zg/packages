@@ -31,6 +31,7 @@ export {
 } from "./adapters/defineDelivery";
 export { releaseFlow } from "./application/releaseFlow";
 export { backendService } from "./modules/backend-service/backend-service.module";
+export { agentPlugin } from "./modules/agent-plugin/agent-plugin.module";
 export { internalTool } from "./modules/internal-tool/internal-tool.module";
 export { mobileApp } from "./modules/mobile-app/mobile-app.module";
 export { publishedPackage } from "./modules/published-package/published-package.module";

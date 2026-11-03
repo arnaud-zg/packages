@@ -156,7 +156,13 @@ url: ${units.other.url} # another unit's value, same environment
 | `webApp({ staticHosting })`             | `web-app`           | Static hosting       |
 | `mobileApp({ mobileDistribution })`     | `mobile-app`        | Mobile distribution  |
 | `publishedPackage({ packageRegistry })` | `published-package` | A package registry   |
+| `agentPlugin()`                         | `agent-plugin`      | Nothing: see below   |
 | `internalTool()`                        | `internal-tool`     | Nothing: tagged only |
+
+`agentPlugin()` is a plugin for coding agents. The release PR writes its version into each agent
+manifest in its folder that has one: `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`,
+`.cursor-plugin/plugin.json`, `gemini-extension.json`. Then it is tagged; nothing deploys it. Pair
+it with `tag: "plugin"`.
 
 Each takes an optional `name`, for two modules of one kind:
 `backendService({ name: "workers", ... })` then `module: workers`. Source: `src/modules/`.
