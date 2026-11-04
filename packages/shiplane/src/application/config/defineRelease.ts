@@ -16,8 +16,6 @@ export interface ReleaseConfig {
    * How a tag names a version: `"package"` (`{name}@{version}`, the default), `"plugin"` (`{name}--v{version}`), `"single"` (`v{version}`, one unit only), `"module"` (`{name}/v{version}`), or a format of your own.
    */
   tag?: TagFormatName | (string & {});
-  /** @deprecated Ignored: use `pnpm changeset`, or `commitsVersioning()` from `@shiplane/changesets`. */
-  commitsWithoutChangeset?: "release" | "ignore";
   /** How much the release says while it runs; `--verbose` and `--mascot` (or `--no-…`) override. */
   display?: DisplayChoice;
 }
