@@ -55,8 +55,8 @@ Source: `ChangesetsOptions` in `src/changesets-versioning.adapter.ts`.
 
 `commitsVersioning()` takes the same options and needs no changeset written: the commits since each
 package's version become the release's changesets, and the changesets CLI does the rest. `feat` is a
-minor, `fix` and `perf` a patch, a subject marked `!` a major (a minor below 1.0), and anything else
-releases nothing. [How-to](../../docs/shiplane/how-to.md#release-from-commits). Source:
+minor, a subject marked `!` a major (a minor below 1.0), and anything else a patch.
+[How-to](../../docs/shiplane/how-to.md#release-from-commits). Source:
 `src/commits-versioning.adapter.ts`.
 
 ## Example

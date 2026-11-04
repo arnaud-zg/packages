@@ -103,19 +103,32 @@ describe("versioning from commits, with no changeset to write", () => {
     ]);
   });
 
-  it.each(["chore(ci): baseline", "docs: the readme", "test: more"])(
-    "given only %s, when pending is read, then nothing releases",
+  it.each(["chore(reviewer): tidy up", "docs: the skill", "test: more", "no type at all"])(
+    "given only %s in a package, when pending is read, then it still ships as a patch",
     async (subject) => {
       const port = setUp();
       commit("plugins/reviewer/a.md", subject);
 
-      expect(await port.pending()).toEqual([]);
-      expect((await port.plan([], [])).releases).toEqual([]);
+      const pending = await port.pending();
+
+      expect(pending).toHaveLength(1);
+      expect(pending[0]?.text).toContain('"@acme/reviewer": patch');
     },
   );
 
+  it("given several chores, when pending is read, then only the latest is told", async () => {
+    const port = setUp();
+    commit("plugins/reviewer/a.md", "chore(reviewer): the first");
+    commit("plugins/reviewer/b.md", "chore(reviewer): the second");
+
+    const pending = await port.pending();
+
+    expect(pending).toHaveLength(1);
+    expect(pending[0]?.text).toContain("The second.");
+  });
+
   it("given nothing queued, when a person is told what to do, then a commit is what it asks for", () => {
-    expect(setUp().nextChange).toBe("a feat or fix commit");
+    expect(setUp().nextChange).toBe("a commit in the package");
   });
 
   it("given a feature and a chore, when pending is read, then the feature alone is told, naming its package, as a sentence", async () => {

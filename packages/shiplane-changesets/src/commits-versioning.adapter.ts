@@ -30,20 +30,22 @@ const asSentence = (subject: string) => {
   return /[.!?]$/.test(sentence) ? sentence : `${sentence}.`;
 };
 
-/** One changeset per feature, fix or breaking commit: nothing else releases. */
+/**
+ * One changeset per feature, fix or breaking commit, or the latest commit when there are none: a
+ * commit in a package changed what it ships, whatever its type says.
+ */
 const changesetsFrom = (
   name: string,
   version: string,
   subjects: readonly string[],
 ): PlannedChangeset[] => {
+  const told = subjects.filter((subject) => USER_FACING.test(subject) || BREAKING.test(subject));
   const slug = name.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
-  return subjects
-    .filter((subject) => USER_FACING.test(subject) || BREAKING.test(subject))
-    .map((subject, index) => ({
-      id: `commits-${slug}-${index + 1}`,
-      releases: [{ name, type: bumpOf(subject, version) }],
-      summary: asSentence(subject),
-    }));
+  return (told.length > 0 ? told : subjects.slice(0, 1)).map((subject, index) => ({
+    id: `commits-${slug}-${index + 1}`,
+    releases: [{ name, type: bumpOf(subject, version) }],
+    summary: asSentence(subject),
+  }));
 };
 
 const textOf = ({ releases, summary }: PlannedChangeset) =>
@@ -109,7 +111,7 @@ const commitsFiles = (root: string, shell: Shell, options: ChangesetsOptions): V
 
   return {
     ...files,
-    nextChange: "a feat or fix commit",
+    nextChange: "a commit in the package",
     pending: async () => [
       ...(await files.pending()),
       ...(await fromCommits()).map((changeset) => ({
