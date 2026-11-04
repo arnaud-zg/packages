@@ -1,6 +1,6 @@
 {
   "name": "agent-context-budget",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Token-budget analysis for AI agent context files like CLAUDE.md and AGENTS.md.",
   "keywords": [
     "claude-code",
