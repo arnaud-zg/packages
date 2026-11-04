@@ -112,6 +112,31 @@ export const DEFAULT_FLOW: Record<FlowPort, FlowChoice> = {
   versioning: { factory: "changesetsVersioning", from: pluginPackage("changesets") },
 };
 
+/** Versioning from commits: same plugin, and setup offers it when no changesets config exists. */
+export const COMMITS_VERSIONING: FlowChoice = {
+  factory: "commitsVersioning",
+  from: pluginPackage("changesets"),
+};
+
+/** Both ways of versioning run on changesets. Private packages, such as plugins, version too. */
+export const CHANGESETS_CONFIG = `${JSON.stringify(
+  {
+    changelog: "@changesets/cli/changelog",
+    commit: false,
+    fixed: [],
+    linked: [],
+    access: "restricted",
+    baseBranch: "main",
+    updateInternalDependencies: "patch",
+    ignore: [],
+    privatePackages: { version: true, tag: false },
+  },
+  null,
+  2,
+)}\n`;
+
+export const CHANGESETS_CLI = { name: "@changesets/cli", version: "^3.0.1" };
+
 /** A root config with this flow (today's by default) and these modules, in the order given. */
 export const renderConfig = (
   entries: readonly ModuleEntry[],

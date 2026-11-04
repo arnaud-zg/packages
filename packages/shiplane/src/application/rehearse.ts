@@ -33,7 +33,7 @@ const check = async (context: SetupContext, label: string, work: () => Promise<b
 };
 
 /** The package manager this repository runs scripts with. */
-const runner = (context: SetupContext) =>
+export const runner = (context: SetupContext) =>
   context.files.exists("pnpm-lock.yaml")
     ? "pnpm"
     : context.files.exists("yarn.lock")
