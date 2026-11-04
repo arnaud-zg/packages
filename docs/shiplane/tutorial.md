@@ -15,7 +15,9 @@ flowchart LR
     D --> E["shiplane"]
 ```
 
-**Before you start:** a pnpm workspace with changesets, on GitHub, with `gh` and `npm` signed in.
+**Before you start:** a pnpm workspace with changesets, on GitHub, with `gh` and `npm` signed in. No
+changesets yet? `shiplane setup` asks how you want to release and configures them, then says to run
+`pnpm install`.
 
 ## 1. Install the CLI and its plugins
 

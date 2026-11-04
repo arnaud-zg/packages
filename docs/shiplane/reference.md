@@ -20,6 +20,7 @@
 | `shiplane version`            | Open the release PR for what is pending                              |
 | `shiplane tag`                | Tag merged versions, publish their notes                             |
 | `shiplane ship [unit...]`     | Trigger each tagged unit's deploy, then return                       |
+| `shiplane setup`              | Find what ships, write the config and unit files, rehearse a release |
 | `shiplane init`               | Find what ships, write the config and unit files, run doctor         |
 | `shiplane add <folder>`       | `init`'s questions for one folder                                    |
 | `shiplane remove <unit>`      | Stop shipping a unit; it stays versioned                             |

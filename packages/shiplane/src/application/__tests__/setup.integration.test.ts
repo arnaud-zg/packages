@@ -237,6 +237,89 @@ describe("Feature: nothing is written until a release would work", () => {
   });
 });
 
+describe("Feature: choosing how a repository releases", () => {
+  const NO_CHANGESETS = Object.fromEntries(
+    Object.entries(PROVEN).filter(([file]) => file !== ".changeset/config.json"),
+  );
+  const QUESTION = "How do you want to release?";
+
+  const devDependencies = (files: { read: (file: string) => string | null }) =>
+    (JSON.parse(files.read("package.json") ?? "{}") as { devDependencies?: Record<string, string> })
+      .devDependencies;
+
+  it("given no changesets config, when commits are picked, then setup configures them and says what is left", async () => {
+    const { context, prompter, output, files } = given({ ...NO_CHANGESETS, "pnpm-lock.yaml": "" });
+    prompter.answer("commits", true, true);
+
+    expect(await setup(context, { yes: false })).toBe(true);
+
+    expect(prompter.asked).toEqual([
+      QUESTION,
+      "Your apps and packages are in apps/* (1 folders)?",
+      "Releasable. Write it?",
+    ]);
+    expect(prompter.initials[QUESTION]).toBe("commits");
+    expect(files.read("shiplane.config.ts")).toContain("versioning: commitsVersioning()");
+    expect(JSON.parse(files.read(".changeset/config.json") ?? "{}")).toMatchObject({
+      baseBranch: "main",
+      privatePackages: { version: true, tag: false },
+    });
+    expect(devDependencies(files)).toHaveProperty("@changesets/cli");
+    expect(output.text).toContain("Run pnpm install, then merge a commit");
+    expect(output.text).not.toMatch(/a changeset/);
+  });
+
+  it("given no changesets config, when changesets are picked, then the config is written the same and it says to add one", async () => {
+    const { context, prompter, output, files } = given(NO_CHANGESETS);
+    prompter.answer("changesets", true, true);
+
+    expect(await setup(context, { yes: false })).toBe(true);
+
+    expect(files.read("shiplane.config.ts")).toContain("versioning: changesetsVersioning()");
+    expect(files.exists(".changeset/config.json")).toBe(true);
+    expect(output.text).toContain("then add a changeset, merge");
+  });
+
+  it("given --yes and no changesets config, when setup runs, then it takes commits and asks nothing", async () => {
+    const { context, prompter, files } = given(NO_CHANGESETS, { interactive: false });
+
+    expect(await setup(context, { yes: true })).toBe(true);
+
+    expect(prompter.asked).toEqual([]);
+    expect(files.read("shiplane.config.ts")).toContain("commitsVersioning()");
+    expect(files.exists(".changeset/config.json")).toBe(true);
+  });
+
+  it("given @changesets/cli already there, when setup runs, then package.json is left alone and no install is asked for", async () => {
+    const manifestWithCli = JSON.stringify({
+      name: "acme",
+      private: true,
+      devDependencies: { "@changesets/cli": "^2.0.0" },
+    });
+    const { context, prompter, output, files } = given({
+      ...NO_CHANGESETS,
+      "package.json": manifestWithCli,
+    });
+    prompter.answer("commits", true, true);
+
+    await setup(context, { yes: false });
+
+    expect(files.read("package.json")).toBe(manifestWithCli);
+    expect(output.text).toContain("Ready. Merge a commit");
+  });
+
+  it("given a failing build, when setup rehearses, then the changesets files are put back too", async () => {
+    const { context, prompter, files, shell } = given(NO_CHANGESETS);
+    const before = files.all;
+    shell.seed("npm run build", { status: 1, stderr: "error TS2304: cannot find name" });
+    prompter.answer("commits", true);
+
+    expect(await setup(context, { yes: false })).toBe(false);
+
+    expect(files.all).toEqual(before);
+  });
+});
+
 describe("Feature: running setup again", () => {
   it("given nothing changed, when setup runs again, then it asks nothing and says all is set", async () => {
     const { context, prompter, output } = given(PROVEN);

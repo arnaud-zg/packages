@@ -156,7 +156,9 @@ Queue each release with `pnpm changeset`, as for any unit, or
 
 ## Release from commits
 
-Swap the versioning adapter and no one writes a changeset:
+`shiplane setup` offers this when the repository has no `.changeset/config.json`, and `--yes` takes
+it: setup writes that file and adds `@changesets/cli`, and you run the install. A repository already
+on changesets is not asked. To move one, swap the versioning adapter and no one writes a changeset:
 
 ```ts
 import { commitsVersioning } from "@shiplane/changesets";

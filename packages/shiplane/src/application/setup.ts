@@ -18,10 +18,13 @@ import {
   suggestedName,
 } from "./customAdapter";
 import { askOptions } from "./initRelease";
-import { rehearse } from "./rehearse";
+import { rehearse, runner } from "./rehearse";
 import { paint } from "./say";
 import {
   addToConfig,
+  CHANGESETS_CLI,
+  CHANGESETS_CONFIG,
+  COMMITS_VERSIONING,
   CONFIG_FILE,
   DEFAULT_FLOW,
   FLOW_PORTS,
@@ -44,6 +47,8 @@ export interface Write {
 
 const ok = paint("green", "✓");
 const unsure = paint("yellow", "?");
+
+const CHANGESETS_CONFIG_FILE = ".changeset/config.json";
 
 /** What a flow port is called, and what proves the ready-made adapter fits. */
 const FLOW_LABEL: Record<FlowPort, { label: string; ready: string }> = {
@@ -94,7 +99,7 @@ const flowEvidence = async (context: SetupContext): Promise<Record<FlowPort, str
     sourceControl: files.exists(".git") ? ".git" : null,
     codeHost: github ? `remote github.com/${github}` : null,
     ciPipeline: workflows[0] ? `.github/workflows/${workflows[0]}` : null,
-    versioning: files.exists(".changeset/config.json") ? ".changeset/config.json" : null,
+    versioning: files.exists(CHANGESETS_CONFIG_FILE) ? CHANGESETS_CONFIG_FILE : null,
   };
 };
 
@@ -126,6 +131,74 @@ const customWrites = (port: CustomPortKey, name: string, pkg: string): Write[] =
   { file: customFiles(name).test, text: renderCustomTest(port, name, pkg), created: true },
 ];
 
+/** What both ways of versioning need: the changesets config, and its CLI when it is missing. */
+const changesetsWrites = ({ files }: SetupContext): Write[] => {
+  const manifest = files.read("package.json");
+  const parsed = JSON.parse(manifest ?? "{}") as Record<string, Record<string, string> | undefined>;
+  const present = { ...parsed.dependencies, ...parsed.devDependencies }[CHANGESETS_CLI.name];
+  return [
+    { file: CHANGESETS_CONFIG_FILE, text: CHANGESETS_CONFIG, created: true },
+    ...(manifest === null || present
+      ? []
+      : [
+          {
+            file: "package.json",
+            text: `${JSON.stringify(
+              {
+                ...parsed,
+                devDependencies: {
+                  ...parsed.devDependencies,
+                  [CHANGESETS_CLI.name]: CHANGESETS_CLI.version,
+                },
+              },
+              null,
+              2,
+            )}\n`,
+            created: false,
+          },
+        ]),
+  ];
+};
+
+/** How a repository with no changesets config releases: asked once, commits unless told. */
+const chooseVersioning = async (
+  context: SetupContext,
+  yes: boolean,
+  writes: Write[],
+  pkg: string,
+): Promise<FlowChoice | null> => {
+  const { prompter } = context;
+  const picked =
+    yes || !prompter.interactive
+      ? "commits"
+      : await prompter.select(
+          "How do you want to release?",
+          [
+            {
+              value: "commits",
+              label: "From commits",
+              hint: "feat, fix and ! set the version, nothing to write",
+            },
+            {
+              value: "changesets",
+              label: "From changesets",
+              hint: "you write what ships, and when",
+            },
+            { value: "custom", label: "Custom", hint: "a no-op in memory you implement" },
+          ],
+          "commits",
+        );
+  if (picked === null) return null;
+  if (picked === "custom") {
+    const name = await askName(context, "versioning", suggestedName("versioning"));
+    if (name === null) return null;
+    writes.push(...customWrites("versioning", name, pkg));
+    return { factory: name, from: customFiles(name).from };
+  }
+  writes.push(...changesetsWrites(context));
+  return picked === "commits" ? COMMITS_VERSIONING : DEFAULT_FLOW.versioning;
+};
+
 /** The flow, from what the repository proves; asked part by part when unsure or when asked to. */
 const chooseFlow = async (
   context: SetupContext,
@@ -149,16 +222,22 @@ const chooseFlow = async (
   const sure = FLOW_PORTS.every((port) => evidence[port] !== null);
   // Proven: nothing to ask. The rehearsal and "Write it?" are the check.
   if (sure) return DEFAULT_FLOW;
-  if (yes) {
+  const missing = FLOW_PORTS.filter((port) => !evidence[port] && port !== "versioning");
+  if (yes && missing.length > 0) {
     needsPerson.push(
-      ...FLOW_PORTS.filter((port) => !evidence[port]).map(
-        (port) => `the ${FLOW_LABEL[port].label.toLowerCase()} (nothing proves one)`,
-      ),
+      ...missing.map((port) => `the ${FLOW_LABEL[port].label.toLowerCase()} (nothing proves one)`),
     );
     return null;
   }
   const flow = { ...DEFAULT_FLOW };
-  for (const port of FLOW_PORTS) {
+  // Only how it versions is left open: the rest is proven, so nothing else is asked.
+  for (const port of missing.length > 0 ? FLOW_PORTS : (["versioning"] as const)) {
+    if (port === "versioning" && !evidence.versioning) {
+      const choice = await chooseVersioning(context, yes, writes, pkg);
+      if (choice === null) return null;
+      flow.versioning = choice;
+      continue;
+    }
     const { label, ready } = FLOW_LABEL[port];
     const picked = await prompter.select(
       `${label}?`,
@@ -495,9 +574,15 @@ export const setup = async (context: SetupContext, { yes }: { yes: boolean }): P
       `  ${paint("dim", "Works? Share it as shiplane-<name>, or open a pull request at github.com/arnaud-zg/packages.")}`,
     );
   }
+  const fromCommits = flow
+    ? flow.versioning.factory === COMMITS_VERSIONING.factory
+    : existing?.flow.versioning.name === "commits";
+  const next = fromCommits ? "erge a commit" : "dd a changeset, merge";
+  const install = writes.some(({ file }) => file === "package.json");
+  const start = fromCommits ? "m" : "a";
   output.line();
   output.line(
-    `  ${ok} ${paint("bold", "Ready.")} Add a changeset, merge, and run ${paint("cyan", "shiplane")}`,
+    `  ${ok} ${paint("bold", "Ready.")} ${install ? `Run ${runner(context)} install, then ${start}` : start.toUpperCase()}${next}, and run ${paint("cyan", "shiplane")}`,
   );
   return true;
 };
