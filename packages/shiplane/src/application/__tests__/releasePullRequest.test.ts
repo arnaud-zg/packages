@@ -114,7 +114,7 @@ describe("opening the release pull request", () => {
         Object.fromEntries(units.map(({ packageName }) => [packageName, "1.0.0"])),
       ),
     });
-    world.prompter.answer(true);
+    world.prompter.answer("minor");
 
     await openReleasePr(
       world.context,
@@ -193,7 +193,7 @@ describe("opening the release pull request", () => {
 
   it("given only api released, when the release opens, then its PR and commit keep api's own title", async () => {
     const { context, host, prompter } = setUp();
-    prompter.answer(true);
+    prompter.answer("patch");
 
     await openReleasePr(context, await prepareRelease(context, new Set(["api"])));
 
@@ -204,7 +204,7 @@ describe("opening the release pull request", () => {
 
   it("given admin left out, when the release PR is opened, then admin's changeset stays pending for a later release", async () => {
     const { context, versioning, prompter } = setUp();
-    prompter.answer(true);
+    prompter.answer("patch");
 
     const prepared = await prepareRelease(context, new Set(["api"]));
     await openReleasePr(context, prepared);
@@ -235,9 +235,9 @@ describe("opening the release pull request", () => {
     expect(versioning.applied).toEqual([]);
   });
 
-  it("given the person says no, when asked to release, then nothing is written", async () => {
+  it("given the person cancels, when asked to release, then nothing is written", async () => {
     const { context, source, versioning, prompter } = setUp();
-    prompter.answer(false);
+    prompter.answer(null);
 
     await openReleasePr(context, await prepareRelease(context, new Set(["api"])));
 
@@ -245,13 +245,13 @@ describe("opening the release pull request", () => {
     expect(source.received).toEqual([]);
   });
 
-  it("given changesets to release, when it asks to release them to preview, then Yes is preselected", async () => {
+  it("given changesets to release, when it asks to release them to preview, then the computed version is preselected", async () => {
     const { context, prompter } = setUp();
-    prompter.answer(false);
+    prompter.answer(null);
 
     await openReleasePr(context, await prepareRelease(context, new Set(["api"])));
 
-    expect(prompter.initials["Release these to preview?"]).toBe(true);
+    expect(prompter.initials["Release these to preview as (Esc cancels)"]).toBe("patch");
   });
 });
 
@@ -385,7 +385,7 @@ describe("the release commit's hooks", () => {
 
   it("given four apps one changeset ties together, when their names overflow one header, then their one PR names them all and its commit skips the hooks", async () => {
     const { context, host, source, prompter } = setUpMany();
-    prompter.answer(true);
+    prompter.answer("minor");
 
     await openReleasePr(context, await prepareRelease(context, new Set(NAMES)));
 

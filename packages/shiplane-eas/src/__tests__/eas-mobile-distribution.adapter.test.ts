@@ -169,7 +169,7 @@ describe("what a release PR versions for the mobile app", () => {
       ],
       plan: planFrom([EXPO_MINOR], { "@acme/expo": "0.1.115" }),
     });
-    prompter.answer("update", true);
+    prompter.answer("update", "minor");
 
     await openReleasePr(context, await prepareRelease(context, new Set(["expo"])));
 
@@ -186,7 +186,7 @@ describe("what a release PR versions for the mobile app", () => {
       pending: [],
       plan: planFrom([], { "@acme/expo": "0.1.115", "@acme/api": "0.0.3" }),
     });
-    prompter.answer("build", true);
+    prompter.answer("build", "patch");
 
     const prepared = await prepareRelease(context, new Set(["expo"]));
     await openReleasePr(context, prepared);
@@ -241,7 +241,7 @@ describe("what a release PR versions for the mobile app", () => {
       ],
       plan: planFrom([EXPO_MINOR], { "@acme/expo": "0.1.115", "@acme/api": "0.0.3" }),
     });
-    prompter.answer("build", true);
+    prompter.answer("build", "minor");
 
     await openReleasePr(context, await prepareRelease(context, new Set(["expo"])));
 
@@ -249,6 +249,22 @@ describe("what a release PR versions for the mobile app", () => {
     expect(host.received[0]?.type === "pr" && host.received[0].body).toContain(
       "Build iOS and Android, submitted when done",
     );
+  });
+
+  it("given a forced version, when the release PR opens, then expo decides again and carries the forced version", async () => {
+    const { context, versioning, prompter, host, workspace: ws } = setUp();
+    versioning.seed({
+      pending: [
+        { id: EXPO_MINOR.id, text: changesetText({ "@acme/expo": "minor" }, EXPO_MINOR.summary) },
+      ],
+      plan: planFrom([EXPO_MINOR], { "@acme/expo": "0.1.115", "@acme/api": "0.0.3" }),
+    });
+    prompter.answer("build", "major", "Drops the old navigation", "build");
+
+    await openReleasePr(context, await prepareRelease(context, new Set(["expo"])));
+
+    expect(JSON.parse(ws.read("apps/expo/app-version.json")).preview.version).toBe("1.0.0");
+    expect(host.received[0]?.type === "pr" && host.received[0].title).toContain("1.0.0");
   });
 
   it("given native code changed, when asked what expo ships, then the build is suggested and the update is offered greyed with why", async () => {

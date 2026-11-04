@@ -59,6 +59,13 @@ minor, a subject marked `!` a major (a minor below 1.0), and anything else a pat
 [How-to](../../docs/shiplane/how-to.md#release-from-commits). Source:
 `src/commits-versioning.adapter.ts`.
 
+## Force another version
+
+When a person [picks another version](../../docs/shiplane/how-to.md#force-another-version), shiplane
+adds a changeset at that level and hands both adapters a `ceiling`: no line ships above it. A plan
+puts the files back when it ends; a release consumes them on its branch, and puts them back if
+`changeset version` fails.
+
 ## Example
 
 [`examples/`](./examples) holds one pending changeset,

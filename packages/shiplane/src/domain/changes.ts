@@ -6,6 +6,9 @@ export interface UnitRef {
 
 export type BumpType = "major" | "minor" | "patch" | "none";
 
+/** A bump that moves a version. */
+export type BumpLevel = Exclude<BumpType, "none">;
+
 /** One changeset, as `changeset status --output` lists it. */
 export interface PlannedChangeset {
   id: string;

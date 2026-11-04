@@ -17,7 +17,7 @@ export type { Deploy } from "./ports/code-host.port";
 export type { Shell, ShellResult } from "./ports/shell.port";
 export { CommandFailed } from "./ports/shell.port";
 export type { AfterShipContext, FollowUp, Shipped } from "./modules/module";
-export type { AppBump, PlannedChangeset, StatusPlan } from "./domain/changes";
+export type { AppBump, BumpLevel, PlannedChangeset, StatusPlan } from "./domain/changes";
 export { appBumps } from "./domain/changes";
 export type { GitPosition } from "./domain/governance";
 export { releaseSource, yesAllowed } from "./domain/governance";

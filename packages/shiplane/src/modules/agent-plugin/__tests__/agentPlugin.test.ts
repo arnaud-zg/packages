@@ -76,7 +76,7 @@ describe("a plugin for coding agents, released from the repository agents instal
 
   it("given a minor changeset, when the release PR opens, then every agent manifest moves to 0.8.0 before the commit, one line each", async () => {
     const { context, host, prompter } = setUp();
-    prompter.answer(true);
+    prompter.answer("minor");
 
     await openReleasePr(context, await prepareRelease(context, new Set(["reviewer"])));
 
@@ -94,7 +94,7 @@ describe("a plugin for coding agents, released from the repository agents instal
 
   it("given the release PR it opens, when it is read, then it says merging is what ships the plugin", async () => {
     const { context, host, prompter } = setUp();
-    prompter.answer(true);
+    prompter.answer("minor");
 
     await openReleasePr(context, await prepareRelease(context, new Set(["reviewer"])));
 
@@ -102,9 +102,9 @@ describe("a plugin for coding agents, released from the repository agents instal
     expect(pr && "body" in pr ? pr.body : "").toContain("Agents update to it: merging ships it");
   });
 
-  it("given the person says no, when the release is offered, then no manifest is touched", async () => {
+  it("given the person cancels, when the release is offered, then no manifest is touched", async () => {
     const { context, prompter } = setUp();
-    prompter.answer(false);
+    prompter.answer(null);
 
     await openReleasePr(context, await prepareRelease(context, new Set(["reviewer"])));
 
@@ -152,13 +152,13 @@ describe("a plugin has no environment, like a package on npm", () => {
 
   it("given a minor changeset, when the whole release runs, then it asks to release it live and nothing said names preview", async () => {
     const world = released();
-    world.prompter.answer(["reviewer"], true, true);
+    world.prompter.answer(["reviewer"], "minor", true);
 
     expect(await releaseToPreview(world.context)).toBe(true);
 
     expect(world.prompter.asked).toEqual([
       "What do you want to release live? Greyed units have nothing to release.",
-      "Release these live?",
+      "Release these live as (Esc cancels)",
       "Tag reviewer--v0.8.0 and publish their release notes?",
     ]);
     expect(world.source.received).toContainEqual(

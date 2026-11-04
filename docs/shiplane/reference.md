@@ -33,14 +33,14 @@ Source: `src/cli/main.ts`. Here, `pnpm shiplane` builds the CLI first when its s
 
 ## Flags
 
-| Flag                            | Means                                                           |
-| ------------------------------- | --------------------------------------------------------------- |
-| `--channel preview\|production` | The environment worked on (preview by default)                  |
-| `--via github\|local`           | Ship through GitHub Actions or this machine, without asking     |
-| `--yes`, `-y`                   | Yes to every question. Refused on production                    |
-| `--json`                        | `status` and `plugins` print JSON                               |
-| `--blank`                       | `init` writes commented templates, not guesses                  |
-| `--verbose`, `--mascot`         | On by default; `--no-` turns off. Defaults: `display` in config |
+| Flag                            | Means                                                                 |
+| ------------------------------- | --------------------------------------------------------------------- |
+| `--channel preview\|production` | The environment worked on (preview by default)                        |
+| `--via github\|local`           | Ship through GitHub Actions or this machine, without asking           |
+| `--yes`, `-y`                   | Yes to every question, at the computed version. Refused on production |
+| `--json`                        | `status` and `plugins` print JSON                                     |
+| `--blank`                       | `init` writes commented templates, not guesses                        |
+| `--verbose`, `--mascot`         | On by default; `--no-` turns off. Defaults: `display` in config       |
 
 ## Exit codes
 
@@ -165,8 +165,8 @@ manifest in its folder that has one: `.claude-plugin/plugin.json`, `.codex-plugi
 it with `tag: "plugin"`.
 
 A published package, an agent plugin and an internal tool have no environment, so a run names none:
-it asks `Release these live?`, not `Release these to preview?`. A repository mixing them with an app
-that deploys reads `preview`, since the app does go there.
+it asks to release them live, not to preview. A repository mixing them with an app that deploys
+reads `preview`, since the app does go there.
 
 Each takes an optional `name`, for two modules of one kind:
 `backendService({ name: "workers", ... })` then `module: workers`. Source: `src/modules/`.
@@ -180,8 +180,11 @@ Each takes an optional `name`, for two modules of one kind:
   finish its notes. What it cannot undo is printed as commands.
 - **Retries.** A dropped push or pull is tried twice more, after 2s then 10s.
 - **Production asks.** You type `production` to start, and `--yes` is refused there.
+- **A forced version says why.** Any version but the computed one takes a line for the release
+  notes, and a version versioning cannot land on stops the run before anything is written.
 
-Source: `src/application/steps.ts`, `src/application/requirements.ts`, `src/application/ship.ts`.
+Source: `src/application/steps.ts`, `src/application/requirements.ts`, `src/application/ship.ts`,
+`src/application/chooseVersion.ts`.
 
 ## `status --json`
 

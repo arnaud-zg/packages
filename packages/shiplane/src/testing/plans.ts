@@ -1,20 +1,13 @@
-import type { PlannedChangeset, StatusPlan } from "../domain/changes";
-import { nextPatch } from "../domain/versions";
-
-const bump = (version: string, type: string) => {
-  const [major = 0, minor = 0] = version.split(".").map(Number);
-  if (type === "major") return `${major + 1}.0.0`;
-  if (type === "minor") return `${major}.${minor + 1}.0`;
-  return nextPatch(version);
-};
+import type { BumpLevel, PlannedChangeset, StatusPlan } from "../domain/changes";
+import { nextVersion } from "../domain/versions";
 
 /**
  * What `changeset status` answers for these pending changesets, plus the ones a release adds, minus
- * the lines it holds back: every named package moves once, by its biggest bump.
+ * the lines it holds back: every named package moves once, by its biggest bump, up to `ceiling`.
  */
 export const planFrom =
   (pending: PlannedChangeset[], versions: Record<string, string>) =>
-  (added: PlannedChangeset[], held: PlannedChangeset[]): StatusPlan => {
+  (added: PlannedChangeset[], held: PlannedChangeset[], ceiling?: BumpLevel): StatusPlan => {
     const heldLines = new Set(
       held.flatMap(({ id, releases }) => releases.map(({ name }) => `${id}:${name}`)),
     );
@@ -26,7 +19,8 @@ export const planFrom =
         ),
       }))
       .filter(({ releases }) => releases.length > 0);
-    const order = ["major", "minor", "patch"];
+    const order: BumpLevel[] = ["major", "minor", "patch"];
+    const capped = ceiling ? order.slice(order.indexOf(ceiling)) : order;
     const names = [
       ...new Set(changesets.flatMap(({ releases }) => releases.map(({ name }) => name))),
     ];
@@ -36,18 +30,19 @@ export const planFrom =
         const lines = changesets.filter(({ releases }) =>
           releases.some((line) => line.name === name),
         );
-        const type =
+        const named =
           order.find((candidate) =>
             lines.some(({ releases }) =>
               releases.some((line) => line.name === name && line.type === candidate),
             ),
           ) ?? "patch";
+        const type = capped.includes(named) ? named : (ceiling ?? named);
         const oldVersion = versions[name] ?? "0.1.0";
         return {
           name,
-          type: type as "patch",
+          type,
           oldVersion,
-          newVersion: bump(oldVersion, type),
+          newVersion: nextVersion(oldVersion, type),
           changesets: lines.map(({ id }) => id),
         };
       }),
