@@ -1,5 +1,15 @@
 # agent-context-budget
 
+## 0.1.1
+
+### Patch Changes
+
+- Version forced to 0.1.1 instead of 0.2.0: rename the config file
+
+- [#48](https://github.com/arnaud-zg/packages/pull/48) [`d4ca535`](https://github.com/arnaud-zg/packages/commit/d4ca53507dc9382c2ad234c2f9e34d61ee7dfcb2) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - Rename the config file to `agent-context-budget.config.json`. `context-budget.config.json` is still
+  read, with a deprecation warning, and will be removed in the next release. If both files exist, the
+  new one wins and the old one is ignored.
+
 ## 0.1.0
 
 ### Minor Changes
