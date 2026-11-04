@@ -22,16 +22,16 @@ flowchart LR
 
 ## Adapters
 
-| Package                                                                         | Factory                          | Port                | Goes in            |
-| ------------------------------------------------------------------------------- | -------------------------------- | ------------------- | ------------------ |
-| [shiplane-git](../../packages/shiplane-git/README.md)                           | `gitSourceControl()`             | Source control      | `releaseFlow`      |
-| [shiplane-github](../../packages/shiplane-github/README.md)                     | `gitHubCodeHost()`               | Code host           | `releaseFlow`      |
-| [shiplane-github](../../packages/shiplane-github/README.md)                     | `gitHubActionsCiPipeline()`      | CI pipeline         | `releaseFlow`      |
-| [shiplane-changesets](../../packages/shiplane-changesets/README.md)             | `changesetsVersioning()`         | Versioning          | `releaseFlow`      |
-| [shiplane-fly](../../packages/shiplane-fly/README.md)                           | `flyServerHosting()`             | Server hosting      | `backendService`   |
-| [shiplane-cloudflare-pages](../../packages/shiplane-cloudflare-pages/README.md) | `cloudflarePagesStaticHosting()` | Static hosting      | `webApp`           |
-| [shiplane-eas](../../packages/shiplane-eas/README.md)                           | `easMobileDistribution()`        | Mobile distribution | `mobileApp`        |
-| [shiplane-npm](../../packages/shiplane-npm/README.md)                           | `npmPackageRegistry()`           | Package registry    | `publishedPackage` |
+| Package                                                                         | Factory                                         | Port                | Goes in            |
+| ------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------- | ------------------ |
+| [shiplane-git](../../packages/shiplane-git/README.md)                           | `gitSourceControl()`                            | Source control      | `releaseFlow`      |
+| [shiplane-github](../../packages/shiplane-github/README.md)                     | `gitHubCodeHost()`                              | Code host           | `releaseFlow`      |
+| [shiplane-github](../../packages/shiplane-github/README.md)                     | `gitHubActionsCiPipeline()`                     | CI pipeline         | `releaseFlow`      |
+| [shiplane-changesets](../../packages/shiplane-changesets/README.md)             | `changesetsVersioning()`, `commitsVersioning()` | Versioning          | `releaseFlow`      |
+| [shiplane-fly](../../packages/shiplane-fly/README.md)                           | `flyServerHosting()`                            | Server hosting      | `backendService`   |
+| [shiplane-cloudflare-pages](../../packages/shiplane-cloudflare-pages/README.md) | `cloudflarePagesStaticHosting()`                | Static hosting      | `webApp`           |
+| [shiplane-eas](../../packages/shiplane-eas/README.md)                           | `easMobileDistribution()`                       | Mobile distribution | `mobileApp`        |
+| [shiplane-npm](../../packages/shiplane-npm/README.md)                           | `npmPackageRegistry()`                          | Package registry    | `publishedPackage` |
 
 `shiplane-github` also brings a feature, `releaseComments()`, for `features`. Each package's README
 has its unit file keys, an example and the sign-ins it needs. Each plugin is installed as

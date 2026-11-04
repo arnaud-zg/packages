@@ -152,7 +152,7 @@ const LEFTOVERS: Record<string, string> = {
 /** Keys a config may still set: they load, do nothing, and say so. */
 const DEPRECATED: Record<string, string> = {
   commitsWithoutChangeset:
-    "commitsWithoutChangeset is deprecated and ignored: only changesets release. Remove it and queue each release with pnpm changeset",
+    "commitsWithoutChangeset is deprecated and ignored: remove it, then queue each release with pnpm changeset, or release from commits with commitsVersioning() from @shiplane/changesets",
 };
 
 /** The modules, their names unique and their adapters' settings free of `module`. */

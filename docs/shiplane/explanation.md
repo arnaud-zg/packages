@@ -39,9 +39,12 @@ app reading another's url comes after it, and loading says so when it does not.
 ## Changesets decide what ships
 
 A diff says something changed; a changeset says whether it is a fix or a feature, and what to tell
-users. So it drives the version and the changelog, and only a changeset releases a unit: a change
-with none stays unreleased. `commitsWithoutChangeset` once released from commits as well. It is
-deprecated: a config that still sets it loads, warns and releases from changesets alone.
+users. So it drives the version and the changelog, and a change with none stays unreleased.
+
+Core only knows the versioning port, so where changesets come from is the adapter's choice:
+`commitsVersioning()` writes them from Conventional Commits and hands them to changesets, with
+nothing in core reading a commit to release it. `commitsWithoutChangeset`, the option that once did
+this in core, is deprecated: a config that still sets it loads, warns and ignores it.
 
 ## A package or a plugin has no environment
 

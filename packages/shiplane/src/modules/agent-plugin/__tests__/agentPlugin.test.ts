@@ -196,6 +196,20 @@ describe("a plugin has no environment, like a package on npm", () => {
     expect(everythingSaid(world)).not.toMatch(/preview/i);
   });
 
+  it("given versioning that needs no changeset, when nothing is queued, then it says what that versioning asks for", async () => {
+    const world = setUp();
+    world.versioning.seed({
+      pending: [],
+      plan: planFrom([], { "@acme/plugin-reviewer": "0.7.0" }),
+    });
+    world.versioning.nextChange = "a feat or fix commit";
+
+    await releaseToPreview(world.context);
+
+    expect(world.output.text).toContain("a feat or fix commit");
+    expect(world.output.text).not.toContain("pnpm changeset");
+  });
+
   it("given nothing queued, when promoted, then it points to a changeset, never to a preview to release first", async () => {
     const world = setUp();
     world.versioning.seed({

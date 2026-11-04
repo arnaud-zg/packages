@@ -53,6 +53,8 @@ export class VersioningFake implements VersioningPort {
     return Promise.resolve();
   };
 
+  nextChange = "pnpm changeset";
+
   changesetFile = (id: string) => `.changeset/${id}.md`;
   changelogFile = (dir: string) => `${dir}/CHANGELOG.md`;
 }

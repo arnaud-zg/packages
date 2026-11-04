@@ -46,7 +46,9 @@ export const pickScope = async (
       "resting",
       `${paint("bold", `Nothing to release ${where}.`)} ${paint("dim", queue ? "Queue a change first:" : "Release to preview first:")}`,
     );
-    output.line(`    ${paint("cyan", queue ? "pnpm changeset" : "shiplane")}`);
+    output.line(
+      `    ${paint("cyan", queue ? context.services.versioning.nextChange : "shiplane")}`,
+    );
     output.line();
     return null;
   }

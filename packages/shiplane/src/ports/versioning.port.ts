@@ -2,6 +2,8 @@ import type { PlannedChangeset, StatusPlan } from "../domain/changes";
 
 /** The intent to release: changesets today. */
 export interface VersioningPort {
+  /** What a person does to queue a release, as they read it: "pnpm changeset". */
+  readonly nextChange: string;
   /** Pending change files, by id, with their raw text. */
   pending: () => Promise<{ id: string; text: string }[]>;
   /** What versioning would move, with these added and the `waits` held back, writing nothing. */
