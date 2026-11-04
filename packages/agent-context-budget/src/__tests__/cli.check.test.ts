@@ -48,7 +48,7 @@ describe("context-budget check", () => {
   it("given a config file lowering the root threshold below the file's size, when checked, then it exits 1 and reports the budget exceeded", async () => {
     fs.writeFileSync(path.join(tmpDir, "CLAUDE.md"), "# Big\n\n" + "word ".repeat(200));
     fs.writeFileSync(
-      path.join(tmpDir, "context-budget.config.json"),
+      path.join(tmpDir, "agent-context-budget.config.json"),
       JSON.stringify({ root: { threshold: 10 } }),
     );
 
@@ -139,7 +139,7 @@ describe("context-budget check", () => {
   it("given custom health bands, when checked, then the summary legend shows them", async () => {
     fs.writeFileSync(path.join(tmpDir, "CLAUDE.md"), "# Small\n\nJust a few words.");
     fs.writeFileSync(
-      path.join(tmpDir, "context-budget.config.json"),
+      path.join(tmpDir, "agent-context-budget.config.json"),
       JSON.stringify({ health: { goodBelow: 0.5, normalBelow: 0.7 } }),
     );
 
@@ -167,12 +167,40 @@ describe("context-budget check", () => {
 
   it("given a config file that is not valid JSON, when checked, then it reports the config file and exits 1", async () => {
     fs.writeFileSync(path.join(tmpDir, "CLAUDE.md"), "# Small\n\nJust a few words.");
+    fs.writeFileSync(path.join(tmpDir, "agent-context-budget.config.json"), "{ not json");
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await runCli([]);
+
+    expect(process.exitCode).toBe(1);
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining("agent-context-budget.config.json"),
+    );
+  });
+
+  it("given only the legacy config file, when checked, then it is applied and the deprecation warning is shown", async () => {
+    fs.writeFileSync(path.join(tmpDir, "CLAUDE.md"), "# Big\n\n" + "word ".repeat(200));
+    fs.writeFileSync(
+      path.join(tmpDir, "context-budget.config.json"),
+      JSON.stringify({ root: { threshold: 10 } }),
+    );
+
+    await runCli([]);
+
+    expect(process.exitCode).toBe(1);
+    expect(warnLines.some((line) => line.includes("deprecated"))).toBe(true);
+  });
+
+  it("given a legacy config file that is not valid JSON, when checked, then the error names the legacy file", async () => {
+    fs.writeFileSync(path.join(tmpDir, "CLAUDE.md"), "# Small\n\nJust a few words.");
     fs.writeFileSync(path.join(tmpDir, "context-budget.config.json"), "{ not json");
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
     await runCli([]);
 
     expect(process.exitCode).toBe(1);
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("context-budget.config.json"));
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Invalid context-budget.config.json"),
+    );
   });
 });

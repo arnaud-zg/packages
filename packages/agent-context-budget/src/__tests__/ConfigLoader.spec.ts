@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { loadConfig } from "../config";
 
@@ -15,6 +15,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.restoreAllMocks();
   process.chdir(originalCwd);
   fs.rmSync(tmpDir, { recursive: true, force: true });
 });
@@ -52,7 +53,7 @@ describe("loading the analysis config", () => {
   describe("given a config file with a partial override", () => {
     it("when loaded, then the override is deep-merged over the defaults", () => {
       fs.writeFileSync(
-        path.join(tmpDir, "context-budget.config.json"),
+        path.join(tmpDir, "agent-context-budget.config.json"),
         JSON.stringify({ root: { threshold: 5000 } }),
       );
 
@@ -83,10 +84,74 @@ describe("loading the analysis config", () => {
     });
   });
 
+  describe("given only the legacy config file exists", () => {
+    it("when loaded, then it is still read and a deprecation warning names the new file", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      fs.writeFileSync(
+        path.join(tmpDir, "context-budget.config.json"),
+        JSON.stringify({ root: { threshold: 5000 } }),
+      );
+
+      const config = loadConfig();
+
+      expect(config.root.threshold).toBe(5000);
+      expect(warn).toHaveBeenCalledOnce();
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining("will be removed in the next release"),
+      );
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining("agent-context-budget.config.json"),
+      );
+    });
+
+    it("when loaded by explicit path, then no deprecation warning is shown", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const legacyPath = path.join(tmpDir, "context-budget.config.json");
+      fs.writeFileSync(legacyPath, JSON.stringify({ root: { threshold: 5000 } }));
+
+      expect(loadConfig(legacyPath).root.threshold).toBe(5000);
+      expect(warn).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("given both the new and the legacy config files exist", () => {
+    it("when loaded, then the new file wins and the warning says the legacy one is ignored", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      fs.writeFileSync(
+        path.join(tmpDir, "agent-context-budget.config.json"),
+        JSON.stringify({ root: { threshold: 5000 } }),
+      );
+      fs.writeFileSync(
+        path.join(tmpDir, "context-budget.config.json"),
+        JSON.stringify({ root: { threshold: 9000 } }),
+      );
+
+      const config = loadConfig();
+
+      expect(config.root.threshold).toBe(5000);
+      expect(warn).toHaveBeenCalledOnce();
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("is ignored"));
+    });
+  });
+
+  describe("given only the new config file exists", () => {
+    it("when loaded, then no warning is shown", () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      fs.writeFileSync(
+        path.join(tmpDir, "agent-context-budget.config.json"),
+        JSON.stringify({ root: { threshold: 5000 } }),
+      );
+
+      loadConfig();
+
+      expect(warn).not.toHaveBeenCalled();
+    });
+  });
+
   describe("given goodBelow above normalBelow", () => {
     it("when loaded, then the inverted health bands are rejected", () => {
       fs.writeFileSync(
-        path.join(tmpDir, "context-budget.config.json"),
+        path.join(tmpDir, "agent-context-budget.config.json"),
         JSON.stringify({ health: { goodBelow: 0.9, normalBelow: 0.5 } }),
       );
 

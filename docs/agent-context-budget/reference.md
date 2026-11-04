@@ -44,7 +44,7 @@ invalid config file prints the reason and exits `1`.
 
 ## Configuration
 
-Reads `./context-budget.config.json` if present (or an explicit path via `loadConfig(path)`
+Reads `./agent-context-budget.config.json` if present (or an explicit path via `loadConfig(path)`
 programmatically), deep-merged over the built-in defaults — a partial override only needs the fields
 it changes:
 
@@ -54,6 +54,10 @@ it changes:
   "subdir": { "dirs": ["apps", "packages", "tooling"] }
 }
 ```
+
+The previous name, `context-budget.config.json`, still works but prints a deprecation warning and
+will be removed in the next release: rename the file to keep your settings. If both files exist,
+`agent-context-budget.config.json` wins and the old one is ignored.
 
 | Field                     | Default                                   | Meaning                                                                   |
 | ------------------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
