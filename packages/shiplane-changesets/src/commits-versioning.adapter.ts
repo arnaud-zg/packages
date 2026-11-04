@@ -88,8 +88,13 @@ const commitsFiles = (root: string, shell: Shell, options: ChangesetsOptions): V
     const [folders, written] = await Promise.all([files.folders(), files.pending()]);
     const config = Config.safeParse(readJson(path.join(root, ".changeset", "config.json")));
     const ignored = new Set(config.success ? config.data.ignore : []);
-    const moving = Object.entries(folders).filter(
-      ([name]) => !ignored.has(name) && !written.some(({ text }) => text.includes(`"${name}":`)),
+    const packages = Object.entries(folders);
+    // The root's folder holds every commit: beside other packages, it is not one of them.
+    const moving = packages.filter(
+      ([name, folder]) =>
+        !(folder === "." && packages.length > 1) &&
+        !ignored.has(name) &&
+        !written.some(({ text }) => text.includes(`"${name}":`)),
     );
     const found = await Promise.all(
       moving.map(async ([name, folder]) => {

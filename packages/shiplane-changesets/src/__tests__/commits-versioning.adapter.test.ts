@@ -138,6 +138,36 @@ describe("versioning from commits, with no changeset to write", () => {
     expect(await port.pending()).toEqual([]);
   });
 
+  it("given the root listed in the workspace beside its packages, when a plugin changes, then only the plugin releases", async () => {
+    const port = setUp();
+    write("pnpm-workspace.yaml", 'packages:\n  - "."\n  - plugins/*\n');
+    write("package.json", manifest("repo", "2.0.0"));
+    git("add", "-A");
+    git("commit", "-qm", "chore(release): the root");
+    commit("plugins/reviewer/a.md", "feat(reviewer): add the audit skill");
+    commit("scripts/a.md", "feat: a script of the repository");
+
+    const pending = await port.pending();
+
+    expect(pending).toHaveLength(1);
+    expect(pending[0]?.text).toContain('"@acme/reviewer": minor');
+  });
+
+  it("given a single package at the root, when it changes, then it releases", async () => {
+    setUp();
+    fs.rmSync(path.join(root, "plugins"), { recursive: true });
+    write("pnpm-workspace.yaml", 'packages:\n  - "."\n');
+    write("package.json", manifest("@acme/solo", "2.0.0"));
+    git("add", "-A");
+    git("commit", "-qm", "chore(release): solo");
+    commit("src/a.md", "feat: something");
+
+    const pending = await commitsVersioning().create({ root, shell }).pending();
+
+    expect(pending).toHaveLength(1);
+    expect(pending[0]?.text).toContain('"@acme/solo": minor');
+  });
+
   it("given a package the changesets config ignores, when pending is read, then its commits release nothing", async () => {
     const port = setUp();
     commit("plugins/ignored/a.md", "feat: something");
