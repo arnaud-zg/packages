@@ -45,9 +45,6 @@ export const doctor = async (context: SetupContext): Promise<boolean> => {
       `${paint("dim", "│")}  ${paint("yellow", "!")} ${paint("dim", `rename ${from} to ${to}: the old name still works for now`)}`,
     ),
   );
-  (release.deprecations ?? []).forEach((message) =>
-    output.line(`${paint("dim", "│")}  ${paint("yellow", "!")} ${paint("dim", message)}`),
-  );
   const unique = requirementsOf(release);
   const failing: Requirement[] = [];
   const missing = new Set<string>();

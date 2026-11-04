@@ -40,8 +40,7 @@ app reading another's url comes after it, and loading says so when it does not.
 
 A diff says something changed; a changeset says whether it is a fix or a feature, and what to tell
 users. So it drives the version and the changelog, and only a changeset releases a unit: a change
-with none stays unreleased. `commitsWithoutChangeset` once released from commits as well. It is
-deprecated: a config that still sets it loads, warns and releases from changesets alone.
+with none stays unreleased.
 
 ## A package or a plugin has no environment
 
