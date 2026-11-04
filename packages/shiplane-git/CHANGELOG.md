@@ -1,5 +1,21 @@
 # @shiplane/git
 
+## 0.4.1
+
+### Patch Changes
+
+- [#41](https://github.com/arnaud-zg/packages/pull/41) [`ad23280`](https://github.com/arnaud-zg/packages/commit/ad23280c143888d4398a020751e69910b9dfc568) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - Only changesets release now: `commitsWithoutChangeset` is removed, so queue each release with
+  `pnpm changeset`. A config that still sets it loads as before and the key does nothing.
+  `status --json` drops the `commits` field, and `SourceControlPort` drops `subjectsSince`.
+  
+  An agent plugin or internal tool has no environment, like a package on npm, so a run stops offering
+  preview: it asks `Release these live?`, and the scope question, the release PR, `status` and the
+  "Nothing to ship" lines say `live` too. So do a package's hints, which said `on preview`.
+
+- Version forced to 0.4.1 instead of 0.5.0: Adds setup versioning and a version picker to the same release flow
+- Updated dependencies [[`ad23280`](https://github.com/arnaud-zg/packages/commit/ad23280c143888d4398a020751e69910b9dfc568), [`f8dd4e8`](https://github.com/arnaud-zg/packages/commit/f8dd4e8edaec8cd9b75da7f3cb5f969263e98fe9), [`7ec8604`](https://github.com/arnaud-zg/packages/commit/7ec8604fa0aeafa226dc4e85f2e5ff6c79e35ea5), [`8315f35`](https://github.com/arnaud-zg/packages/commit/8315f3531b272c5d97f8429b6b9e39911489fa93)]:
+  - shiplane@0.4.1
+
 ## 0.4.0
 
 ### Patch Changes

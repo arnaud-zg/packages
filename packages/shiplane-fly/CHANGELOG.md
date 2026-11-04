@@ -1,5 +1,13 @@
 # @shiplane/fly
 
+## 0.4.1
+
+### Patch Changes
+
+- Version forced to 0.4.1 instead of 0.5.0: Adds setup versioning and a version picker to the same release flow
+- Updated dependencies [[`ad23280`](https://github.com/arnaud-zg/packages/commit/ad23280c143888d4398a020751e69910b9dfc568), [`f8dd4e8`](https://github.com/arnaud-zg/packages/commit/f8dd4e8edaec8cd9b75da7f3cb5f969263e98fe9), [`7ec8604`](https://github.com/arnaud-zg/packages/commit/7ec8604fa0aeafa226dc4e85f2e5ff6c79e35ea5), [`8315f35`](https://github.com/arnaud-zg/packages/commit/8315f3531b272c5d97f8429b6b9e39911489fa93)]:
+  - shiplane@0.4.1
+
 ## 0.4.0
 
 ### Patch Changes

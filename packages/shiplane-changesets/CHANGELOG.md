@@ -1,5 +1,30 @@
 # @shiplane/changesets
 
+## 0.4.1
+
+### Patch Changes
+
+- [#42](https://github.com/arnaud-zg/packages/pull/42) [`f8dd4e8`](https://github.com/arnaud-zg/packages/commit/f8dd4e8edaec8cd9b75da7f3cb5f969263e98fe9) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - Release with no changeset to write: `commitsVersioning()` turns the Conventional Commits since each
+  package's version into the release's changesets. `feat` is a minor, a subject marked `!` a major (a
+  minor below 1.0), and anything else a patch, so a change committed as `chore:` still ships. A
+  pending changeset still takes over for the package it names.
+  
+  `VersioningPort` gains a required `nextChange`: what a person does to queue a release, so shiplane
+  stops telling a repository on commits to run `pnpm changeset`.
+
+- [#46](https://github.com/arnaud-zg/packages/pull/46) [`7ec8604`](https://github.com/arnaud-zg/packages/commit/7ec8604fa0aeafa226dc4e85f2e5ff6c79e35ea5) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - Pick the version a release ships. When everything it moves lands on one version, `shiplane` asks
+  `Release these to preview as`, with the computed version selected: Enter releases it, Esc cancels,
+  and any other version asks why in one line. That line reaches the changelog, the release PR and the
+  release notes, as `Version forced to 1.0.0 instead of 0.5.0: …`. Units moving to different versions
+  keep the plain yes, and `--yes` keeps the computed version.
+  
+  `VersioningPort`'s `plan` and `apply` take an optional `ceiling`, the level nothing moves past. An
+  adapter that ignores it stops the run with `Can't force`, rather than shipping another version.
+
+- Version forced to 0.4.1 instead of 0.5.0: Adds setup versioning and a version picker to the same release flow
+- Updated dependencies [[`ad23280`](https://github.com/arnaud-zg/packages/commit/ad23280c143888d4398a020751e69910b9dfc568), [`f8dd4e8`](https://github.com/arnaud-zg/packages/commit/f8dd4e8edaec8cd9b75da7f3cb5f969263e98fe9), [`7ec8604`](https://github.com/arnaud-zg/packages/commit/7ec8604fa0aeafa226dc4e85f2e5ff6c79e35ea5), [`8315f35`](https://github.com/arnaud-zg/packages/commit/8315f3531b272c5d97f8429b6b9e39911489fa93)]:
+  - shiplane@0.4.1
+
 ## 0.4.0
 
 ### Patch Changes
