@@ -8,8 +8,8 @@
 [Set a value per environment](#set-a-value-per-environment) ·
 [Read another app's value](#read-another-apps-value) · [Hold an app back](#hold-an-app-back)
 
-**Release:** [Preview every command](#preview-every-command) ·
-[Promote to production](#promote-to-production) ·
+**Release:** [Force another version](#force-another-version) ·
+[Preview every command](#preview-every-command) · [Promote to production](#promote-to-production) ·
 [Widen a production rollout](#widen-a-production-rollout) ·
 [Choose GitHub Actions or this machine](#choose-github-actions-or-this-machine) ·
 [Ship with no laptop](#ship-with-no-laptop) · [Use it from a script](#use-it-from-a-script)
@@ -66,6 +66,39 @@ The app read must ship first: list its module before the reader's in `modules`.
 ## Hold an app back
 
 Untick it when `pnpm shiplane` asks what to release. Its changesets wait for the next release.
+
+## Force another version
+
+When everything a release moves lands on one version, `pnpm shiplane` asks for it, with the computed
+version selected:
+
+```text
+◆  Release these to preview as (Esc cancels)
+│  ○ 1.0.0  major
+│  ● 0.5.0  minor, computed
+│  ○ 0.4.1  patch
+```
+
+Enter releases the computed version. Pick another and it asks why, in one line:
+
+```text
+◆  Why 1.0.0? Tell users what changed, in one line.
+│  Drops subjectsSince from SourceControlPort
+```
+
+Esc or an empty line goes back to the versions. The line reaches the changelog, the release PR and
+the release notes, as
+`Version forced to 1.0.0 instead of 0.5.0: Drops subjectsSince from SourceControlPort`. Everything
+the release moves takes the forced version, a whole fixed group included, and a changeset's own bump
+gives way when you go lower.
+
+- **Units moving to different versions** get a plain yes: untick the others to force one.
+- **`--yes` and a run without a terminal** keep the computed version.
+- **An open release PR** has its version already: close it and run `pnpm shiplane` to change it.
+- **A release PR replaced because main moved** starts again from the computed version, so force it
+  again. `--yes` will not ask.
+- **Versioning that cannot land there**, a peer dependency pulling a unit further, stops with
+  `Can't force` and writes nothing.
 
 ## Preview every command
 
@@ -148,7 +181,7 @@ The release PR writes each plugin's new version into every agent manifest it has
 (`.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `.cursor-plugin/plugin.json`,
 `gemini-extension.json`), one line each. After the merge, `reviewer--v0.8.0` is tagged with its
 changelog as notes. Nothing deploys a plugin: agents install it from the repository, so the merge
-ships it, and a run names no environment: it asks `Release these live?`, as for a package on npm. A
+ships it, and a run names no environment: it asks to release it live, as for a package on npm. A
 manifest with no `version` is left alone.
 
 Queue each release with `pnpm changeset`, as for any unit, or

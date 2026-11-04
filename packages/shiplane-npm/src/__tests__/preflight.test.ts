@@ -54,7 +54,7 @@ describe("checking sign-ins before a release writes anything", () => {
 
   it("given every sign-in works, when a release starts, then the check says nothing and the release goes on to its PR", async () => {
     const { context, prompter, host } = setUp({ interactive: true });
-    prompter.answer(["budget"], true);
+    prompter.answer(["budget"], "minor");
 
     await releaseToPreview(context);
 

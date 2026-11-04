@@ -1,3 +1,5 @@
+import type { BumpLevel } from "./changes";
+
 const toParts = (version: string) =>
   version.split(".").map((part) => Number.parseInt(part, 10) || 0);
 
@@ -18,4 +20,12 @@ export const compareVersions = (left: string, right: string): number => {
 export const nextPatch = (version: string) => {
   const [major = 0, minor = 0, patch = 0] = version.split(".").map(Number);
   return `${major}.${minor}.${patch + 1}`;
+};
+
+/** The version one bump of `level` after `version`. */
+export const nextVersion = (version: string, level: BumpLevel) => {
+  const [major = 0, minor = 0] = version.split(".").map(Number);
+  if (level === "major") return `${major + 1}.0.0`;
+  if (level === "minor") return `${major}.${minor + 1}.0`;
+  return nextPatch(version);
 };

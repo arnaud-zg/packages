@@ -119,10 +119,11 @@ const commitsFiles = (root: string, shell: Shell, options: ChangesetsOptions): V
         text: textOf(changeset),
       })),
     ],
-    plan: async (added, held) => files.plan([...(await fromCommits()), ...added], held),
-    apply: async (added, held) => {
+    plan: async (added, held, ceiling) =>
+      files.plan([...(await fromCommits()), ...added], held, ceiling),
+    apply: async (added, held, ceiling) => {
       const commits = await fromCommits();
-      await files.apply([...commits, ...added], held);
+      await files.apply([...commits, ...added], held, ceiling);
       // A held unit's commits are still there next time: no file keeps them.
       commits.forEach(({ id }) =>
         fs.rmSync(path.join(root, files.changesetFile(id)), { force: true }),

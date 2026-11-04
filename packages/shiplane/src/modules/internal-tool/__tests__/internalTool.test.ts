@@ -65,11 +65,11 @@ describe("an app released but never deployed, like the release CLI", () => {
       pending: [{ id: FLAG.id, text: changesetText({ "@acme/release": "patch" }, FLAG.summary) }],
       plan: planFrom([FLAG], { "@acme/release": "0.3.0" }),
     });
-    prompter.answer(false);
+    prompter.answer(null);
 
     await openReleasePr(context, await prepareRelease(context, new Set(["release"])));
 
-    expect(prompter.asked).toEqual(["Release these live?"]);
+    expect(prompter.asked).toEqual(["Release these live as (Esc cancels)"]);
     expect(output.text).not.toContain("preview");
   });
 

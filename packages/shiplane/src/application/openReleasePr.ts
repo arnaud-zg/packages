@@ -11,8 +11,9 @@ import {
   releaseTitle,
   titleFits,
 } from "../domain/releasePr";
+import { chooseVersion } from "./chooseVersion";
 import { prepareRelease } from "./prepareRelease";
-import { confirm, fail, listed, paint } from "./say";
+import { fail, listed, paint } from "./say";
 import { branchStep, openPrStep, pushStep, runSteps } from "./steps";
 import { destination, environmentLabel, moduleOf } from "./targets";
 
@@ -106,6 +107,13 @@ export const printSummary = (context: ReleaseContext, prepared: Prepared) => {
   printCompanions(context, prepared);
 };
 
+/** Says what a plugin refuses in `prepared`; true when something does. */
+const refused = (context: ReleaseContext, { contributions }: Prepared) => {
+  const blocked = Object.values(contributions).find((entry) => entry.blocked)?.blocked;
+  if (blocked) fail(context, blocked.title, blocked.detail, blocked.commands);
+  return Boolean(blocked);
+};
+
 /**
  * Versions what `prepared` covers on one branch from main, opens its PR, and goes back to main.
  * Null, with what to do, when it must not run.
@@ -118,11 +126,7 @@ export const openReleasePr = async (
 ): Promise<OpenPr[] | null> => {
   const { output, services, clock } = context;
   printSummary(context, prepared);
-  const blocked = Object.values(prepared.contributions).find((entry) => entry.blocked)?.blocked;
-  if (blocked) {
-    fail(context, blocked.title, blocked.detail, blocked.commands);
-    return null;
-  }
+  if (refused(context, prepared)) return null;
   const source = releaseSource("build", "preview", await services.sourceControl.position());
   if (!source.allowed) {
     fail(
@@ -159,18 +163,22 @@ export const openReleasePr = async (
   output.line(paint("dim", "  Steps"));
   planned.forEach((step, index) => output.line(`  ${index + 1}. ${step}`));
   output.line();
-  if (!(await confirm(context, `Release these ${whereTo(context, prepared)}?`, true))) {
+  const chosen = await chooseVersion(context, prepared, whereTo(context, prepared));
+  if (!chosen) {
     output.line(paint("dim", "Nothing ran."));
     return null;
   }
+  // A forced version can change what a plugin decides, and what its changeset ties together.
+  if (refused(context, chosen)) return null;
+  const opening = prGroupsOf(context, chosen);
   const now = clock.now();
   const prs: OpenPr[] = [];
-  for (const group of groups) {
+  for (const group of opening) {
     const apps = new Set(group.map(({ app }) => app));
     const scoped =
-      groups.length > 1 ? await prepareRelease(context, apps, prepared.contributions) : prepared;
+      opening.length > 1 ? await prepareRelease(context, apps, chosen.contributions) : chosen;
     const [first] = group;
-    const branch = `${releaseBranchName(now)}${groups.length > 1 && first ? `-${first.app}` : ""}`;
+    const branch = `${releaseBranchName(now)}${opening.length > 1 && first ? `-${first.app}` : ""}`;
     const pr = await openOne(context, scoped, kindOf, branch, replaces);
     if (!pr) {
       if (prs.length > 0) {
@@ -231,7 +239,8 @@ const openOne = async (
     branchStep(context, branch),
     {
       label: "versions and changelogs",
-      run: () => services.versioning.apply(prepared.added, prepared.split.waits),
+      run: () =>
+        services.versioning.apply(prepared.added, prepared.split.waits, prepared.forced?.level),
     },
     ...Object.values(prepared.contributions).flatMap(({ writes }) => writes),
     {

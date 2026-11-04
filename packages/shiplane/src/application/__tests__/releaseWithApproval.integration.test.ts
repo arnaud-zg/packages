@@ -159,7 +159,7 @@ describe("Feature: coming back to a release", () => {
 
       // and when shiplane runs again
       world.host.seed({ openPrs: [], prStates: { 1800: ["OPEN", "MERGED"] } });
-      world.prompter.answer(["api"], true);
+      world.prompter.answer(["api"], "minor");
       await releaseToPreview(world.context);
 
       // then

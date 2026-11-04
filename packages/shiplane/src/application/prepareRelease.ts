@@ -1,5 +1,6 @@
 import type { AppBump, PlannedChangeset } from "../domain/changes";
 import type { Companion } from "../domain/companions";
+import type { ForcedVersion } from "../domain/versionChoice";
 import type { VersionChoice, VersionContribution } from "../ports/delivery.port";
 import type { ReleaseContext } from "./context";
 import { appBumps, packageBumps, splitChangesets } from "../domain/changes";
@@ -13,6 +14,10 @@ export type Split = ReturnType<typeof splitChangesets>;
 const NOTHING_HELD: Split = { ships: [], waits: [] };
 
 export interface Prepared {
+  /** The units the person picked. */
+  scope: ReadonlySet<string>;
+  /** The version the person chose over the computed one, when they did. */
+  forced?: ForcedVersion;
   /** Changesets this release ships, the ones it writes included. */
   pending: number;
   /** Units the person left out: their changesets stay pending. */
@@ -78,6 +83,7 @@ export const prepareRelease = async (
   context: ReleaseContext,
   scope: ReadonlySet<string>,
   known: Readonly<Record<string, VersionContribution>> = {},
+  forced?: ForcedVersion,
 ): Promise<Prepared> => {
   const { release, services } = context;
   const refs = unitRefs(release.units);
@@ -89,16 +95,27 @@ export const prepareRelease = async (
   ]);
   const held = [...named].filter((app) => !scope.has(app));
   const split = held.length > 0 ? splitChangesets(base.changesets, held, refs) : NOTHING_HELD;
-  const picked = held.length > 0 ? await services.versioning.plan([], split.waits) : base;
+  const own = forced ? [forced.changeset] : [];
+  const ceiling = forced?.level;
+  const picked =
+    held.length > 0 || forced ? await services.versioning.plan(own, split.waits, ceiling) : base;
   const contributions = await contributionsOf(
     context,
     scope,
     appBumps(picked, dependencies, refs),
     known,
   );
-  const added = Object.values(contributions).flatMap((contribution) => contribution.added);
-  const plan = added.length > 0 ? await services.versioning.plan(added, split.waits) : picked;
+  const added = [
+    ...own,
+    ...Object.values(contributions).flatMap((contribution) => contribution.added),
+  ];
+  const plan =
+    added.length > own.length
+      ? await services.versioning.plan(added, split.waits, ceiling)
+      : picked;
   return {
+    scope,
+    forced,
     pending: (held.length > 0 ? split.ships.length : pendingFiles.length) + added.length,
     held,
     split,

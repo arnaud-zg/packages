@@ -1,4 +1,4 @@
-import type { PlannedChangeset, StatusPlan } from "../domain/changes";
+import type { BumpLevel, PlannedChangeset, StatusPlan } from "../domain/changes";
 
 /** The intent to release: changesets today. */
 export interface VersioningPort {
@@ -6,10 +6,21 @@ export interface VersioningPort {
   readonly nextChange: string;
   /** Pending change files, by id, with their raw text. */
   pending: () => Promise<{ id: string; text: string }[]>;
-  /** What versioning would move, with these added and the `waits` held back, writing nothing. */
-  plan: (added: PlannedChangeset[], held: PlannedChangeset[]) => Promise<StatusPlan>;
-  /** Writes `added`, versions everything but `held`, and leaves `held` pending. */
-  apply: (added: PlannedChangeset[], held: PlannedChangeset[]) => Promise<void>;
+  /**
+   * What versioning would move, with these added and the `waits` held back, writing nothing. With
+   * a `ceiling`, nothing moves by more than that level, whatever a change says.
+   */
+  plan: (
+    added: PlannedChangeset[],
+    held: PlannedChangeset[],
+    ceiling?: BumpLevel,
+  ) => Promise<StatusPlan>;
+  /** Writes `added`, versions everything but `held` up to `ceiling`, and leaves `held` pending. */
+  apply: (
+    added: PlannedChangeset[],
+    held: PlannedChangeset[],
+    ceiling?: BumpLevel,
+  ) => Promise<void>;
   /** Adds one pending changeset, as a person would with `pnpm changeset`. */
   write: (changeset: PlannedChangeset) => Promise<void>;
   /** Each workspace package's runtime workspace dependencies, by package name. */
