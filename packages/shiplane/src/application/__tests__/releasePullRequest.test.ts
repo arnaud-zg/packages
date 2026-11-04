@@ -214,35 +214,6 @@ describe("opening the release pull request", () => {
     expect(versioning.applied[0]?.held.map(({ id }) => id)).toEqual(["admin-history"]);
   });
 
-  it("given admin changed with no changeset and picked, when the release PR is opened, then its changelog comes from its feature commits", async () => {
-    const { context, source, versioning, prompter } = setUp();
-    versioning.seed({
-      pending: [],
-      plan: planFrom([], { "@acme/admin": "0.1.0" }),
-    });
-    source.seed({
-      versionCommits: { "apps/admin@0.1.0": { sha: "a0", subject: "chore(release): admin 0.1.0" } },
-      subjects: {
-        "a0:apps/admin": [
-          "feat(admin): the user page lists every identification (#1690)",
-          "chore(admin): bump refine",
-        ],
-      },
-    });
-    prompter.answer(true);
-
-    const prepared = await prepareRelease(context, new Set(["admin"]));
-    await openReleasePr(context, prepared);
-
-    expect(versioning.applied[0]?.added).toEqual([
-      {
-        id: "admin-0.1.1-1",
-        releases: [{ name: "@acme/admin", type: "patch" }],
-        summary: "The user page lists every identification.",
-      },
-    ]);
-  });
-
   it("given a branch that is not main, when the release PR would open, then nothing is written and it says to switch to main", async () => {
     const { context, source, versioning, output } = setUp();
     source.seed({ position: { branch: "feat/x", head: "b1", originMain: "m1" } });

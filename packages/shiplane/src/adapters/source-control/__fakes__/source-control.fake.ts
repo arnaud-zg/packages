@@ -9,8 +9,6 @@ interface SourceState {
   tags: Record<string, string>;
   /** `<dir>@<version>` → the commit that brought that version. */
   versionCommits: Record<string, { sha: string; subject: string }>;
-  /** `<sha>:<dir>` → subjects of the commits since, newest first. */
-  subjects: Record<string, string[]>;
   /** `<ref>:<file>` → its text at that ref. */
   files: Record<string, string>;
   /** `<from>..<to>` → the files that differ. */
@@ -40,7 +38,6 @@ export class SourceControlFake implements SourceControlPort {
     clean: true,
     tags: {},
     versionCommits: {},
-    subjects: {},
     files: {},
     diffs: {},
     commits: {},
@@ -73,8 +70,6 @@ export class SourceControlFake implements SourceControlPort {
   tagCommit = (tag: string) => Promise.resolve(this.state.tags[tag] ?? null);
   versionCommit = (dir: string, _manifest: string, version: string) =>
     Promise.resolve(this.state.versionCommits[`${dir}@${version}`] ?? null);
-  subjectsSince = (sha: string, dir: string) =>
-    Promise.resolve(this.state.subjects[`${sha}:${dir}`] ?? []);
   changedFiles = () => Promise.resolve(this.state.changed);
   diffNames = (from: string, to: string) =>
     Promise.resolve(this.state.diffs[`${from}..${to}`] ?? []);

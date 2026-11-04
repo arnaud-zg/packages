@@ -73,7 +73,7 @@ pnpm shiplane
 ```
 
 ```text
-  Unit                     Version             Ships to preview
+  Unit                     Version             Ships live
   agent-context-budget     0.1.0               – nothing changed
   vite-workspace-resolver  0.1.0 → 0.1.1       ↑ ship  npm
 

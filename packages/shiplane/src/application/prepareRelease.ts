@@ -1,11 +1,11 @@
-import type { AppBump, PlannedChangeset, UnreleasedApp } from "../domain/changes";
+import type { AppBump, PlannedChangeset } from "../domain/changes";
 import type { Companion } from "../domain/companions";
 import type { VersionChoice, VersionContribution } from "../ports/delivery.port";
 import type { ReleaseContext } from "./context";
-import { appBumps, packageBumps, splitChangesets, unreleasedChangesets } from "../domain/changes";
+import { appBumps, packageBumps, splitChangesets } from "../domain/changes";
 import { draggedUnits } from "../domain/companions";
 import { tagName } from "../domain/tags";
-import { findUnreleased, namedUnits, unitRefs } from "./readScope";
+import { namedUnits, unitRefs } from "./readScope";
 import { decideContext, jobInput, moduleOf } from "./targets";
 
 export type Split = ReturnType<typeof splitChangesets>;
@@ -17,8 +17,6 @@ export interface Prepared {
   pending: number;
   /** Units the person left out: their changesets stay pending. */
   held: string[];
-  /** Changed units the person left out: no changeset ships them. */
-  unreleased: UnreleasedApp[];
   split: Split;
   bumps: AppBump[];
   /** Units the person did not pick that move anyway, with the package that drags each. */
@@ -89,36 +87,20 @@ export const prepareRelease = async (
     services.versioning.plan([], []),
     services.versioning.pending(),
   ]);
-  const baseBumps = appBumps(base, dependencies, refs);
-  const unreleased = await findUnreleased(
-    context,
-    new Set([...named, ...baseBumps.map(({ app }) => app)]),
-  );
   const held = [...named].filter((app) => !scope.has(app));
-  const adopted = unreleased
-    .filter(({ app }) => scope.has(app))
-    .flatMap(({ app, version, commits }) => {
-      const ref = refs.find(({ name }) => name === app);
-      return ref ? unreleasedChangesets(ref, version, commits) : [];
-    });
   const split = held.length > 0 ? splitChangesets(base.changesets, held, refs) : NOTHING_HELD;
-  const picked =
-    held.length > 0 || adopted.length > 0
-      ? await services.versioning.plan(adopted, split.waits)
-      : base;
+  const picked = held.length > 0 ? await services.versioning.plan([], split.waits) : base;
   const contributions = await contributionsOf(
     context,
     scope,
     appBumps(picked, dependencies, refs),
     known,
   );
-  const contributed = Object.values(contributions).flatMap(({ added }) => added);
-  const added = [...adopted, ...contributed];
-  const plan = contributed.length > 0 ? await services.versioning.plan(added, split.waits) : picked;
+  const added = Object.values(contributions).flatMap((contribution) => contribution.added);
+  const plan = added.length > 0 ? await services.versioning.plan(added, split.waits) : picked;
   return {
     pending: (held.length > 0 ? split.ships.length : pendingFiles.length) + added.length,
     held,
-    unreleased: unreleased.filter(({ app }) => !scope.has(app)),
     split,
     bumps: appBumps(plan, dependencies, refs),
     companions: draggedUnits(plan, dependencies, refs, scope),

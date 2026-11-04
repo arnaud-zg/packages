@@ -49,7 +49,6 @@ export const testContext = ({
   interactive = true,
   root = "/repo",
   tagFormat = DEFAULT_TAG_FORMAT,
-  commitsWithoutChangeset = "release",
   approval,
 }: {
   units: ReleaseUnit[];
@@ -60,8 +59,6 @@ export const testContext = ({
   interactive?: boolean;
   root?: string;
   tagFormat?: string;
-  /** A release skips commits no changeset names; the config default ignores them. */
-  commitsWithoutChangeset?: "release" | "ignore";
   /** Whether someone else approves the release PR; the config default when absent. */
   approval?: Approval;
 }) => {
@@ -83,7 +80,6 @@ export const testContext = ({
     units,
     problems: [],
     tagFormat,
-    releasesCommits: commitsWithoutChangeset === "release",
   };
   const context: ReleaseContext = {
     release,

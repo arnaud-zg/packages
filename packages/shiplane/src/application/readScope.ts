@@ -1,14 +1,13 @@
-import type { UnitRef, UnreleasedApp } from "../domain/changes";
+import type { UnitRef } from "../domain/changes";
 import type { Environment } from "../domain/environment";
 import type { ScopeInfo } from "../domain/scope";
 import type { ReleaseUnit } from "../domain/unit";
 import type { Deploy } from "../ports/code-host.port";
 import type { ReleaseContext } from "./context";
-import { changesetApps, unreleasedApps } from "../domain/changes";
+import { changesetApps } from "../domain/changes";
 import { deployRunTitle } from "../domain/deploys";
 import { cameWithRelease, firstRelease, tagName } from "../domain/tags";
-import { UNIT_FILES } from "./config/readUnitFile";
-import { decideContext, jobInput, moduleOf } from "./targets";
+import { decideContext, hasNoEnvironment, jobInput, moduleOf } from "./targets";
 
 export const MANIFEST = "package.json";
 
@@ -22,26 +21,6 @@ export const namedUnits = async ({ release, services }: ReleaseContext) =>
       changesetApps(text, unitRefs(release.units)),
     ),
   );
-
-/** Units whose folder moved since their current version, that no changeset or bump ships. */
-export const findUnreleased = async (
-  { release, services: { sourceControl: source } }: ReleaseContext,
-  named: ReadonlySet<string>,
-): Promise<UnreleasedApp[]> => {
-  if (!release.releasesCommits) return [];
-  const history = await Promise.all(
-    release.units.map(async ({ name, dir, version }) => {
-      const since =
-        (await source.tagCommit(tagName(name, version, release.tagFormat))) ??
-        (await source.versionCommit(dir, MANIFEST, version))?.sha;
-      if (!since) return [];
-      // Its own release config is not a change its users get.
-      const commits = await source.subjectsSince(since, dir, UNIT_FILES);
-      return [{ app: name, version, commits }];
-    }),
-  );
-  return unreleasedApps(history.flat(), named);
-};
 
 /** A tag's deploy on an environment, from every record the host keeps. */
 export const deployedOn = (history: readonly Deploy[], tag: string, environment: Environment) => {
@@ -64,7 +43,6 @@ export const readScope = async (
   const pending = await services.versioning.pending();
   const refs = unitRefs(release.units);
   const named = pending.map(({ text }) => changesetApps(text, refs));
-  const unreleased = await findUnreleased(context, new Set(named.flat()));
   const [deployed, tags] = await Promise.all([
     services.codeHost.deployments().catch(() => []),
     services.sourceControl.tags(),
@@ -87,7 +65,6 @@ export const readScope = async (
         app: unit.name,
         version: unit.version,
         changesets: named.filter((apps) => apps.includes(unit.name)).length,
-        commits: unreleased.find((entry) => entry.app === unit.name)?.commits.length ?? 0,
         tagged,
         versioned:
           commit !== null && cameWithRelease({ app: unit.name, version: unit.version, commit }),
@@ -99,6 +76,7 @@ export const readScope = async (
         onPreview: await live("preview"),
         ...(decidedBy ? { decidedBy } : {}),
         ...(target?.releaseOnly ? { releaseOnly: true } : {}),
+        ...(target && hasNoEnvironment(target) ? { noEnvironment: true } : {}),
       };
     }),
   );

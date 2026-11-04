@@ -29,18 +29,15 @@ export const nextStep = ({
   pending,
   releasePrs,
   untagged,
-  unreleased,
 }: {
   pending: number;
   /** The open release PR, if any; older releases may have left one per app. */
   releasePrs: OpenPr[];
   /** Versions a merged release moved that have no tag or release notes yet. */
   untagged: number;
-  /** Apps changed since their current version with no changeset naming them. */
-  unreleased: number;
 }): ReleaseStep => {
   if (releasePrs.length > 0) return { step: "wait-merge", prs: releasePrs };
-  if ((pending > 0 || unreleased > 0) && untagged === 0) return { step: "release-pr" };
+  if (pending > 0 && untagged === 0) return { step: "release-pr" };
   return { step: "ship" };
 };
 
@@ -186,8 +183,15 @@ export const releaseCommitBody = (bumps: AppBump[]) =>
     })
     .join("\n\n");
 
-/** The release PR's body; `onMerge` says what happens to each unit once it is merged. */
-export const releasePrBody = (bumps: AppBump[], onMerge: (bump: AppBump) => string) => {
+/**
+ * The release PR's body; `onMerge` says what happens to each unit once it is merged, `where` where
+ * the run ships them, such as "to preview".
+ */
+export const releasePrBody = (
+  bumps: AppBump[],
+  onMerge: (bump: AppBump) => string,
+  where: string,
+) => {
   const appWidth = Math.max(3, ...bumps.map(({ app }) => app.length));
   const versionWidth = Math.max(7, ...bumps.map(({ from, to }) => `${from} → ${to}`.length));
   const row = (cells: string[]) => `| ${cells.join(" | ")} |`;
@@ -208,7 +212,7 @@ export const releasePrBody = (bumps: AppBump[], onMerge: (bump: AppBump) => stri
   return [
     "## 🎯 What & why",
     "",
-    "Versions the changesets merged since the last release. Squash and merge it by hand: `pnpm shiplane`, still running or run again, tags and ships to preview once it is merged.",
+    `Versions the changesets merged since the last release. Squash and merge it by hand: \`pnpm shiplane\`, still running or run again, tags and ships ${where} once it is merged.`,
     "",
     ...(bumps.length > 0 ? table : ["Internal packages only: changelogs, nothing ships."]),
     ...notes,

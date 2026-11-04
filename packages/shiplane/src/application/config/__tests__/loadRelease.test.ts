@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import type { Workspace } from "../../../testing/workspace";
@@ -43,6 +45,22 @@ describe("finding what ships", () => {
       { from: "release.config.ts", to: "shiplane.config.ts" },
       { from: "apps/api/release.unit.yml", to: "apps/api/shiplane.unit.yml" },
     ]);
+  });
+
+  it("given a config still setting the removed commitsWithoutChangeset, when the release loads, then it loads with no problem", async () => {
+    workspace = setUp({ "apps/api/shiplane.unit.yml": SERVER_UNIT });
+    fs.writeFileSync(
+      path.join(workspace.root, "shiplane.config.ts"),
+      MODULE_CONFIG.replace(
+        "defineRelease({",
+        'defineRelease({\n  commitsWithoutChangeset: "release",',
+      ),
+    );
+
+    const release = await load(workspace.root);
+
+    expect(release.problems).toEqual([]);
+    expect(release.units.map(({ name }) => name)).toEqual(["api"]);
   });
 
   it("given both names next to an app, when the release loads, then shiplane.unit.yml wins and nothing is to rename", async () => {

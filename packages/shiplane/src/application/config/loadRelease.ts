@@ -50,18 +50,13 @@ export interface Release {
   problems: ConfigProblem[];
   /** How a tag names a version, such as `{name}@{version}`. */
   tagFormat: string;
-  /** Commits no changeset names release their unit, with a changelog from them. */
-  releasesCommits?: boolean;
   /** How much the release says while it runs, as the config asks. */
   display?: DisplayChoice;
   /** Files still under their name from before shiplane. */
   renames?: Rename[];
 }
 
-type Composed = Pick<
-  Release,
-  "flow" | "modules" | "features" | "display" | "tagFormat" | "releasesCommits"
-> & {
+type Composed = Pick<Release, "flow" | "modules" | "features" | "display" | "tagFormat"> & {
   units?: string[];
 };
 
@@ -179,12 +174,6 @@ const tagFormatOf = (tag: unknown) => {
   return format;
 };
 
-const releasesCommitsOf = (choice: unknown) => {
-  if (choice === undefined || choice === "ignore") return false;
-  if (choice === "release") return true;
-  throw new Error('commitsWithoutChangeset is "release" or "ignore"');
-};
-
 const readConfig = async (file: string, aliases: Record<string, string>): Promise<Composed> => {
   const jiti = createJiti(import.meta.url, { alias: aliases, moduleCache: false, fsCache: false });
   const loaded: unknown = await jiti.import(file, { default: true });
@@ -211,7 +200,6 @@ const readConfig = async (file: string, aliases: Record<string, string>): Promis
     units,
     display: { verbose: flag(display.verbose), mascot: mascotOf(display.mascot) },
     tagFormat: tagFormatOf(loaded.tag),
-    releasesCommits: releasesCommitsOf(loaded.commitsWithoutChangeset),
   };
 };
 
@@ -376,6 +364,5 @@ export const loadRelease = async (root: string, options: LoadOptions = {}): Prom
       (file) => renameOf(file) ?? [],
     ),
     tagFormat: config.tagFormat,
-    releasesCommits: config.releasesCommits,
   };
 };

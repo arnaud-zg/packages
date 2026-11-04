@@ -66,7 +66,7 @@ tag:
 `pnpm shiplane plan` in that repository prints what a ship to preview could run:
 
 ```text
-  Plan  ·  preview  · nothing runs
+  Plan  ·  live  · nothing runs
   Order  1 toolkit · Latest
 
   toolkit@1.0.0 → @acme/toolkit on npm (next)  (not tagged yet: release first)

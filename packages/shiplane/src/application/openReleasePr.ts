@@ -14,11 +14,11 @@ import {
 import { prepareRelease } from "./prepareRelease";
 import { confirm, fail, listed, paint } from "./say";
 import { branchStep, openPrStep, pushStep, runSteps } from "./steps";
-import { environmentLabel, moduleOf } from "./targets";
+import { destination, environmentLabel, moduleOf } from "./targets";
 
 const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
 
-/** What happens to a unit once the release PR merges: its module ships the version to preview. */
+/** What happens to a unit once the release PR merges: its module ships the version. */
 const shipsOnMerge =
   (context: ReleaseContext, { contributions, companions }: Prepared) =>
   (bump: AppBump) => {
@@ -31,8 +31,16 @@ const shipsOnMerge =
       : bump.movedWith.length > 0
         ? ` (moved with ${bump.movedWith.join(", ")})`
         : "";
-    return `${environmentLabel(context, [bump.app], "preview") === "live" ? "Ship live" : "Ship to preview"} with ${(unit && moduleOf(context, unit)?.provider) ?? "its target"}${reason}`;
+    return `Ship ${destination(context, [bump.app], "preview")} with ${(unit && moduleOf(context, unit)?.provider) ?? "its target"}${reason}`;
   };
+
+/** Where a release sends what it moves. */
+const whereTo = (context: ReleaseContext, { bumps }: Prepared) =>
+  destination(
+    context,
+    bumps.map(({ app }) => app),
+    "preview",
+  );
 
 /** Units going out unpicked, each with the package that takes it along. */
 const printCompanions = ({ output, release }: ReleaseContext, { companions, split }: Prepared) => {
@@ -54,18 +62,14 @@ const printCompanions = ({ output, release }: ReleaseContext, { companions, spli
 /** The table a person reads before anything is written: each unit, its move, what ships. */
 export const printSummary = (context: ReleaseContext, prepared: Prepared) => {
   const { output, release } = context;
-  const { bumps, packages, pending, held, unreleased, contributions, companions } = prepared;
+  const { bumps, packages, pending, held, contributions, companions } = prepared;
   const dot = paint("dim", "·");
   const stays = held.filter((app) => !bumps.some((bump) => bump.app === app));
   const heldLabel = stays.length > 0 ? `  ${dot}  ${stays.join(", ")} held` : "";
-  const where = environmentLabel(
-    context,
-    bumps.map(({ app }) => app),
-    "preview",
-  );
+  const moving = bumps.map(({ app }) => app);
   output.line();
   output.line(
-    `  ${paint("bold", "Release")}  ${dot}  ${where}  ${dot}  ${plural(pending, "changeset")}${heldLabel}`,
+    `  ${paint("bold", "Release")}  ${dot}  ${environmentLabel(context, moving, "preview")}  ${dot}  ${plural(pending, "changeset")}${heldLabel}`,
   );
   output.line();
   // The unit column fits the longest name, as status does.
@@ -73,22 +77,15 @@ export const printSummary = (context: ReleaseContext, prepared: Prepared) => {
   output.line(
     paint(
       "dim",
-      `  ${"Unit".padEnd(width)}${"Version".padEnd(20)}${where === "live" ? "Ships live" : "Ships to preview"}`,
+      `  ${"Unit".padEnd(width)}${"Version".padEnd(20)}Ships ${destination(context, moving, "preview")}`,
     ),
   );
   release.units.forEach((unit) => {
     const bump = bumps.find(({ app }) => app === unit.name);
     const version = bump ? `${bump.from} → ${bump.to}` : unit.version;
-    const left = unreleased.find(({ app }) => app === unit.name);
     const ships = (() => {
       if (held.includes(unit.name) && !bump)
         return paint("yellow", "⏸ held, its changesets stay pending");
-      if (left && !bump) {
-        return paint(
-          "yellow",
-          `! ${plural(left.commits.length, "commit")} since ${left.version}, no changeset: not in this release`,
-        );
-      }
       const contributed = contributions[unit.name]?.summary;
       if (contributed && contributed.length > 0)
         return contributed.join(`\n  ${" ".repeat(width + 20)}`);
@@ -162,14 +159,7 @@ export const openReleasePr = async (
   output.line(paint("dim", "  Steps"));
   planned.forEach((step, index) => output.line(`  ${index + 1}. ${step}`));
   output.line();
-  const where = environmentLabel(
-    context,
-    prepared.bumps.map(({ app }) => app),
-    "preview",
-  );
-  if (
-    !(await confirm(context, `Release these ${where === "live" ? "live" : "to preview"}?`, true))
-  ) {
+  if (!(await confirm(context, `Release these ${whereTo(context, prepared)}?`, true))) {
     output.line(paint("dim", "Nothing ran."));
     return null;
   }
@@ -261,7 +251,12 @@ const openOne = async (
         head: branch,
         title,
         body:
-          replacedLine(replaces) + releasePrBody(prepared.bumps, shipsOnMerge(context, prepared)),
+          replacedLine(replaces) +
+          releasePrBody(
+            prepared.bumps,
+            shipsOnMerge(context, prepared),
+            whereTo(context, prepared),
+          ),
         label: "type: chore",
       });
       return created.pr;

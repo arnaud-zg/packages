@@ -2,14 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { StatusPlan } from "../changes";
 import { SAMPLE_UNITS } from "../../testing/sample";
-import {
-  appBumps,
-  changesetApps,
-  packageBumps,
-  splitChangesets,
-  unreleasedApps,
-  unreleasedChangesets,
-} from "../changes";
+import { appBumps, changesetApps, packageBumps, splitChangesets } from "../changes";
 
 // The four changesets that came with #1676, #1677, #1680 and #1681.
 const LAST_WEEK: StatusPlan = {
@@ -158,95 +151,11 @@ describe("picking what ships", () => {
   });
 });
 
-describe("apps changed with no changeset", () => {
-  const ADMIN = {
-    app: "admin" as const,
-    version: "0.1.0",
-    commits: [
-      "feat(missions): the admin follows missions and feedback",
-      "chore(release): expo 0.1.115 and api 0.0.2 (#1697)",
-      "fix(admin): plant status reads correctly in both themes",
-    ],
-  };
-
+describe("a pending changeset", () => {
   it("given a pending changeset, when read, then it names the apps it releases and not the packages", () => {
     const text =
       '---\n"@acme/admin": patch\n"@acme/plant-contracts": minor\n"@acme/api": patch\n---\n\nNotes.\n';
 
     expect(changesetApps(text, SAMPLE_UNITS)).toEqual(["api", "admin"]);
-  });
-
-  it("given admin commits since its last release and no changeset naming it, when checked, then admin has unreleased changes", () => {
-    expect(unreleasedApps([ADMIN], new Set())).toEqual([
-      {
-        app: "admin",
-        version: "0.1.0",
-        commits: [
-          "feat(missions): the admin follows missions and feedback",
-          "fix(admin): plant status reads correctly in both themes",
-        ],
-      },
-    ]);
-  });
-
-  it("given a changeset already names admin, when checked, then nothing is flagged", () => {
-    expect(unreleasedApps([ADMIN], new Set(["admin"]))).toEqual([]);
-  });
-
-  it("given only a release commit titled for the app since its last release, when checked, then nothing is flagged", () => {
-    const api = {
-      app: "api" as const,
-      version: "0.0.4",
-      commits: ["chore(api): release v0.0.4 (#1740)"],
-    };
-
-    expect(unreleasedApps([api], new Set())).toEqual([]);
-  });
-
-  it("given only a release commit since the last release, when checked, then nothing is flagged", () => {
-    const landing = {
-      app: "landing" as const,
-      version: "0.2.0",
-      commits: ["chore(release): landing 0.2.0"],
-    };
-
-    expect(unreleasedApps([landing], new Set())).toEqual([]);
-  });
-
-  it("given admin's features, fixes and chores, when picked, then each feature or fix becomes one changelog line", () => {
-    const commits = [
-      "chore(ci): update admin bundle size baseline (1.51 MB → 1.51 MB)",
-      "feat(admin): the dashboard says whether anything is wrong before you read it (#1580)",
-      "fix(admin): plant status reads correctly in both themes (#1530)",
-    ];
-
-    expect(
-      unreleasedChangesets({ name: "admin", packageName: "@acme/admin" }, "0.1.0", commits),
-    ).toEqual([
-      {
-        id: "admin-0.1.1-1",
-        releases: [{ name: "@acme/admin", type: "patch" }],
-        summary: "The dashboard says whether anything is wrong before you read it.",
-      },
-      {
-        id: "admin-0.1.1-2",
-        releases: [{ name: "@acme/admin", type: "patch" }],
-        summary: "Plant status reads correctly in both themes.",
-      },
-    ]);
-  });
-
-  it("given only chores, when picked, then the latest one becomes the line", () => {
-    const commits = ["chore(api): every endpoint lives under /v1 (#1660)", "chore(ci): baseline"];
-
-    expect(
-      unreleasedChangesets({ name: "admin", packageName: "@acme/admin" }, "0.1.0", commits),
-    ).toEqual([
-      {
-        id: "admin-0.1.1-1",
-        releases: [{ name: "@acme/admin", type: "patch" }],
-        summary: "Every endpoint lives under /v1.",
-      },
-    ]);
   });
 });
