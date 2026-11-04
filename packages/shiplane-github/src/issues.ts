@@ -12,7 +12,7 @@ export const previousTag = (
   tags: ReadonlySet<string>,
   unit: string,
   version: string,
-  format = DEFAULT_TAG_FORMAT,
+  format: string = DEFAULT_TAG_FORMAT,
 ) => {
   const [before = "", after = ""] = tagName(unit, "\0", format).split("\0");
   const [newest] = [...tags]
