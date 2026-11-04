@@ -46,23 +46,6 @@ describe("modules no app names", () => {
   });
 });
 
-describe("a config still setting what no longer does anything", () => {
-  it("given commitsWithoutChangeset in the config, when doctor runs, then it says only changesets release and still passes", async () => {
-    const { context, output } = setUp({
-      "apps/api/shiplane.unit.yml": SERVER_UNIT,
-      "shiplane.config.ts": MODULE_CONFIG.replace(
-        "defineRelease({",
-        'defineRelease({\n  commitsWithoutChangeset: "release",',
-      ),
-    });
-
-    expect(await doctor(context)).toBe(true);
-
-    expect(output.text).toContain("commitsWithoutChangeset is deprecated and ignored");
-    expect(output.text).toContain("pnpm changeset");
-  });
-});
-
 describe("files still named release.*", () => {
   it("given a unit file named release.unit.yml, when doctor runs, then it says to rename it and still passes", async () => {
     const { context, output } = setUp({ "apps/api/release.unit.yml": SERVER_UNIT });

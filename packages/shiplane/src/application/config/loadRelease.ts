@@ -54,14 +54,9 @@ export interface Release {
   display?: DisplayChoice;
   /** Files still under their name from before shiplane. */
   renames?: Rename[];
-  /** What the config still sets that no longer does anything, each with what to do instead. */
-  deprecations?: string[];
 }
 
-type Composed = Pick<
-  Release,
-  "flow" | "modules" | "features" | "display" | "tagFormat" | "deprecations"
-> & {
+type Composed = Pick<Release, "flow" | "modules" | "features" | "display" | "tagFormat"> & {
   units?: string[];
 };
 
@@ -149,12 +144,6 @@ const LEFTOVERS: Record<string, string> = {
   latest: "latest is gone: the first app of the first module is the Latest release",
 };
 
-/** Keys a config may still set: they load, do nothing, and say so. */
-const DEPRECATED: Record<string, string> = {
-  commitsWithoutChangeset:
-    "commitsWithoutChangeset is deprecated and ignored: remove it, then queue each release with pnpm changeset, or release from commits with commitsVersioning() from @shiplane/changesets",
-};
-
 /** The modules, their names unique and their adapters' settings free of `module`. */
 const checkModules = (modules: readonly ReleaseModule[], features: readonly Feature[]) => {
   const names = [...modules, ...features].map(({ name }) => name);
@@ -211,9 +200,6 @@ const readConfig = async (file: string, aliases: Record<string, string>): Promis
     units,
     display: { verbose: flag(display.verbose), mascot: mascotOf(display.mascot) },
     tagFormat: tagFormatOf(loaded.tag),
-    deprecations: Object.entries(DEPRECATED).flatMap(([key, message]) =>
-      key in loaded ? [message] : [],
-    ),
   };
 };
 
@@ -378,6 +364,5 @@ export const loadRelease = async (root: string, options: LoadOptions = {}): Prom
       (file) => renameOf(file) ?? [],
     ),
     tagFormat: config.tagFormat,
-    deprecations: config.deprecations,
   };
 };

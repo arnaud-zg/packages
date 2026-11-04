@@ -47,32 +47,20 @@ describe("finding what ships", () => {
     ]);
   });
 
-  it.each(["release", "ignore"])(
-    'given a config still setting commitsWithoutChangeset to "%s", when the release loads, then it loads and says only changesets release',
-    async (value) => {
-      workspace = setUp({ "apps/api/shiplane.unit.yml": SERVER_UNIT });
-      fs.writeFileSync(
-        path.join(workspace.root, "shiplane.config.ts"),
-        MODULE_CONFIG.replace(
-          "defineRelease({",
-          `defineRelease({\n  commitsWithoutChangeset: "${value}",`,
-        ),
-      );
-
-      const release = await load(workspace.root);
-
-      expect(release.problems).toEqual([]);
-      expect(release.units.map(({ name }) => name)).toEqual(["api"]);
-      expect(release.deprecations).toEqual([
-        expect.stringContaining("commitsWithoutChangeset is deprecated and ignored"),
-      ]);
-    },
-  );
-
-  it("given a config without it, when the release loads, then nothing is deprecated", async () => {
+  it("given a config still setting the removed commitsWithoutChangeset, when the release loads, then it loads with no problem", async () => {
     workspace = setUp({ "apps/api/shiplane.unit.yml": SERVER_UNIT });
+    fs.writeFileSync(
+      path.join(workspace.root, "shiplane.config.ts"),
+      MODULE_CONFIG.replace(
+        "defineRelease({",
+        'defineRelease({\n  commitsWithoutChangeset: "release",',
+      ),
+    );
 
-    expect((await load(workspace.root)).deprecations).toEqual([]);
+    const release = await load(workspace.root);
+
+    expect(release.problems).toEqual([]);
+    expect(release.units.map(({ name }) => name)).toEqual(["api"]);
   });
 
   it("given both names next to an app, when the release loads, then shiplane.unit.yml wins and nothing is to rename", async () => {
