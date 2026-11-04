@@ -62,14 +62,33 @@ export const ConfigSchema = z.object({
 
 export type Config = z.infer<typeof ConfigSchema>;
 
-const DEFAULT_CONFIG_FILE = "context-budget.config.json";
+const CONFIG_FILE = "agent-context-budget.config.json";
+const LEGACY_CONFIG_FILE = "context-budget.config.json";
+
+/** The config file a default load reads: the new name, or the legacy one when it is the only file. */
+export function defaultConfigPath(): string {
+  return !existsSync(CONFIG_FILE) && existsSync(LEGACY_CONFIG_FILE)
+    ? LEGACY_CONFIG_FILE
+    : CONFIG_FILE;
+}
+
+function warnAboutLegacyConfigFile(): void {
+  if (!existsSync(LEGACY_CONFIG_FILE)) return;
+  console.warn(
+    existsSync(CONFIG_FILE)
+      ? `⚠ ${LEGACY_CONFIG_FILE} is ignored because ${CONFIG_FILE} exists. Delete it.`
+      : `⚠ ${LEGACY_CONFIG_FILE} is deprecated and will be removed in the next release. Rename it to ${CONFIG_FILE}.`,
+  );
+}
 
 /**
- * Loads config overrides from a JSON file (defaulting to ./context-budget.config.json), deep-merged
- * over ConfigSchema's own per-field defaults. With no file present, returns the defaults.
+ * Loads config overrides from a JSON file (defaulting to ./agent-context-budget.config.json, then
+ * the deprecated ./context-budget.config.json), deep-merged over ConfigSchema's own per-field
+ * defaults. With no file present, returns the defaults.
  */
 export function loadConfig(configPath?: string): Config {
-  const resolvedPath = configPath ?? DEFAULT_CONFIG_FILE;
+  if (configPath === undefined) warnAboutLegacyConfigFile();
+  const resolvedPath = configPath ?? defaultConfigPath();
   if (!existsSync(resolvedPath)) return ConfigSchema.parse({});
 
   const overrides: unknown = JSON.parse(readFileSync(resolvedPath, "utf-8"));

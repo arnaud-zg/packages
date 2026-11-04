@@ -7,7 +7,7 @@ import type { FileResult, Health } from "./analyzeFile";
 import type { Config } from "./config";
 import type { SimilarityPair } from "./helpers";
 import { analyzeFile, toHealth } from "./analyzeFile";
-import { loadConfig } from "./config";
+import { defaultConfigPath, loadConfig } from "./config";
 import {
   adaptiveThreshold,
   coefficientOfVariation,
@@ -212,7 +212,7 @@ function loadConfigOrReport(): Config | null {
     return loadConfig();
   } catch (error) {
     const reason = error instanceof Error ? error.message : String(error);
-    console.error(`✗ Invalid context-budget.config.json: ${reason}`);
+    console.error(`✗ Invalid ${defaultConfigPath()}: ${reason}`);
     return null;
   }
 }

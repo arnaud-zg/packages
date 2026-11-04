@@ -28,7 +28,7 @@ and points at the sections worth cutting.
    npx agent-context-budget check --explain CLAUDE.md
    ```
 
-4. Adjust the budgets in `context-budget.config.json` (only the fields you change):
+4. Adjust the budgets in `agent-context-budget.config.json` (only the fields you change):
 
    ```json
    { "root": { "threshold": 4000 } }
