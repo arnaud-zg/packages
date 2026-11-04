@@ -28,6 +28,12 @@ export const versioningContract = (name: string, subject: () => Promise<Versioni
       );
     });
 
+    it("given a person with nothing queued, when they are told what to do, then the port says it", async () => {
+      const { port } = await subject();
+
+      expect(port.nextChange).not.toBe("");
+    });
+
     it("given a workspace package, when the folders are read, then it is found in its folder", async () => {
       const { port, workspace } = await subject();
 

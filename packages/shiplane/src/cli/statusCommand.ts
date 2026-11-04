@@ -11,17 +11,20 @@ const NEXT: Record<string, string> = {
 };
 
 /** The next step as a person reads it; a ship with nothing pending anywhere is nothing to do. */
-export const nextLabel = ({
-  next,
-  units,
-  untagged,
-}: {
-  next: { step: string };
-  units: readonly { pending: boolean }[];
-  untagged: readonly unknown[];
-}) =>
+export const nextLabel = (
+  {
+    next,
+    units,
+    untagged,
+  }: {
+    next: { step: string };
+    units: readonly { pending: boolean }[];
+    untagged: readonly unknown[];
+  },
+  nextChange: string,
+) =>
   next.step === "ship" && untagged.length === 0 && !units.some(({ pending }) => pending)
-    ? "nothing to release: queue a change with pnpm changeset"
+    ? `nothing to release: queue a change with ${nextChange}`
     : (NEXT[next.step] ?? "");
 
 /** `shiplane status`: where every unit stands on an environment, and what to run next. Reads only. */
@@ -55,6 +58,8 @@ export const statusCommand = async (
     out(`  ${paint("yellow", "Untagged")}  ${status.untagged.map(({ tag }) => tag).join(", ")}`);
   }
   out();
-  out(`${paint(["bold", "green"], "→ Next:")} ${nextLabel(status)}`);
+  out(
+    `${paint(["bold", "green"], "→ Next:")} ${nextLabel(status, context.services.versioning.nextChange)}`,
+  );
   out();
 };

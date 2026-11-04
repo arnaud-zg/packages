@@ -152,6 +152,7 @@ const changesetsFiles = (
       Promise.resolve(
         Object.fromEntries(workspacePackages().map(({ folder, pkg }) => [pkg.name, folder])),
       ),
+    nextChange: "pnpm changeset",
     changesetFile: (id) => path.posix.join(".changeset", `${id}.md`),
     changelogFile: (folder) => path.posix.join(folder, "CHANGELOG.md"),
   };

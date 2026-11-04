@@ -16,6 +16,7 @@
 
 **Hosts:** [Publish a package to npm](#publish-a-package-to-npm) ·
 [Release Claude Code plugins](#release-claude-code-plugins) ·
+[Release from commits](#release-from-commits) ·
 [Ship a host with no plugin](#ship-a-host-with-no-plugin) · [Swap a provider](#swap-a-provider) ·
 [Write a plugin](#write-a-plugin) · [Comment on what shipped](#comment-on-what-shipped) ·
 [Set up the sign-ins](#set-up-the-sign-ins)
@@ -150,7 +151,40 @@ changelog as notes. Nothing deploys a plugin: agents install it from the reposit
 ships it, and a run names no environment: it asks `Release these live?`, as for a package on npm. A
 manifest with no `version` is left alone.
 
-Queue each release with `pnpm changeset`, as for any unit: a commit alone releases nothing.
+Queue each release with `pnpm changeset`, as for any unit, or
+[release from commits](#release-from-commits).
+
+## Release from commits
+
+Swap the versioning adapter and no one writes a changeset:
+
+```ts
+import { commitsVersioning } from "@shiplane/changesets";
+
+export default defineRelease({
+  flow: releaseFlow({
+    sourceControl: gitSourceControl(),
+    codeHost: gitHubCodeHost(),
+    ciPipeline: gitHubActionsCiPipeline(),
+    versioning: commitsVersioning(),
+  }),
+  modules: [agentPlugin()],
+});
+```
+
+Each package's commits since its version become its release, read as Conventional Commits:
+
+| Subject               | Bump                   | Changelog                                     |
+| --------------------- | ---------------------- | --------------------------------------------- |
+| `feat: ...`           | minor                  | One line                                      |
+| `fix:` or `perf: ...` | patch                  | One line                                      |
+| `refactor!: ...`      | major, minor below 1.0 | One line, for any type marked `!`             |
+| Anything else         | patch                  | Only the latest, when nothing else has a line |
+
+Any commit touching a package releases it, so a change committed as `chore:` still ships. Only the
+subject counts: a `BREAKING CHANGE:` footer is not read. A pending changeset naming a package takes
+over from its commits. `.changeset/config.json` and `@changesets/cli` stay, as changesets still does
+the versioning, and shiplane's own messages keep saying `changesets`.
 
 ## Ship a host with no plugin
 
