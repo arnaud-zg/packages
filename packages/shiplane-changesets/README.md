@@ -1,6 +1,11 @@
 # 🔌 @shiplane/changesets
 
-<a href="https://npm-stat.com/charts.html?package=@shiplane/changesets"><img src="https://img.shields.io/npm/dm/@shiplane/changesets.svg" alt="npm downloads per month, click for the download history chart"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/changesets">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/changesets.svg?days=90&logo=false&mode=dark" />
+    <img alt="@shiplane/changesets npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/changesets.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>
 
 Versions from `.changeset` files, through the changesets CLI: fills
 [shiplane](../shiplane/README.md)'s **versioning** port. A changeset is the intent to release;

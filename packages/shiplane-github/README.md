@@ -1,6 +1,11 @@
 # 🔌 @shiplane/github
 
-<a href="https://npm-stat.com/charts.html?package=@shiplane/github"><img src="https://img.shields.io/npm/dm/@shiplane/github.svg" alt="npm downloads per month, click for the download history chart"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/github">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/github.svg?days=90&logo=false&mode=dark" />
+    <img alt="@shiplane/github npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/github.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>
 
 GitHub for [shiplane](../shiplane/README.md), through the `gh` CLI. Two adapters and a feature, one
 sign-in:

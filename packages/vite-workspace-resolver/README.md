@@ -1,6 +1,11 @@
 # vite-workspace-resolver
 
-<a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver"><img src="https://img.shields.io/npm/dm/vite-workspace-resolver.svg" alt="npm downloads per month, click for the download history chart"></a>
+<a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/vite-workspace-resolver.svg?days=90&logo=false&mode=dark" />
+    <img alt="vite-workspace-resolver npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/vite-workspace-resolver.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>
 
 Vite's test resolver won't follow a workspace package's `package.json` `exports` map for non-`"."`
 subpaths, and can't reach into a package's `src/` for files that aren't exported at all.
