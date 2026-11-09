@@ -3,7 +3,8 @@ import type { Environment } from "./environment";
 /** A name an app reads from its environment, as platforms store it: `SENTRY_DSN`. */
 export type EnvVarName = string & { readonly brand: "EnvVarName" };
 
-const ENV_VAR_NAME = /^[A-Z][A-Z0-9_]*$/;
+/** UPPER_SNAKE: a capital letter, then capitals, digits or underscores. */
+export const ENV_VAR_NAME = /^[A-Z][A-Z0-9_]*$/;
 
 export const isEnvVarName = (text: string): text is EnvVarName => ENV_VAR_NAME.test(text);
 

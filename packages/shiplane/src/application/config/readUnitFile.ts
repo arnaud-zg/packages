@@ -2,10 +2,13 @@ import type { Document } from "yaml";
 import type { z } from "zod";
 import { isMap, isScalar, isSeq, LineCounter, parseDocument } from "yaml";
 
+import type { EnvVarName } from "../../domain/checkEnvBeforeDeploy";
+import type { Environment } from "../../domain/environment";
 import type { ReleaseModule } from "../../modules/module";
 import type { ConfigProblem } from "./problem";
+import { EnvToCheck, isEnvVarName } from "../../domain/checkEnvBeforeDeploy";
 import { didYouMean } from "./problem";
-import { keysAt, unitSchema } from "./unitSchema";
+import { checkEnvBeforeDeploySchema, keysAt, unitSchema } from "./unitSchema";
 import { isRecord } from "./values";
 
 export const UNIT_FILE = "shiplane.unit.yml";
@@ -18,6 +21,8 @@ export interface UnitFile {
   module: string;
   /** Its `buildCommand:`, when it says one. */
   buildCommand?: string;
+  /** Its `checkEnvBeforeDeploy:`, when it lists one. */
+  checkEnvBeforeDeploy?: EnvToCheck;
   options: Record<string, unknown>;
   /** The line a key path sits on, for problems found after reading. */
   lineOf: (at: readonly string[]) => number | undefined;
@@ -38,6 +43,12 @@ const locate =
     return offset === undefined ? undefined : counter.linePos(offset).line;
   };
 
+/** Of a union's branches, the one written in the right shape: its problems are inside, not the shape. */
+const closestBranch = (branches: readonly (readonly z.core.$ZodIssue[])[]) =>
+  branches.find((issues) =>
+    issues.every(({ code, path }) => !(code === "invalid_type" && path.length === 0)),
+  );
+
 const describeIssue = (
   issue: z.core.$ZodIssue,
   file: string,
@@ -45,6 +56,14 @@ const describeIssue = (
   lineAt: ReturnType<typeof locate>,
 ): ConfigProblem[] => {
   const at = issue.path;
+  if (issue.code === "invalid_union") {
+    const branch = closestBranch(issue.errors);
+    if (branch) {
+      return branch.flatMap((inner) =>
+        describeIssue({ ...inner, path: [...at, ...inner.path] }, file, module, lineAt),
+      );
+    }
+  }
   if (issue.code === "unrecognized_keys") {
     return issue.keys.map((key) => ({
       file,
@@ -61,6 +80,23 @@ const describeIssue = (
   }
   return [{ file, line: lineAt(at), message: `"${name}": ${issue.message}` }];
 };
+
+const CORE_KEYS = new Set(["module", "buildCommand", "checkEnvBeforeDeploy"]);
+
+const envVarNames = (list: readonly string[] = []) => list.filter(isEnvVarName);
+
+const envToCheck = (written: z.infer<typeof checkEnvBeforeDeploySchema>) =>
+  new EnvToCheck(
+    Array.isArray(written)
+      ? envVarNames(written)
+      : {
+          all: envVarNames(written.all),
+          ...({
+            preview: envVarNames(written.preview),
+            production: envVarNames(written.production),
+          } satisfies Record<Environment, EnvVarName[]>),
+        },
+  );
 
 const problem = (file: string, line: number | undefined, message: string, hint: string) => ({
   problems: [{ file, line, message, hint }],
@@ -123,14 +159,14 @@ export const readUnitFile = (
       problems: parsed.error.issues.flatMap((issue) => describeIssue(issue, file, module, lineAt)),
     };
   }
-  const options = Object.fromEntries(
-    Object.entries(data).filter(([key]) => key !== "module" && key !== "buildCommand"),
-  );
+  const options = Object.fromEntries(Object.entries(data).filter(([key]) => !CORE_KEYS.has(key)));
   const buildCommand = typeof data.buildCommand === "string" ? data.buildCommand : undefined;
+  const written = parsed.data.checkEnvBeforeDeploy;
   return {
     unit: {
       module: named,
       ...(buildCommand ? { buildCommand } : {}),
+      ...(written ? { checkEnvBeforeDeploy: envToCheck(written) } : {}),
       options,
       lineOf: (at) => lineAt(at),
     },
