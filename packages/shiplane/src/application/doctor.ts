@@ -2,9 +2,9 @@ import path from "node:path";
 
 import type { Requirement } from "../ports/delivery.port";
 import type { SetupContext } from "./setupContext";
-import { reportEnvToCheck } from "./checkEnvBeforeDeploy";
 import { UNIT_FILE } from "./config/readUnitFile";
 import { releaseOrder } from "./releaseOrder";
+import { reportEnvToCheck } from "./reportEnvToCheck";
 import { checkStatus, requirementsOf } from "./requirements";
 import { paint } from "./say";
 import { refreshEditorSchema } from "./setupFiles";
