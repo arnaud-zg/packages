@@ -2,6 +2,7 @@ import path from "node:path";
 
 import type { Requirement } from "../ports/delivery.port";
 import type { SetupContext } from "./setupContext";
+import { reportEnvToCheck } from "./checkEnvBeforeDeploy";
 import { UNIT_FILE } from "./config/readUnitFile";
 import { releaseOrder } from "./releaseOrder";
 import { checkStatus, requirementsOf } from "./requirements";
@@ -76,8 +77,10 @@ export const doctor = async (context: SetupContext): Promise<boolean> => {
       });
     }
   }
+  const envSet = await reportEnvToCheck({ release, shell, output });
+  const passed = failing.length === 0 && envSet;
   output.line(
-    `${paint("dim", "└")}  Next: ${paint("cyan", failing.length > 0 ? "shiplane doctor" : "shiplane status")}`,
+    `${paint("dim", "└")}  Next: ${paint("cyan", passed ? "shiplane status" : "shiplane doctor")}`,
   );
-  return failing.length === 0;
+  return passed;
 };
