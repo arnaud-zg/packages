@@ -91,3 +91,12 @@ an `eas.json`.
 
 Source: `requirements` in `src/eas-mobile-distribution.adapter.ts`. `pnpm shiplane doctor` runs each
 check and offers the fix.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=@shiplane/eas">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/eas.svg?days=90&logo=false&mode=dark" />
+    <img alt="@shiplane/eas npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/eas.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>

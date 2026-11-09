@@ -98,3 +98,12 @@ folder with only a Dockerfile.
 
 Source: `requirements` in `src/fly-server-hosting.adapter.ts`. `pnpm shiplane doctor` runs each
 check and offers the fix.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=@shiplane/fly">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/fly.svg?days=90&logo=false&mode=dark" />
+    <img alt="@shiplane/fly npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/fly.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>

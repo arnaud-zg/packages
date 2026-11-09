@@ -103,3 +103,12 @@ await runSync(paths, { dryRun: false, yes: true });
 By default, `expo-pnpm-catalog` derives the top-level workspace directories to scan (e.g. `apps`,
 `packages`) from the `packages:` globs declared in `pnpm-workspace.yaml`. If none are declared, it
 falls back to `apps`, `packages`, `tooling`.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=expo-pnpm-catalog">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/expo-pnpm-catalog.svg?days=90&logo=false&mode=dark" />
+    <img alt="expo-pnpm-catalog npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/expo-pnpm-catalog.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>

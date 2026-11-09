@@ -109,3 +109,12 @@ sign shared logic hasn't been factored out yet, not a sign this package needs ne
   same component tree shape a consumer would actually get.
 - Published standalone (`pnpm build` via `tsdown` → `dist/`, `LICENSE`, `repository`) — the problem
   it solves isn't specific to any one app or monorepo.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=expo-native-guard">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/expo-native-guard.svg?days=90&logo=false&mode=dark" />
+    <img alt="expo-native-guard npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/expo-native-guard.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>

@@ -81,3 +81,12 @@ connection drops, never when it is refused. A tag is signed when your commits ar
 
 Source: `requirements` in `src/git-source-control.adapter.ts`; no fix is offered. Pushing needs your
 own rights on `origin`.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=@shiplane/git">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/git.svg?days=90&logo=false&mode=dark" />
+    <img alt="@shiplane/git npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/git.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>

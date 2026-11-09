@@ -132,3 +132,12 @@ The adapters come from separate packages:
 - 🔌 **[Plugins](../../docs/shiplane/plugins.md)**: the adapters you can inject, and how to write
   one
 - 💡 **[Explanation](../../docs/shiplane/explanation.md)**: why it works this way
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=shiplane">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/shiplane.svg?days=90&logo=false&mode=dark" />
+    <img alt="shiplane npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/shiplane.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>

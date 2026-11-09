@@ -95,3 +95,12 @@ The upload is the deploy: it returns in seconds. `init` offers this adapter for 
 
 Source: `requirements` in `src/cloudflare-pages-static-hosting.adapter.ts`; the version follows
 `wrangler`. `pnpm shiplane doctor` runs each check and offers the fix.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=@shiplane/cloudflare-pages">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/cloudflare-pages.svg?days=90&logo=false&mode=dark" />
+    <img alt="@shiplane/cloudflare-pages npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/cloudflare-pages.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>

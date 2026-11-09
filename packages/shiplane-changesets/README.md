@@ -103,3 +103,12 @@ release are set aside only while it versions. A GitHub changelog asks GitHub who
 
 The adapter declares no `requirements`, so `doctor` checks neither. Source:
 `src/changesets-versioning.adapter.ts`.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=@shiplane/changesets">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/changesets.svg?days=90&logo=false&mode=dark" />
+    <img alt="@shiplane/changesets npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/changesets.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>
