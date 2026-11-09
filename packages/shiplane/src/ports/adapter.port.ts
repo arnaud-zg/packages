@@ -3,6 +3,7 @@ import type { z } from "zod";
 import type { DecidedBy } from "../domain/scope";
 import type { ReleaseUnit } from "../domain/unit";
 import type { Detection, FolderView, Question, Requirement } from "./delivery.port";
+import type { PlatformEnvPort } from "./platform-env.port";
 import type { Shell } from "./shell.port";
 
 /** What an adapter is given when the CLI creates its port: the repository and a shell. */
@@ -47,4 +48,6 @@ export interface DeliveryAdapter<Port extends { capability: string }> extends Ad
   ) => Question[];
   /** Tools and sign-ins it needs for an app. */
   readonly requirements?: (unit: ReleaseUnit) => Requirement[];
+  /** Lists the env var names its platform holds, for `checkEnvBeforeDeploy`. */
+  readonly env?: (context: AdapterContext) => PlatformEnvPort;
 }

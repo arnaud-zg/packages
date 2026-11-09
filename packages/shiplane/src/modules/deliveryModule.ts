@@ -22,6 +22,7 @@ export const deliveryModule = <Port extends Delivery & { capability: string }>(
   adapters: [adapter],
   decidedBy: adapter.decidedBy,
   typicalMinutes: adapter.typicalMinutes,
+  ...(adapter.env ? { env: adapter.env } : {}),
   requirements: (apps) => apps.flatMap((unit) => adapter.requirements?.(unit) ?? []),
   ship: ({ open }, input) => {
     const port = open(adapter);

@@ -5,7 +5,7 @@ import type { Environment } from "../domain/environment";
 import type { Approval } from "../domain/releasePr";
 import type { DecidedBy } from "../domain/scope";
 import type { ReleaseUnit } from "../domain/unit";
-import type { Adapter, ServiceAdapter } from "../ports/adapter.port";
+import type { Adapter, AdapterContext, ServiceAdapter } from "../ports/adapter.port";
 import type { CiPipelinePort } from "../ports/ci-pipeline.port";
 import type { CodeHostPort } from "../ports/code-host.port";
 import type {
@@ -17,6 +17,7 @@ import type {
   Requirement,
   VersionContribution,
 } from "../ports/delivery.port";
+import type { PlatformEnvPort } from "../ports/platform-env.port";
 import type { SourceControlPort } from "../ports/source-control.port";
 import type { VersioningPort } from "../ports/versioning.port";
 
@@ -78,6 +79,8 @@ export interface ReleaseModule {
   readonly typicalMinutes?: number;
   /** Tools and sign-ins it needs, given the apps that name it. */
   readonly requirements?: (apps: readonly ReleaseUnit[]) => Requirement[];
+  /** Lists the env var names its apps' platform holds; without it, their env is not checked. */
+  readonly env?: (context: AdapterContext) => PlatformEnvPort;
   /** Files a release may change after a tag without changing what ships. Relative to the root. */
   readonly versionFiles?: (
     unit: ReleaseUnit,
