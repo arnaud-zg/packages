@@ -25,7 +25,7 @@ const platformHolding = (held: EnvVarName[]) => ({
     `fly secrets set --stage -a acme-api ${unset.map((name) => `${name}=...`).join(" ")}`,
 });
 
-const setUp = (held: EnvVarName[]) => {
+const setUp = (held: EnvVarName[], { yes = false }: { yes?: boolean } = {}) => {
   const hosting = serverHostingFake();
   const api = testUnit("api", {
     version: "0.1.0",
@@ -37,25 +37,26 @@ const setUp = (held: EnvVarName[]) => {
     units: [api],
     modules: [backendService({ serverHosting: { ...hosting, env: () => platformHolding(held) } })],
     interactive: false,
+    yes,
   });
   world.source.seed({ tags: { "api@0.1.0": "t1" } });
   return { ...world, hosting: hosting.fake };
 };
 
 describe("a deploy with env to check", () => {
-  it("given SENTRY_DSN unset on the platform, when api ships to preview from CI, then nothing deploys", async () => {
-    const { context, hosting, output } = setUp([]);
+  it("given SENTRY_DSN unset on the platform, when api ships to preview from CI with --yes, then nothing runs", async () => {
+    const { context, shell, output } = setUp([], { yes: true });
 
     expect(await shipTo(context, "preview", { via: "local" })).toBe(false);
-    expect(hosting.received).toEqual([]);
+    expect(shell.calls).toEqual([]);
     expect(output.text).toContain("SENTRY_DSN");
   });
 
-  it("given SENTRY_DSN set on the platform, when api ships to preview, then it deploys as before", async () => {
-    const { context, hosting } = setUp(names("SENTRY_DSN"));
+  it("given SENTRY_DSN set on the platform, when api ships to preview from CI with --yes, then it deploys as before", async () => {
+    const { context, shell } = setUp(names("SENTRY_DSN"), { yes: true });
 
     expect(await shipTo(context, "preview", { via: "local" })).toBe(true);
-    expect(hosting.received.map(({ tag }) => tag)).toEqual(["api@0.1.0"]);
+    expect(shell.calls.map(({ args }) => args)).toContainEqual(["deploy", "acme-api", "api@0.1.0"]);
   });
 
   it("given SENTRY_DSN unset and a changeset to release, when releasing to preview, then it stops before the release PR is opened", async () => {
