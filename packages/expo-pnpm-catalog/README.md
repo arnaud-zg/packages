@@ -2,7 +2,7 @@
 
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
 <a href="https://www.npmjs.com/package/expo-pnpm-catalog"><img src="https://img.shields.io/npm/v/expo-pnpm-catalog.svg" alt="npm version"></a>
-<img src="https://img.shields.io/badge/CLI-ready-brightgreen" alt="CLI ready"> <br/>
+<img src="https://img.shields.io/badge/CLI-ready-brightgreen" alt="CLI ready">
 
 Deterministic Expo SDK checks and sync for [pnpm catalogs](https://pnpm.io/catalogs), like
 `expo-doctor` for a whole workspace.
