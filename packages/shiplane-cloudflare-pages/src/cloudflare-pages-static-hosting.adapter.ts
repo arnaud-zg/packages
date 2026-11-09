@@ -1,6 +1,11 @@
 import path from "node:path";
-import type { DeliveryAdapter, StaticHostingPort } from "shiplane/plugin";
-import { defineStaticHosting, perEnv, z } from "shiplane/plugin";
+import type {
+  AdapterContext,
+  DeliveryAdapter,
+  PlatformEnvPort,
+  StaticHostingPort,
+} from "shiplane/plugin";
+import { defineStaticHosting, isEnvVarName, perEnv, z } from "shiplane/plugin";
 
 const WRANGLER = "wrangler@4.141.0";
 
@@ -27,6 +32,48 @@ const PagesOptions = z.object({
   wrangler: z.string().default(WRANGLER).describe("The wrangler npx runs, pinned"),
 });
 
+const SECRET_LINE = /^\s*-\s+([A-Za-z_][A-Za-z0-9_]*):/;
+
+/** Pages secrets of the environment, plus the variables the unit file gives its build. */
+const pagesEnv = ({ shell }: AdapterContext): PlatformEnvPort => ({
+  listNames: async ({ environment, options }) => {
+    const { project, wrangler, build } = PagesOptions.parse(options);
+    const result = await shell.capture("npx", [
+      "--yes",
+      wrangler,
+      "pages",
+      "secret",
+      "list",
+      "--project-name",
+      project,
+      "--env",
+      environment,
+    ]);
+    if (result.status !== 0) {
+      const reason =
+        result.stderr
+          .split("\n")
+          .find((line) => line.trim())
+          ?.trim() ?? `exit ${result.status}`;
+      throw new Error(`wrangler pages secret list --env ${environment}: ${reason}`);
+    }
+    const secrets = result.stdout.split("\n").flatMap((line) => {
+      const name = SECRET_LINE.exec(line)?.[1];
+      return name ? [name] : [];
+    });
+    return new Set([...secrets, ...Object.keys(build.env ?? {})].filter(isEnvVarName));
+  },
+  setCommand: ({ environment, options, names }) => {
+    const { project, wrangler } = PagesOptions.parse(options);
+    return names
+      .map(
+        (name) =>
+          `npx --yes ${wrangler} pages secret put ${name} --project-name ${project} --env ${environment}`,
+      )
+      .join(" && ");
+  },
+});
+
 /** A static build on Cloudflare Pages: built against its environment, uploaded with wrangler. */
 export type CloudflarePagesStaticHostingAdapter = DeliveryAdapter<StaticHostingPort>;
 
@@ -34,6 +81,7 @@ export const cloudflarePagesStaticHosting = (): CloudflarePagesStaticHostingAdap
   defineStaticHosting({
     name: "cloudflare-pages",
     settings: PagesOptions,
+    env: pagesEnv,
     typicalMinutes: 5,
     describe: ({ options }) => `${options.project} on Pages (${options.branch})`,
     detect: (folder) => {
