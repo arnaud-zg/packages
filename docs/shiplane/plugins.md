@@ -77,13 +77,14 @@ export const renderServerHosting = () =>
   });
 ```
 
-| Part           | Means                                                                        |
-| -------------- | ---------------------------------------------------------------------------- |
-| `settings`     | The unit file keys, a zod object with defaults                               |
-| `describe`     | Where a tag lands, as a person reads it                                      |
-| `jobs`         | Commands as data: run here, on CI (with `ci: { ref }`), or printed by `plan` |
-| `detect`       | What `init` recognises in a folder                                           |
-| `requirements` | Tools and sign-ins, each with a check and a fix                              |
+| Part           | Means                                                                             |
+| -------------- | --------------------------------------------------------------------------------- |
+| `settings`     | The unit file keys, a zod object with defaults                                    |
+| `describe`     | Where a tag lands, as a person reads it                                           |
+| `jobs`         | Commands as data: run here, on CI (with `ci: { ref }`), or printed by `plan`      |
+| `detect`       | What `init` recognises in a folder                                                |
+| `requirements` | Tools and sign-ins, each with a check and a fix                                   |
+| `env`          | Optional: lists the env var names its platform holds, and the command to set them |
 
 Source: `src/ports/delivery.port.ts`. `defineStaticHosting`, `defineMobileDistribution` and
 `definePackageRegistry` work the same, plus their port's own members. Name the factories in the
