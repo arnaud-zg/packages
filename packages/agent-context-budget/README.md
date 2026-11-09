@@ -1,9 +1,6 @@
 # agent-context-budget
 
-<a href="https://npm-stat.com/charts.html?package=agent-context-budget"><img src="https://img.shields.io/npm/dw/agent-context-budget.svg" alt="npm downloads per week"></a>
-<a href="https://npm-stat.com/charts.html?package=agent-context-budget"><img src="https://img.shields.io/npm/dm/agent-context-budget.svg" alt="npm downloads per month"></a>
-<a href="https://npm-stat.com/charts.html?package=agent-context-budget"><img src="https://img.shields.io/npm/dy/agent-context-budget.svg" alt="npm downloads per year"></a>
-<a href="https://npm-stat.com/charts.html?package=agent-context-budget"><img src="https://img.shields.io/npm/dt/agent-context-budget.svg" alt="npm total downloads"></a>
+<a href="https://npm-stat.com/charts.html?package=agent-context-budget"><img src="https://img.shields.io/npm/dm/agent-context-budget.svg" alt="npm downloads per month, click for the download history chart"></a>
 
 Token-budget analysis for AI agent context files (CLAUDE.md, AGENTS.md, etc.).
 

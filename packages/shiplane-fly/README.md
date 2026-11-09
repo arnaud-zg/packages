@@ -1,9 +1,6 @@
 # 🔌 @shiplane/fly
 
-<a href="https://npm-stat.com/charts.html?package=@shiplane/fly"><img src="https://img.shields.io/npm/dw/@shiplane/fly.svg" alt="npm downloads per week"></a>
-<a href="https://npm-stat.com/charts.html?package=@shiplane/fly"><img src="https://img.shields.io/npm/dm/@shiplane/fly.svg" alt="npm downloads per month"></a>
-<a href="https://npm-stat.com/charts.html?package=@shiplane/fly"><img src="https://img.shields.io/npm/dy/@shiplane/fly.svg" alt="npm downloads per year"></a>
-<a href="https://npm-stat.com/charts.html?package=@shiplane/fly"><img src="https://img.shields.io/npm/dt/@shiplane/fly.svg" alt="npm total downloads"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/fly"><img src="https://img.shields.io/npm/dm/@shiplane/fly.svg" alt="npm downloads per month, click for the download history chart"></a>
 
 Ships a backend to Fly.io: fills [shiplane](../shiplane/README.md)'s **server hosting** port with
 `flyctl deploy`. Any app with a Dockerfile works.

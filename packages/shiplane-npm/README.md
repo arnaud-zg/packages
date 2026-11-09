@@ -1,9 +1,6 @@
 # 🔌 @shiplane/npm
 
-<a href="https://npm-stat.com/charts.html?package=@shiplane/npm"><img src="https://img.shields.io/npm/dw/@shiplane/npm.svg" alt="npm downloads per week"></a>
-<a href="https://npm-stat.com/charts.html?package=@shiplane/npm"><img src="https://img.shields.io/npm/dm/@shiplane/npm.svg" alt="npm downloads per month"></a>
-<a href="https://npm-stat.com/charts.html?package=@shiplane/npm"><img src="https://img.shields.io/npm/dy/@shiplane/npm.svg" alt="npm downloads per year"></a>
-<a href="https://npm-stat.com/charts.html?package=@shiplane/npm"><img src="https://img.shields.io/npm/dt/@shiplane/npm.svg" alt="npm total downloads"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/npm"><img src="https://img.shields.io/npm/dm/@shiplane/npm.svg" alt="npm downloads per month, click for the download history chart"></a>
 
 Publishes a package to npm: fills [shiplane](../shiplane/README.md)'s **package registry** port with
 `pnpm publish` and `npm dist-tag`.

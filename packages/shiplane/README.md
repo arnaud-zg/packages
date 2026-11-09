@@ -1,9 +1,6 @@
 # 🚢 shiplane
 
-<a href="https://npm-stat.com/charts.html?package=shiplane"><img src="https://img.shields.io/npm/dw/shiplane.svg" alt="npm downloads per week"></a>
-<a href="https://npm-stat.com/charts.html?package=shiplane"><img src="https://img.shields.io/npm/dm/shiplane.svg" alt="npm downloads per month"></a>
-<a href="https://npm-stat.com/charts.html?package=shiplane"><img src="https://img.shields.io/npm/dy/shiplane.svg" alt="npm downloads per year"></a>
-<a href="https://npm-stat.com/charts.html?package=shiplane"><img src="https://img.shields.io/npm/dt/shiplane.svg" alt="npm total downloads"></a>
+<a href="https://npm-stat.com/charts.html?package=shiplane"><img src="https://img.shields.io/npm/dm/shiplane.svg" alt="npm downloads per month, click for the download history chart"></a>
 
 The release core: it finds what changed, versions it, tags it and ships each app in order. It talks
 to no host itself. You inject one adapter per port in `shiplane.config.ts`.
