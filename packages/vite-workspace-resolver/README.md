@@ -1,5 +1,10 @@
 # vite-workspace-resolver
 
+<a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver"><img src="https://img.shields.io/npm/dw/vite-workspace-resolver.svg" alt="npm downloads per week"></a>
+<a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver"><img src="https://img.shields.io/npm/dm/vite-workspace-resolver.svg" alt="npm downloads per month"></a>
+<a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver"><img src="https://img.shields.io/npm/dy/vite-workspace-resolver.svg" alt="npm downloads per year"></a>
+<a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver"><img src="https://img.shields.io/npm/dt/vite-workspace-resolver.svg" alt="npm total downloads"></a>
+
 Vite's test resolver won't follow a workspace package's `package.json` `exports` map for non-`"."`
 subpaths, and can't reach into a package's `src/` for files that aren't exported at all.
 `workspaceExports(rootDir)` scans every workspace package once and resolves both cases directly as a

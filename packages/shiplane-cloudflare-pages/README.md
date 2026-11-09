@@ -1,5 +1,10 @@
 # 🔌 @shiplane/cloudflare-pages
 
+<a href="https://npm-stat.com/charts.html?package=@shiplane/cloudflare-pages"><img src="https://img.shields.io/npm/dw/@shiplane/cloudflare-pages.svg" alt="npm downloads per week"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/cloudflare-pages"><img src="https://img.shields.io/npm/dm/@shiplane/cloudflare-pages.svg" alt="npm downloads per month"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/cloudflare-pages"><img src="https://img.shields.io/npm/dy/@shiplane/cloudflare-pages.svg" alt="npm downloads per year"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/cloudflare-pages"><img src="https://img.shields.io/npm/dt/@shiplane/cloudflare-pages.svg" alt="npm total downloads"></a>
+
 Ships a static site to Cloudflare Pages: fills [shiplane](../shiplane/README.md)'s **static
 hosting** port. Each release builds against its environment, then uploads with wrangler.
 

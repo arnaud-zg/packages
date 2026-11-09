@@ -1,5 +1,10 @@
 # 🔌 @shiplane/changesets
 
+<a href="https://npm-stat.com/charts.html?package=@shiplane/changesets"><img src="https://img.shields.io/npm/dw/@shiplane/changesets.svg" alt="npm downloads per week"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/changesets"><img src="https://img.shields.io/npm/dm/@shiplane/changesets.svg" alt="npm downloads per month"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/changesets"><img src="https://img.shields.io/npm/dy/@shiplane/changesets.svg" alt="npm downloads per year"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/changesets"><img src="https://img.shields.io/npm/dt/@shiplane/changesets.svg" alt="npm total downloads"></a>
+
 Versions from `.changeset` files, through the changesets CLI: fills
 [shiplane](../shiplane/README.md)'s **versioning** port. A changeset is the intent to release;
 shiplane turns the pending ones into versions and changelogs on the release PR.

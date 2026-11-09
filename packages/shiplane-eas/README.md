@@ -1,5 +1,10 @@
 # 🔌 @shiplane/eas
 
+<a href="https://npm-stat.com/charts.html?package=@shiplane/eas"><img src="https://img.shields.io/npm/dw/@shiplane/eas.svg" alt="npm downloads per week"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/eas"><img src="https://img.shields.io/npm/dm/@shiplane/eas.svg" alt="npm downloads per month"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/eas"><img src="https://img.shields.io/npm/dy/@shiplane/eas.svg" alt="npm downloads per year"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/eas"><img src="https://img.shields.io/npm/dt/@shiplane/eas.svg" alt="npm total downloads"></a>
+
 Ships an Expo app with EAS: fills [shiplane](../shiplane/README.md)'s **mobile distribution** port.
 Each release is a store build or an over-the-air update, picked from the native fingerprint.
 

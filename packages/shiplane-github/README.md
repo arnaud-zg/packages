@@ -1,5 +1,10 @@
 # 🔌 @shiplane/github
 
+<a href="https://npm-stat.com/charts.html?package=@shiplane/github"><img src="https://img.shields.io/npm/dw/@shiplane/github.svg" alt="npm downloads per week"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/github"><img src="https://img.shields.io/npm/dm/@shiplane/github.svg" alt="npm downloads per month"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/github"><img src="https://img.shields.io/npm/dy/@shiplane/github.svg" alt="npm downloads per year"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/github"><img src="https://img.shields.io/npm/dt/@shiplane/github.svg" alt="npm total downloads"></a>
+
 GitHub for [shiplane](../shiplane/README.md), through the `gh` CLI. Two adapters and a feature, one
 sign-in:
 

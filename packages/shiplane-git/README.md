@@ -1,5 +1,10 @@
 # 🔌 @shiplane/git
 
+<a href="https://npm-stat.com/charts.html?package=@shiplane/git"><img src="https://img.shields.io/npm/dw/@shiplane/git.svg" alt="npm downloads per week"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/git"><img src="https://img.shields.io/npm/dm/@shiplane/git.svg" alt="npm downloads per month"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/git"><img src="https://img.shields.io/npm/dy/@shiplane/git.svg" alt="npm downloads per year"></a>
+<a href="https://npm-stat.com/charts.html?package=@shiplane/git"><img src="https://img.shields.io/npm/dt/@shiplane/git.svg" alt="npm total downloads"></a>
+
 Reads and writes the repository through the git CLI: fills [shiplane](../shiplane/README.md)'s
 **source control** port. Versions, tags, the release branch and every push go through it.
 

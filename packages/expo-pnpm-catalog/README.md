@@ -2,7 +2,11 @@
 
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
 <a href="https://www.npmjs.com/package/expo-pnpm-catalog"><img src="https://img.shields.io/npm/v/expo-pnpm-catalog.svg" alt="npm version"></a>
-<img src="https://img.shields.io/badge/CLI-ready-brightgreen" alt="CLI ready">
+<img src="https://img.shields.io/badge/CLI-ready-brightgreen" alt="CLI ready"> <br/>
+<a href="https://npm-stat.com/charts.html?package=expo-pnpm-catalog"><img src="https://img.shields.io/npm/dw/expo-pnpm-catalog.svg" alt="npm downloads per week"></a>
+<a href="https://npm-stat.com/charts.html?package=expo-pnpm-catalog"><img src="https://img.shields.io/npm/dm/expo-pnpm-catalog.svg" alt="npm downloads per month"></a>
+<a href="https://npm-stat.com/charts.html?package=expo-pnpm-catalog"><img src="https://img.shields.io/npm/dy/expo-pnpm-catalog.svg" alt="npm downloads per year"></a>
+<a href="https://npm-stat.com/charts.html?package=expo-pnpm-catalog"><img src="https://img.shields.io/npm/dt/expo-pnpm-catalog.svg" alt="npm total downloads"></a>
 
 Deterministic Expo SDK checks and sync for [pnpm catalogs](https://pnpm.io/catalogs), like
 `expo-doctor` for a whole workspace.
