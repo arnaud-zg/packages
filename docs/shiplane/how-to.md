@@ -93,8 +93,10 @@ checkEnvBeforeDeploy:
 | In CI, with `--yes` or no terminal | Nothing runs; it prints the command and exits 1          |
 | The plugin cannot list names       | A warning, and the deploy goes on                        |
 
-`shiplane doctor` shows the same check for every environment. `release`, `promote` and `ship` check
-before anything deploys; a release to preview checks before it opens the release PR.
+Fly reads its secrets and the fly.toml `[env]` keys, EAS its environment's variables, and Cloudflare
+Pages its secrets plus the unit's `build.env`. `shiplane doctor` shows the same check for every
+environment. `release`, `promote` and `ship` check before anything deploys; a release to preview
+checks before it opens the release PR.
 
 ## Hold an app back
 
