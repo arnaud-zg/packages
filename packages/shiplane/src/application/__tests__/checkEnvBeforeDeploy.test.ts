@@ -39,8 +39,14 @@ class PlatformEnvFake implements PlatformEnvPort {
     return Promise.resolve(now);
   };
 
-  setCommand = ({ names: unset }: { names: readonly EnvVarName[] }) =>
-    `fly secrets set --stage -a acme-api ${unset.map((name) => `${name}=...`).join(" ")}`;
+  setCommand = ({
+    names: unset,
+    options,
+  }: {
+    names: readonly EnvVarName[];
+    options: Record<string, unknown>;
+  }) =>
+    `fly secrets set --stage -a ${String(options.service)} ${unset.map((name) => `${name}=...`).join(" ")}`;
 }
 
 const setUp = ({
@@ -63,6 +69,7 @@ const setUp = ({
   const adapter = withEnv ? { ...hosting, env: () => platform } : hosting;
   const api = testUnit("api", {
     module: "backend-service",
+    options: { service: "acme-api" },
     ...(toCheck ? { checkEnvBeforeDeploy: toCheck } : {}),
   });
   const world = testContext({

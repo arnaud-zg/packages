@@ -8,11 +8,14 @@ export interface PlatformEnvPort {
   listNames: (input: {
     unit: ReleaseUnit;
     environment: Environment;
+    /** The unit's settings for that environment, as its jobs receive them. */
+    options: Record<string, unknown>;
   }) => Promise<ReadonlySet<EnvVarName>>;
   /** The command a person runs to set these names, with `...` where each value goes. */
   setCommand: (input: {
     unit: ReleaseUnit;
     environment: Environment;
+    options: Record<string, unknown>;
     names: readonly EnvVarName[];
   }) => string;
 }

@@ -7,6 +7,7 @@ import type { Release } from "./config/loadRelease";
 import type { ReleaseContext } from "./context";
 import { findUnset } from "../domain/checkEnvBeforeDeploy";
 import { paint } from "./say";
+import { resolvedOptions } from "./targets";
 
 export const STEP = "Check env before deploy";
 const SET_THEM = "Are they set now?";
@@ -20,15 +21,30 @@ export const listing = (units: readonly ReleaseUnit[]): Checked[] =>
     unit.checkEnvBeforeDeploy ? [{ unit, toCheck: unit.checkEnvBeforeDeploy }] : [],
   );
 
+type WithoutOptions<Input> = Omit<Input, "options">;
+
+/** A unit's platform env, its settings for each environment filled in. */
+export interface UnitPlatformEnv {
+  listNames: (
+    input: WithoutOptions<Parameters<PlatformEnvPort["listNames"]>[0]>,
+  ) => Promise<ReadonlySet<EnvVarName>>;
+  setCommand: (input: WithoutOptions<Parameters<PlatformEnvPort["setCommand"]>[0]>) => string;
+}
+
 /** The unit's platform env, or the provider that cannot list names. */
 export const platformEnvOf = (
   { release, shell }: { release: Release; shell: Shell },
   unit: ReleaseUnit,
-): PlatformEnvPort | { cannotList: string } => {
+): UnitPlatformEnv | { cannotList: string } => {
   const module = release.modules.find(({ name }) => name === unit.module);
-  return module?.env
-    ? module.env({ root: release.root, shell })
-    : { cannotList: module?.provider ?? unit.module };
+  if (!module?.env) return { cannotList: module?.provider ?? unit.module };
+  const port = module.env({ root: release.root, shell });
+  const options = (environment: Environment) =>
+    resolvedOptions(module, unit, environment, release.units);
+  return {
+    listNames: (input) => port.listNames({ ...input, options: options(input.environment) }),
+    setCommand: (input) => port.setCommand({ ...input, options: options(input.environment) }),
+  };
 };
 
 const line = ({ output }: ReleaseContext, mark: string, text: string) =>
@@ -37,7 +53,7 @@ const line = ({ output }: ReleaseContext, mark: string, text: string) =>
 /** The names the platform holds, or null when the person stops, or CI cannot read it. */
 const readNames = async (
   context: ReleaseContext,
-  port: PlatformEnvPort,
+  port: UnitPlatformEnv,
   input: { unit: ReleaseUnit; environment: Environment },
 ): Promise<ReadonlySet<EnvVarName> | null> => {
   try {
@@ -58,7 +74,7 @@ const canWait = ({ prompter, options }: ReleaseContext) => prompter.interactive 
 /** One unit on one environment: true once every listed name is on its platform. */
 const checkUnit = async (
   context: ReleaseContext,
-  port: PlatformEnvPort,
+  port: UnitPlatformEnv,
   { unit, toCheck }: Checked,
   environment: Environment,
 ): Promise<boolean> => {

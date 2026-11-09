@@ -1,8 +1,7 @@
 import type { Environment } from "../domain/environment";
-import type { PlatformEnvPort } from "../ports/platform-env.port";
 import type { Shell } from "../ports/shell.port";
 import type { Output } from "../ports/terminal.port";
-import type { Checked } from "./checkEnvBeforeDeploy";
+import type { Checked, UnitPlatformEnv } from "./checkEnvBeforeDeploy";
 import type { Release } from "./config/loadRelease";
 import { findUnset } from "../domain/checkEnvBeforeDeploy";
 import { ENVIRONMENTS } from "../domain/environment";
@@ -15,7 +14,7 @@ const doctorLine = (output: Output, mark: string, text: string) =>
 /** One unit on one environment, for doctor: true when every listed name is on its platform. */
 const reportUnit = async (
   output: Output,
-  port: PlatformEnvPort,
+  port: UnitPlatformEnv,
   { unit, toCheck }: Checked,
   environment: Environment,
 ): Promise<boolean> => {
