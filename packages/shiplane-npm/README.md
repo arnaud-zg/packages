@@ -1,12 +1,5 @@
 # 🔌 @shiplane/npm
 
-<a href="https://npm-stat.com/charts.html?package=@shiplane/npm">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/npm.svg?days=90&logo=false&mode=dark" />
-    <img alt="@shiplane/npm npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/npm.svg?days=90&logo=false&mode=light" />
-  </picture>
-</a>
-
 Publishes a package to npm: fills [shiplane](../shiplane/README.md)'s **package registry** port with
 `pnpm publish` and `npm dist-tag`.
 
@@ -96,3 +89,12 @@ package with a `bin`, `exports` or `main`.
 
 Source: `requirements` in `src/npm-package-registry.adapter.ts`. `pnpm shiplane doctor` runs each
 check and offers the fix.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=@shiplane/npm">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/npm.svg?days=90&logo=false&mode=dark" />
+    <img alt="@shiplane/npm npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/npm.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>

@@ -1,12 +1,5 @@
 # agent-context-budget
 
-<a href="https://npm-stat.com/charts.html?package=agent-context-budget">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/agent-context-budget.svg?days=90&logo=false&mode=dark" />
-    <img alt="agent-context-budget npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/agent-context-budget.svg?days=90&logo=false&mode=light" />
-  </picture>
-</a>
-
 Token-budget analysis for AI agent context files (CLAUDE.md, AGENTS.md, etc.).
 
 Large context files (CLAUDE.md, AGENTS.md, per-package context docs) load on every agent session —
@@ -138,3 +131,12 @@ pre-commit:
 
 Exit code `2` means advisory findings only; treat it as a pass if you only want to block on budgets:
 `npx agent-context-budget check || [ $? -eq 2 ]`.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=agent-context-budget">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/agent-context-budget.svg?days=90&logo=false&mode=dark" />
+    <img alt="agent-context-budget npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/agent-context-budget.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>

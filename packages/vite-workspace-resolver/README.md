@@ -1,12 +1,5 @@
 # vite-workspace-resolver
 
-<a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/vite-workspace-resolver.svg?days=90&logo=false&mode=dark" />
-    <img alt="vite-workspace-resolver npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/vite-workspace-resolver.svg?days=90&logo=false&mode=light" />
-  </picture>
-</a>
-
 Vite's test resolver won't follow a workspace package's `package.json` `exports` map for non-`"."`
 subpaths, and can't reach into a package's `src/` for files that aren't exported at all.
 `workspaceExports(rootDir)` scans every workspace package once and resolves both cases directly as a
@@ -70,6 +63,15 @@ to Vite's default resolver.
 - Ships as a built package (`tsdown` → `dist/`), not raw source — a package consumed inside a
   `vitest.config.ts` file needs plain JS. Node's synchronous config-loading path only transpiles the
   config file itself, not files reached transitively through an `import`.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=vite-workspace-resolver">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/vite-workspace-resolver.svg?days=90&logo=false&mode=dark" />
+    <img alt="vite-workspace-resolver npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/vite-workspace-resolver.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>
 
 ## License
 

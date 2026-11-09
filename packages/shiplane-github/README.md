@@ -1,12 +1,5 @@
 # 🔌 @shiplane/github
 
-<a href="https://npm-stat.com/charts.html?package=@shiplane/github">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/github.svg?days=90&logo=false&mode=dark" />
-    <img alt="@shiplane/github npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/github.svg?days=90&logo=false&mode=light" />
-  </picture>
-</a>
-
 GitHub for [shiplane](../shiplane/README.md), through the `gh` CLI. Two adapters and a feature, one
 sign-in:
 
@@ -103,3 +96,12 @@ marker, so a version tells a PR once per environment, however many times it ship
 | `gh` | `gh auth status` | `gh auth login` | `GH_TOKEN` |
 
 Source: `requirements` in both adapters. `pnpm shiplane doctor` runs the check and offers the fix.
+
+## 📈 Downloads
+
+<a href="https://npm-stat.com/charts.html?package=@shiplane/github">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/@shiplane/github.svg?days=90&logo=false&mode=dark" />
+    <img alt="@shiplane/github npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/@shiplane/github.svg?days=90&logo=false&mode=light" />
+  </picture>
+</a>
