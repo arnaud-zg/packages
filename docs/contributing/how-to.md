@@ -28,6 +28,18 @@ directly, including for version bumps: everything lands through a merged PR.
 pnpm changeset
 ```
 
+Pick the bump from the PR's commit type. Changesets reads the bump from the file and never looks at
+commits, so a feature written as `patch` ships as a patch:
+
+| Commit type             | Bump                                 |
+| ----------------------- | ------------------------------------ |
+| `feat`                  | `minor`                              |
+| `fix`, `perf`, anything | `patch`                              |
+| breaking, marked `!`    | `minor` below `1.0.0`, `major` after |
+
+`pnpm verify` fails a branch with a `feat` or `!` commit whose changesets are all `patch`
+(`pnpm check:changesets` runs that check alone).
+
 Each merged PR carries its own changeset; they pile up on `main` until step 2 cuts a release. Commit
 the generated `.changeset/*.md` file and merge the PR as usual.
 

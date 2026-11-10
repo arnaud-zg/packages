@@ -5,6 +5,7 @@
   "scripts": {
     "build": "pnpm -r run build",
     "changeset": "changeset",
+    "check:changesets": "node scripts/check-changeset-bumps.mjs",
     "clean": "pnpm -r run clean",
     "format": "prettier --write . --cache --cache-location .cache/.prettiercache",
     "format:check": "prettier --check . --cache --cache-location .cache/.prettiercache",
@@ -17,7 +18,7 @@
     "sync-issues": "node scripts/sync-issues.mjs",
     "test": "pnpm -r run test",
     "typecheck": "pnpm -r run typecheck",
-    "verify": "pnpm typecheck && pnpm lint && pnpm lint:md && pnpm format:check && pnpm test && pnpm build"
+    "verify": "pnpm check:changesets && pnpm typecheck && pnpm lint && pnpm lint:md && pnpm format:check && pnpm test && pnpm build"
   },
   "prettier": "@arnaud-zg/configs/prettier",
   "devDependencies": {
