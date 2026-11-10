@@ -18,15 +18,28 @@ const SENTRY: PlannedChangeset = {
   releases: [{ name: "@acme/api", type: "patch" }],
 };
 
-/** A platform that holds the same names on every environment. */
-const platformHolding = (held: EnvVarName[]) => ({
-  listNames: () => Promise.resolve(new Set(held)),
+/** A platform that holds the same names on every environment, and counts its reads. */
+const platformHolding = (held: EnvVarName[], reads = { count: 0 }) => ({
+  listNames: () => {
+    reads.count += 1;
+    return Promise.resolve(new Set(held));
+  },
   setCommand: ({ names: unset }: { names: readonly EnvVarName[] }) =>
     `fly secrets set --stage -a acme-api ${unset.map((name) => `${name}=...`).join(" ")}`,
 });
 
-const setUp = (held: EnvVarName[], { yes = false }: { yes?: boolean } = {}) => {
+const FLY_SIGN_IN = {
+  label: "flyctl",
+  check: { command: "flyctl", args: ["auth", "whoami"] },
+  fix: { command: "flyctl", args: ["auth", "login"] },
+};
+
+const setUp = (
+  held: EnvVarName[],
+  { yes = false, signIn = false }: { yes?: boolean; signIn?: boolean } = {},
+) => {
   const hosting = serverHostingFake();
+  const reads = { count: 0 };
   const api = testUnit("api", {
     version: "0.1.0",
     module: "backend-service",
@@ -35,12 +48,20 @@ const setUp = (held: EnvVarName[], { yes = false }: { yes?: boolean } = {}) => {
   });
   const world = testContext({
     units: [api],
-    modules: [backendService({ serverHosting: { ...hosting, env: () => platformHolding(held) } })],
+    modules: [
+      backendService({
+        serverHosting: {
+          ...hosting,
+          env: () => platformHolding(held, reads),
+          ...(signIn ? { requirements: () => [FLY_SIGN_IN] } : {}),
+        },
+      }),
+    ],
     interactive: false,
     yes,
   });
   world.source.seed({ tags: { "api@0.1.0": "t1" } });
-  return { ...world, hosting: hosting.fake };
+  return { ...world, hosting: hosting.fake, reads };
 };
 
 describe("a deploy with env to check", () => {
@@ -57,6 +78,23 @@ describe("a deploy with env to check", () => {
 
     expect(await shipTo(context, "preview", { via: "local" })).toBe(true);
     expect(shell.calls.map(({ args }) => args)).toContainEqual(["deploy", "acme-api", "api@0.1.0"]);
+  });
+
+  it("given flyctl signed out, when api ships to preview from CI with --yes, then it stops at the sign-in and never reads the platform", async () => {
+    const { context, shell, output, reads } = setUp(names("SENTRY_DSN"), {
+      yes: true,
+      signIn: true,
+    });
+    shell.seed("flyctl auth whoami", { status: 1 });
+
+    expect(await shipTo(context, "preview", { via: "local" })).toBe(false);
+    expect(output.text).toContain("Not signed in: flyctl");
+    expect(reads.count).toBe(0);
+    expect(shell.calls.map(({ args }) => args)).not.toContainEqual([
+      "deploy",
+      "acme-api",
+      "api@0.1.0",
+    ]);
   });
 
   it("given SENTRY_DSN unset and a changeset to release, when releasing to preview, then it stops before the release PR is opened", async () => {
