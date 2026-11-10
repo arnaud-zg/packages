@@ -6,7 +6,8 @@
 
 **Apps:** [Add an app](#add-an-app) · [Stop shipping an app](#stop-shipping-an-app) ·
 [Set a value per environment](#set-a-value-per-environment) ·
-[Read another app's value](#read-another-apps-value) · [Hold an app back](#hold-an-app-back)
+[Read another app's value](#read-another-apps-value) ·
+[Check env before deploy](#check-env-before-deploy) · [Hold an app back](#hold-an-app-back)
 
 **Release:** [Force another version](#force-another-version) ·
 [Preview every command](#preview-every-command) · [Promote to production](#promote-to-production) ·
@@ -62,6 +63,38 @@ build:
 ```
 
 The app read must ship first: list its module before the reader's in `modules`.
+
+## Check env before deploy
+
+List the env var names an app reads. Before each deploy, shiplane checks they are set on the
+platform. You set the values; shiplane only reads names, never values.
+
+```yaml
+# apps/api/shiplane.unit.yml
+checkEnvBeforeDeploy:
+  - SENTRY_DSN
+  - DATABASE_URL
+```
+
+Names that differ per environment: `all` holds the shared ones, and an environment adds its own. A
+new environment inherits `all`.
+
+```yaml
+checkEnvBeforeDeploy:
+  all:
+    - SENTRY_DSN
+  production:
+    - REVENUECAT_PROJECT_ID
+```
+
+| When a name is unset               | What happens                                             |
+| ---------------------------------- | -------------------------------------------------------- |
+| In a terminal                      | It prints the command to set it, waits, then reads again |
+| In CI, with `--yes` or no terminal | Nothing runs; it prints the command and exits 1          |
+| The plugin cannot list names       | A warning, and the deploy goes on                        |
+
+`shiplane doctor` shows the same check for every environment. `release`, `promote` and `ship` check
+before anything deploys; a release to preview checks before it opens the release PR.
 
 ## Hold an app back
 

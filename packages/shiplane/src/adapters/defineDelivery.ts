@@ -33,6 +33,7 @@ const recipe = <Port extends { capability: string }>(
     detect,
     questions,
     requirements,
+    env,
     ...port
   }: Omit<DeliveryAdapter<Port>, "create" | "capability">,
   capability: Port["capability"],
@@ -45,6 +46,7 @@ const recipe = <Port extends { capability: string }>(
   detect,
   questions,
   requirements,
+  ...(env ? { env } : {}),
   create: () => widen({ ...port, capability }),
 });
 

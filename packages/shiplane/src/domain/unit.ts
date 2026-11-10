@@ -1,3 +1,5 @@
+import type { EnvToCheck } from "./checkEnvBeforeDeploy";
+
 /** Something with a version that ships somewhere: an app, a published package, this CLI. */
 export interface ReleaseUnit {
   /** Its folder's name, the name every command and `${units.<name>}` uses. */
@@ -12,6 +14,8 @@ export interface ReleaseUnit {
   module: string;
   /** Its `buildCommand:`, when its unit file says one; else its package.json "build" script. */
   buildCommand?: string;
+  /** Its `checkEnvBeforeDeploy:`, when its unit file lists one. */
+  checkEnvBeforeDeploy?: EnvToCheck;
   /** As written: per-environment maps and references are resolved by `optionsFor`. */
   options: Record<string, unknown>;
   /** Units whose values it reads: they are dispatched before it. */

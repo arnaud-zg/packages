@@ -1,6 +1,7 @@
 import type { OpenPr } from "../domain/releasePr";
 import type { ReleaseContext } from "./context";
 import { nextStep, RELEASE_BRANCH_PREFIX } from "../domain/releasePr";
+import { checkEnvBeforeDeploy } from "./checkEnvBeforeDeploy";
 import { openReleasePr, printSummary } from "./openReleasePr";
 import { pickScope } from "./pickScope";
 import { prepareRelease } from "./prepareRelease";
@@ -76,6 +77,10 @@ export const releaseToPreview = async (context: ReleaseContext): Promise<boolean
     return true;
   }
   if (!(await preflight(context, picked.scope))) return false;
+  const picking = context.release.units.filter(({ name }) => picked.scope.has(name));
+  if (!(await checkEnvBeforeDeploy(context, { environment: "preview", units: picking }))) {
+    return false;
+  }
   const covered = picked.info.filter(({ app }) => picked.scope.has(app));
   const [releasePrs, missing] = await progress.during(
     "Looking for an open release PR and versions not tagged yet",
@@ -162,5 +167,6 @@ export const releaseToPreview = async (context: ReleaseContext): Promise<boolean
   // A unit the release took along unpicked is tagged with the rest, so it ships with them too.
   return shipTo(current, "preview", {
     scope: new Set([...picked.scope, ...tags.map(({ app }) => app)]),
+    envChecked: picked.scope,
   });
 };

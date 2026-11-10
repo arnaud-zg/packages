@@ -1,6 +1,8 @@
 import { z } from "zod";
 
+import type { Environment } from "../../domain/environment";
 import type { ReleaseModule } from "../../modules/module";
+import { ENV_VAR_NAME } from "../../domain/checkEnvBeforeDeploy";
 
 interface Inspectable {
   def: {
@@ -71,6 +73,31 @@ export const keysAt = (schema: z.ZodType, at: readonly PropertyKey[]): string[] 
   return child ? keysAt(child, rest) : [];
 };
 
+const envVarNames = z
+  .array(z.string().regex(ENV_VAR_NAME, "an env var name is UPPER_SNAKE, like SENTRY_DSN"))
+  .describe("Env var names, one per line");
+
+const onlyOn = (environment: Environment) =>
+  envVarNames.optional().describe(`Checked on ${environment} only, on top of all`);
+
+const environmentLists = {
+  preview: onlyOn("preview"),
+  production: onlyOn("production"),
+} satisfies Record<Environment, z.ZodOptional<typeof envVarNames>>;
+
+/** One list for every environment, or `all` plus a list per environment. */
+export const checkEnvBeforeDeploySchema = z
+  .union([
+    envVarNames,
+    z.strictObject({
+      all: envVarNames.optional().describe("Checked on every environment, current and future"),
+      ...environmentLists,
+    }),
+  ])
+  .describe(
+    "Before each deploy, shiplane checks these env var names are set on the platform; you set the values",
+  );
+
 /** What a unit file naming this module may hold: `module`, then its adapter's settings. */
 export const unitSchema = (module: ReleaseModule) =>
   z.strictObject({
@@ -81,6 +108,7 @@ export const unitSchema = (module: ReleaseModule) =>
       .string()
       .optional()
       .describe('How to build this app, when its package.json has no "build" script'),
+    checkEnvBeforeDeploy: checkEnvBeforeDeploySchema.optional(),
     ...mapShape(module.settings.shape, deepStrict),
   });
 

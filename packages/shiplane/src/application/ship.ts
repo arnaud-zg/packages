@@ -9,9 +9,11 @@ import type { ReleaseContext } from "./context";
 import { onlyVersionFiles, shipsFrom, webShip } from "../domain/deploys";
 import { tagName } from "../domain/tags";
 import { askPaths, PATH_LABEL } from "./askPath";
+import { checkEnvBeforeDeploy } from "./checkEnvBeforeDeploy";
 import { runFollowUps } from "./followUps";
 import { pullRequestFirst } from "./pullRequestFirst";
 import { deployedOn } from "./readScope";
+import { signIn, signInsOf } from "./requirements";
 import { confirm, fail, paint } from "./say";
 import {
   decideContext,
@@ -287,7 +289,16 @@ const shipQuestion = (
 export const shipTo = async (
   context: ReleaseContext,
   environment: Environment,
-  { scope, via }: { scope?: ReadonlySet<string>; via?: DeployPath },
+  {
+    scope,
+    via,
+    envChecked = new Set(),
+  }: {
+    scope?: ReadonlySet<string>;
+    via?: DeployPath;
+    /** Units whose env this run already checked on this environment. */
+    envChecked?: ReadonlySet<string>;
+  },
 ): Promise<boolean> => {
   const { output, prompter, options, services } = context;
   // On a runner, the person typed production before the dispatch that started it.
@@ -312,6 +323,18 @@ export const shipTo = async (
     );
     return true;
   }
+  const toCheck = ready.map(({ unit }) => unit).filter(({ name }) => !envChecked.has(name));
+  const listing = new Set(
+    toCheck.filter((unit) => unit.checkEnvBeforeDeploy).map(({ name }) => name),
+  );
+  const signedIn =
+    listing.size === 0 ||
+    (await signIn(context, {
+      requirements: signInsOf(context.release, listing),
+      again: "ship again",
+    }));
+  if (!signedIn) return false;
+  if (!(await checkEnvBeforeDeploy(context, { environment, units: toCheck }))) return false;
   // On a CI runner, dispatching another workflow would pay for two: this runner ships.
   const forced = options.ci ? "local" : via;
   const paths = new Map<Ready, DeployPath>();

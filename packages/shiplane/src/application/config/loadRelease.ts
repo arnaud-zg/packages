@@ -321,6 +321,9 @@ export const loadRelease = async (root: string, options: LoadOptions = {}): Prom
         version: manifest.version,
         module: result.unit.module,
         ...(result.unit.buildCommand ? { buildCommand: result.unit.buildCommand } : {}),
+        ...(result.unit.checkEnvBeforeDeploy
+          ? { checkEnvBeforeDeploy: result.unit.checkEnvBeforeDeploy }
+          : {}),
         options: result.unit.options,
         after: [],
       };

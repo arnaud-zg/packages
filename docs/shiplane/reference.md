@@ -140,6 +140,8 @@ app: # every other key belongs to that module's plugin
   preview: acme-api-preview
   production: acme-api
 url: ${units.other.url} # another unit's value, same environment
+checkEnvBeforeDeploy: # env var names a deploy waits for, read on the platform
+  - SENTRY_DSN
 ```
 
 - A map keyed by `preview` and `production` is a value per environment.
@@ -147,6 +149,9 @@ url: ${units.other.url} # another unit's value, same environment
 - `shiplane docs <module>` lists every key and its default. Keys per plugin:
   [Plugins](./plugins.md).
 - A `release.unit.yml` still loads, with a line saying to rename it.
+- `checkEnvBeforeDeploy` belongs to shiplane, not to the module. It is one list for every
+  environment, or `all` plus a list per environment. Each name is UPPER_SNAKE. A name not listed is
+  never checked. See [Check env before deploy](./how-to.md#check-env-before-deploy).
 
 ## Modules
 
