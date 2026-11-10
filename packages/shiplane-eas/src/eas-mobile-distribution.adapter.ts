@@ -24,6 +24,7 @@ import {
   verdictLines,
 } from "./eas/analyse";
 import { easClient } from "./eas/client";
+import { easEnv } from "./eas/env";
 import {
   mobileChoice,
   mobileRelease,
@@ -495,6 +496,7 @@ export const easMobileDistribution = (): EasMobileDistributionAdapter =>
         fix: { command: "pnpm", args: ["exec", "eas", "login"], cwd: unit.dir },
       },
     ],
+    env: easEnv,
     jobs: (input) => [buildJob(input), updateJob(input)],
     decide: (context, input) =>
       input.environment === "preview"
