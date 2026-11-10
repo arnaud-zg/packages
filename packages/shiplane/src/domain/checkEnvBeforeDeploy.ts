@@ -36,8 +36,8 @@ export class EnvToCheck {
 
   /** Names in `all` that an environment lists again. */
   listedTwice(): EnvVarName[] {
-    const extras = Object.values(this.#perEnvironment).flat();
-    return [...new Set(this.#all.filter((name) => extras.includes(name)))];
+    const extras = new Set(Object.values(this.#perEnvironment).flat());
+    return [...new Set(this.#all)].filter((name) => extras.has(name));
   }
 }
 

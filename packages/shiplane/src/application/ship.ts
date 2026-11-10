@@ -13,6 +13,7 @@ import { checkEnvBeforeDeploy } from "./checkEnvBeforeDeploy";
 import { runFollowUps } from "./followUps";
 import { pullRequestFirst } from "./pullRequestFirst";
 import { deployedOn } from "./readScope";
+import { signIn, signInsOf } from "./requirements";
 import { confirm, fail, paint } from "./say";
 import {
   decideContext,
@@ -323,6 +324,16 @@ export const shipTo = async (
     return true;
   }
   const toCheck = ready.map(({ unit }) => unit).filter(({ name }) => !envChecked.has(name));
+  const listing = new Set(
+    toCheck.filter((unit) => unit.checkEnvBeforeDeploy).map(({ name }) => name),
+  );
+  const signedIn =
+    listing.size === 0 ||
+    (await signIn(context, {
+      requirements: signInsOf(context.release, listing),
+      again: "ship again",
+    }));
+  if (!signedIn) return false;
   if (!(await checkEnvBeforeDeploy(context, { environment, units: toCheck }))) return false;
   // On a CI runner, dispatching another workflow would pay for two: this runner ships.
   const forced = options.ci ? "local" : via;
