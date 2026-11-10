@@ -1,5 +1,14 @@
 # shiplane
 
+## 0.4.2
+
+### Patch Changes
+
+- [#51](https://github.com/arnaud-zg/packages/pull/51) [`4fd368d`](https://github.com/arnaud-zg/packages/commit/4fd368d0314695a5bcfd77eaa81f599451b178a9) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - A unit file can list `checkEnvBeforeDeploy`: the env var names its app reads. Before each deploy,
+  shiplane checks they are set on the platform, and waits for a person to set any that are missing, or
+  stops in CI. `shiplane doctor` shows the same check. Plugins opt in with an optional `env`, so
+  existing plugins and unit files work unchanged.
+
 ## 0.4.1
 
 ### Patch Changes
