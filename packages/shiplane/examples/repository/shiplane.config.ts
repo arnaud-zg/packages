@@ -1,5 +1,5 @@
 // Each port gets an adapter; a module per kind of app takes the adapter that ships it.
-import { changesetsVersioning } from "@shiplane/changesets";
+import { commitsVersioning } from "@shiplane/changesets";
 import { cloudflarePagesStaticHosting } from "@shiplane/cloudflare-pages";
 import { easMobileDistribution } from "@shiplane/eas";
 import { flyServerHosting } from "@shiplane/fly";
@@ -21,7 +21,7 @@ export default defineRelease({
     sourceControl: gitSourceControl(),
     codeHost: gitHubCodeHost(),
     ciPipeline: gitHubActionsCiPipeline(),
-    versioning: changesetsVersioning(),
+    versioning: commitsVersioning(),
   }),
   modules: [
     backendService({ serverHosting: flyServerHosting() }),

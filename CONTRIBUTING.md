@@ -14,7 +14,8 @@ pnpm verify   # typecheck, lint, format, test, build
 
 - One pull request per change, with a [conventional commit](https://www.conventionalcommits.org)
   title such as `fix(shiplane): ...`.
-- A change users will see needs a changeset: `pnpm changeset`.
+- A change users will see needs a changeset: `pnpm changeset --minor <pkg> -m "…"` for a `feat`,
+  `--patch` for a `fix`.
 
 ## Triage (maintainer)
 

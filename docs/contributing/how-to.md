@@ -24,9 +24,17 @@ directly, including for version bumps: everything lands through a merged PR.
 
 **1. Add a changeset, in your feature/fix PR**
 
+This repo writes its changelog itself (`changesetsVersioning()`), so you pick the bump from the PR
+title:
+
 ```sh
-pnpm changeset
+pnpm changeset --minor shiplane -m "What users can now do."   # feat
+pnpm changeset --patch @shiplane/fly -m "What now works."     # fix, perf, …
 ```
+
+A breaking change (`!`) is `--minor` below `1.0.0`. Before merging,
+`pnpm changeset status --verbose` lists the version each package gets. See
+[Choose how versions are bumped](../shiplane/how-to.md#choose-how-versions-are-bumped).
 
 Each merged PR carries its own changeset; they pile up on `main` until step 2 cuts a release. Commit
 the generated `.changeset/*.md` file and merge the PR as usual.

@@ -58,7 +58,7 @@ From [`examples/repository/shiplane.config.ts`](./examples/repository/shiplane.c
 
 ```ts
 // Each port gets an adapter; a module per kind of app takes the adapter that ships it.
-import { changesetsVersioning } from "@shiplane/changesets";
+import { commitsVersioning } from "@shiplane/changesets";
 import { cloudflarePagesStaticHosting } from "@shiplane/cloudflare-pages";
 import { easMobileDistribution } from "@shiplane/eas";
 import { flyServerHosting } from "@shiplane/fly";
@@ -80,7 +80,7 @@ export default defineRelease({
     sourceControl: gitSourceControl(),
     codeHost: gitHubCodeHost(),
     ciPipeline: gitHubActionsCiPipeline(),
-    versioning: changesetsVersioning(),
+    versioning: commitsVersioning(),
   }),
   modules: [
     backendService({ serverHosting: flyServerHosting() }),
@@ -92,6 +92,18 @@ export default defineRelease({
 });
 ```
 
+Swap any piece:
+
+| Want                                                    | Use                                                                                      |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| To write the changelog yourself                         | [`changesetsVersioning()`](../../docs/shiplane/how-to.md#choose-how-versions-are-bumped) |
+| Any host with a deploy command                          | [`shellServerHosting()`](../../docs/shiplane/plugins.md#built-in-shellserverhosting)     |
+| To release Claude Code, Codex, Cursor or Gemini plugins | [`agentPlugin()`](../../docs/shiplane/how-to.md#release-claude-code-plugins)             |
+| To comment on each PR when it ships                     | [`releaseComments()`](../../docs/shiplane/how-to.md#comment-on-what-shipped)             |
+| Your own host                                           | [Write a plugin](../../docs/shiplane/how-to.md#write-a-plugin)                           |
+| To ship from this machine, not Actions                  | [`--via local`](../../docs/shiplane/how-to.md#choose-github-actions-or-this-machine)     |
+| A quieter terminal                                      | [`display: { mascot: false }`](../../docs/shiplane/how-to.md#turn-the-mascot-off)        |
+
 `pnpm shiplane plugins` in that repository shows what got injected where:
 
 ```text
@@ -100,7 +112,7 @@ Flow in shiplane.config.ts
   sourceControl      git
   codeHost           github
   ciPipeline         github-actions
-  versioning         changesets
+  versioning         commits
 
 Modules, in release order
 
@@ -121,8 +133,7 @@ Features, after the ship
 ```
 
 The adapters come from separate packages:
-**[the adapters you can inject](../../docs/shiplane/plugins.md)**. The core carries one,
-`shellServerHosting()`, for a host with no adapter yet.
+**[the adapters you can inject](../../docs/shiplane/plugins.md)**.
 
 ## 📚 Docs
 
