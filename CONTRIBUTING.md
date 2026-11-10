@@ -9,13 +9,13 @@ sentence is enough to start; a reproduction helps but is optional.
 
 ```sh
 pnpm install
-pnpm verify   # changeset bumps, typecheck, lint, format, test, build
+pnpm verify   # typecheck, lint, format, test, build
 ```
 
 - One pull request per change, with a [conventional commit](https://www.conventionalcommits.org)
   title such as `fix(shiplane): ...`.
-- A change users will see needs a changeset: `pnpm changeset`. A `feat` is `minor`, a `fix` is
-  `patch`.
+- A change users will see needs a changeset: `pnpm changeset --minor <pkg> -m "…"` for a `feat`,
+  `--patch` for a `fix`.
 
 ## Triage (maintainer)
 

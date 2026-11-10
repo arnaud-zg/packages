@@ -29,8 +29,7 @@ isn't part of the `exports` map `tsdown` generates from.
 | `pnpm typecheck`               | `tsc` (or the package's typecheck config) in every package                      |
 | `pnpm test`                    | `vitest run` in every package                                                   |
 | `pnpm build`                   | builds every package (`tsdown` or `tsc`, per package)                           |
-| `pnpm verify`                  | check:changesets, typecheck, lint, lint:md, format:check, test, build           |
-| `pnpm check:changesets`        | fails a `feat` or `!` branch whose changesets are all `patch`                   |
+| `pnpm verify`                  | typecheck, lint, lint:md, format:check, test, build                             |
 | `pnpm changeset`               | records a pending version bump, see [How-to](./how-to.md#release-a-new-version) |
 | `pnpm release`                 | `pnpm build && shiplane`, see [How-to](./how-to.md#release-a-new-version)       |
 | `pnpm shiplane status`         | what each package would release next                                            |

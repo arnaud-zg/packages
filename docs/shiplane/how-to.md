@@ -17,6 +17,7 @@
 
 **Hosts:** [Publish a package to npm](#publish-a-package-to-npm) ·
 [Release Claude Code plugins](#release-claude-code-plugins) ·
+[Choose how versions are bumped](#choose-how-versions-are-bumped) ·
 [Release from commits](#release-from-commits) ·
 [Ship a host with no plugin](#ship-a-host-with-no-plugin) · [Swap a provider](#swap-a-provider) ·
 [Write a plugin](#write-a-plugin) · [Comment on what shipped](#comment-on-what-shipped) ·
@@ -221,6 +222,33 @@ manifest with no `version` is left alone.
 
 Queue each release with `pnpm changeset`, as for any unit, or
 [release from commits](#release-from-commits).
+
+## Choose how versions are bumped
+
+**Write the changelog yourself?** Use `changesetsVersioning()`. **Let PR titles be the changelog?**
+Use `commitsVersioning()`.
+
+Both run on [changesets](https://github.com/changesets/changesets) under the hood: commits mode only
+writes the changesets for you, from the PR titles. Both bump the same way:
+
+| PR title         | Bump                             |
+| ---------------- | -------------------------------- |
+| `feat`           | minor                            |
+| `fix`, `perf`, … | patch                            |
+| `!` (breaking)   | minor below `1.0.0`, major after |
+
+With `changesetsVersioning()`, add one in the feature PR, bump taken from that table:
+
+```sh
+pnpm changeset --minor shiplane -m "What users can now do."
+```
+
+Changesets never picks the bump: it releases what the file says, so a `feat` written as `--patch`
+ships as a patch. Before merging, `pnpm changeset status --verbose` lists the version each package
+gets.
+
+With `commitsVersioning()`, there's nothing to write: the PR title sets the bump, see
+[Release from commits](#release-from-commits).
 
 ## Release from commits
 
