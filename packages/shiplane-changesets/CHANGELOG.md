@@ -1,5 +1,12 @@
 # @shiplane/changesets
 
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [[`4fd368d`](https://github.com/arnaud-zg/packages/commit/4fd368d0314695a5bcfd77eaa81f599451b178a9)]:
+  - shiplane@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @shiplane/eas
 
+## 0.4.2
+
+### Patch Changes
+
+- [#52](https://github.com/arnaud-zg/packages/pull/52) [`1d6346e`](https://github.com/arnaud-zg/packages/commit/1d6346ebd0e6204aeccef4ed098d7d7fb34a510d) Thanks [@arnaud-zg](https://github.com/arnaud-zg)! - Fly, EAS and Cloudflare Pages list the env var names they hold, so `checkEnvBeforeDeploy` and
+  `shiplane doctor` can check them. Fly reads its secrets and the fly.toml `[env]` keys, EAS its
+  environment's variables, Pages its secrets and the unit's build variables. Values are never read.
+- Updated dependencies [[`4fd368d`](https://github.com/arnaud-zg/packages/commit/4fd368d0314695a5bcfd77eaa81f599451b178a9)]:
+  - shiplane@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes
