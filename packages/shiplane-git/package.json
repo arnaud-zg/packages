@@ -4,10 +4,7 @@
   "description": "Git plugin for shiplane: commits, tags, release branches and pushes through the git CLI.",
   "keywords": [
     "shiplane",
-    "shiplane-plugin",
     "git",
-    "tags",
-    "release-branch",
     "release"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-git#readme",

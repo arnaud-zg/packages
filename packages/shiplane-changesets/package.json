@@ -4,12 +4,8 @@
   "description": "Changesets plugin for shiplane: versions and changelogs from .changeset files.",
   "keywords": [
     "shiplane",
-    "shiplane-plugin",
     "changesets",
-    "versioning",
     "changelog",
-    "release",
-    "monorepo",
     "semver"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-changesets#readme",

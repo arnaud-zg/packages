@@ -4,13 +4,9 @@
   "description": "Fly.io plugin for shiplane: deploy any Dockerfile app per environment with flyctl.",
   "keywords": [
     "shiplane",
-    "shiplane-plugin",
     "fly-io",
-    "flyctl",
     "docker",
-    "deploy",
-    "server-hosting",
-    "release"
+    "deploy"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-fly#readme",
   "bugs": {

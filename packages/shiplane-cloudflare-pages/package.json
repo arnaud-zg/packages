@@ -4,13 +4,9 @@
   "description": "Cloudflare Pages plugin for shiplane: deploy a static site per environment with wrangler.",
   "keywords": [
     "shiplane",
-    "shiplane-plugin",
-    "cloudflare-pages",
     "cloudflare",
-    "wrangler",
-    "static-site",
-    "deploy",
-    "release"
+    "cloudflare-pages",
+    "wrangler"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-cloudflare-pages#readme",
   "bugs": {

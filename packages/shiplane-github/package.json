@@ -4,13 +4,8 @@
   "description": "GitHub plugin for shiplane: release PRs, GitHub Releases, deployment records and the ship workflow on Actions.",
   "keywords": [
     "shiplane",
-    "shiplane-plugin",
     "github",
-    "github-actions",
-    "github-releases",
-    "pull-request",
-    "deployments",
-    "release"
+    "github-actions"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-github#readme",
   "bugs": {

@@ -4,12 +4,8 @@
   "description": "npm plugin for shiplane: publish a package under next, then promote it to latest.",
   "keywords": [
     "shiplane",
-    "shiplane-plugin",
     "npm",
-    "publish",
-    "dist-tag",
-    "npm-registry",
-    "release"
+    "publish"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-npm#readme",
   "bugs": {

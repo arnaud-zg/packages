@@ -4,16 +4,10 @@
   "description": "Keep CLAUDE.md and AGENTS.md small: scores AI agent context files against token budgets and shows which sections to cut.",
   "keywords": [
     "claude-code",
-    "claude-md",
     "agents-md",
-    "token-budget",
-    "context-window",
-    "context-engineering",
     "llm",
     "ai-agents",
-    "cursor-rules",
-    "prompt",
-    "linter",
+    "cursor",
     "cli"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/agent-context-budget#readme",

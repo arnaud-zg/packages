@@ -4,16 +4,9 @@
   "description": "Expo EAS plugin for shiplane: ship a store build or an over-the-air update, picked from the native fingerprint.",
   "keywords": [
     "shiplane",
-    "shiplane-plugin",
     "expo",
     "eas",
-    "eas-build",
-    "eas-update",
-    "over-the-air",
-    "app-store",
-    "react-native",
-    "deploy",
-    "release"
+    "react-native"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-eas#readme",
   "bugs": {

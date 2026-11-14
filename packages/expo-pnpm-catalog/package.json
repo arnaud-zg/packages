@@ -4,18 +4,11 @@
   "description": "Keep Expo SDK versions right in a pnpm monorepo: runs expo-doctor and expo install --fix against your pnpm catalogs, for the whole workspace.",
   "keywords": [
     "expo",
+    "react-native",
     "pnpm",
-    "catalog",
     "monorepo",
     "expo-doctor",
-    "expo-install",
-    "cli",
-    "pnpm-workspace",
-    "expo-sdk",
-    "expo-upgrade",
-    "dependency-management",
-    "version-mismatch",
-    "react-native"
+    "pnpm-workspace"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/expo-pnpm-catalog#readme",
   "bugs": {

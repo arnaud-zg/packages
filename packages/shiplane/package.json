@@ -3,17 +3,13 @@
   "version": "0.4.2",
   "description": "Release and deploy a monorepo in one command: finds what changed, versions, tags and ships each app through plugins (npm, Fly.io, EAS, Cloudflare Pages).",
   "keywords": [
-    "shiplane",
     "release",
     "deploy",
     "monorepo",
-    "release-automation",
     "changesets",
-    "semver",
-    "ci",
-    "continuous-deployment",
-    "cli",
-    "pnpm-workspace"
+    "github-actions",
+    "ci-cd",
+    "cli"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane#readme",
   "bugs": {
