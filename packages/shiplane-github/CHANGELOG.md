@@ -1,5 +1,18 @@
 # @shiplane/github
 
+## 0.5.0
+
+### Patch Changes
+
+- [#58](https://github.com/arnaud-zg/packages/pull/58) [`2b11fcf`](https://github.com/arnaud-zg/packages/commit/2b11fcf651ff2f47946199c0db726fc6938f8110) - The README links each guide page directly (tutorial, how-to, reference, explanation, or the example
+  config) instead of a folder listing.
+
+- [#56](https://github.com/arnaud-zg/packages/pull/56) [`8517d57`](https://github.com/arnaud-zg/packages/commit/8517d57bf1ff7ed13561d9686529a4718cf581da) - Clearer npm description and keywords, so the package shows up in npm and web search.
+- Updated dependencies [[`956673f`](https://github.com/arnaud-zg/packages/commit/956673f131cda3b7e1b25fe01c0dfb9124657147), [`8517d57`](https://github.com/arnaud-zg/packages/commit/8517d57bf1ff7ed13561d9686529a4718cf581da), [`956673f`](https://github.com/arnaud-zg/packages/commit/956673f131cda3b7e1b25fe01c0dfb9124657147)]:
+  - shiplane@0.5.0
+
+🙏 Thanks to [@arnaud-zg](https://github.com/arnaud-zg) for this release!
+
 ## 0.4.2
 
 ### Patch Changes

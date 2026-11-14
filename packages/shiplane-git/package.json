@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/git",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Git plugin for shiplane: commits, tags, release branches and pushes through the git CLI.",
   "keywords": [
     "shiplane",

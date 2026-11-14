@@ -1,6 +1,6 @@
 {
   "name": "expo-pnpm-catalog",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Checks and syncs Expo SDK versions in pnpm catalogs, like expo-doctor and expo install --fix for a whole pnpm workspace.",
   "keywords": [
     "expo",

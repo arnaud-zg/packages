@@ -1,6 +1,6 @@
 {
   "name": "expo-native-guard",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Load native-only modules safely in Expo Go: picks a fallback implementation instead of crashing, and marks it with a visible badge.",
   "keywords": [
     "expo",

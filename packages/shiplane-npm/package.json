@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/npm",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "npm plugin for shiplane: publish a package under next, then promote it to latest.",
   "keywords": [
     "shiplane",
