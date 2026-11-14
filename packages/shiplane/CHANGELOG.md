@@ -1,5 +1,13 @@
 # shiplane
 
+## 0.5.1
+
+### Patch Changes
+
+- [#61](https://github.com/arnaud-zg/packages/pull/61) [`0afa067`](https://github.com/arnaud-zg/packages/commit/0afa067ce4d46dad2c9abf6690119367c83f2374) - README: same layout as every package, links to each guide page.
+
+🙏 Thanks to [@arnaud-zg](https://github.com/arnaud-zg) for this release!
+
 ## 0.5.0
 
 ### Patch Changes
