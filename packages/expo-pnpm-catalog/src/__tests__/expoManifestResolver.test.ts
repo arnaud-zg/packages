@@ -1,7 +1,7 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { CatalogWorkspace } from "../catalogWorkspace";
@@ -22,7 +22,7 @@ afterEach(() => {
 function loadWorkspace(overrides: object = {}): CatalogWorkspace {
   const data = aWorkspaceYaml().build();
   const filePath = path.join(tmpDir, "pnpm-workspace.yaml");
-  fs.writeFileSync(filePath, yaml.dump({ ...data, ...overrides }));
+  fs.writeFileSync(filePath, dump({ ...data, ...overrides }));
   return CatalogWorkspace.load(filePath);
 }
 

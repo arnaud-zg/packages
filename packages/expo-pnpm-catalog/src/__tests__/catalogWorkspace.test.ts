@@ -1,7 +1,7 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { CatalogWorkspace } from "../catalogWorkspace";
@@ -19,7 +19,7 @@ afterEach(() => {
 
 function writeYaml(data: object): string {
   const filePath = path.join(tmpDir, "pnpm-workspace.yaml");
-  fs.writeFileSync(filePath, yaml.dump(data));
+  fs.writeFileSync(filePath, dump(data));
   return filePath;
 }
 

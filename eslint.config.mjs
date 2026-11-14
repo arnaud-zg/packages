@@ -9,7 +9,7 @@ import tseslint from "typescript-eslint";
  */
 export default tseslint.config(
   // shiplane configs sit outside every tsconfig.
-  { ignores: ["shiplane.config.ts", "packages/shiplane*/*.config.ts"] },
+  { ignores: ["shiplane.config.ts", "packages/shiplane*/*.config.ts", ".claude/worktrees/**"] },
   ...base,
   {
     files: ["**/*.{ts,tsx}"],

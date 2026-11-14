@@ -10,7 +10,7 @@ type PullRequest = Extract<Decision, { action: "pull-request" }>;
 /**
  * A small PR a plugin needs merged before it ships, such as production's version moving: branch,
  * write, commit, push, open, back to main, wait for the merge, pull. `declined` when the person
- * said no.
+ * said no, or the PR was left waiting for approval.
  */
 export const pullRequestFirst = async (
   context: ReleaseContext,
@@ -51,9 +51,14 @@ export const pullRequestFirst = async (
   const { pr } = created;
   if (!opened || !pr) return "failed";
   output.line();
-  if (!(await waitForMerge(context, pr))) {
+  const outcome = await waitForMerge(context, pr);
+  if (outcome === "closed") {
     fail(context, `#${pr.number} was closed without a merge`, "nothing shipped.", ["shiplane"]);
     return "failed";
+  }
+  if (outcome === "left") {
+    output.line(paint("dim", `  Left #${pr.number} waiting. Run shiplane once it's merged.`));
+    return "declined";
   }
   const pulled = await runSteps(context, [
     { label: "pull main", run: () => services.sourceControl.pull() },

@@ -41,7 +41,7 @@ function resolveSource(
   appLabel: string,
 ): string {
   return isExtraOnly(packageName, extra, manifest)
-    ? extra.byPackage[packageName].join(", ")
+    ? (extra.byPackage[packageName] ?? []).join(", ")
     : appLabel;
 }
 
@@ -108,7 +108,8 @@ function printScanHeader(
   );
   for (const name of extraOnlyNames) {
     console.info(
-      chalk.dim(`    + ${name}`) + chalk.dim.italic(` (${extra.byPackage[name].join(", ")})`),
+      chalk.dim(`    + ${name}`) +
+        chalk.dim.italic(` (${(extra.byPackage[name] ?? []).join(", ")})`),
     );
   }
 }

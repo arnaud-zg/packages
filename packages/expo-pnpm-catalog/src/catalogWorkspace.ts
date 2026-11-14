@@ -3,7 +3,7 @@
  * and writes version updates in place (preserving comments).
  */
 import fs from "fs";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
 import type { WorkspaceYaml } from "./catalogUtils";
 import {
@@ -24,7 +24,7 @@ export class CatalogWorkspace {
 
   static load(path: string): CatalogWorkspace {
     const raw = fs.readFileSync(path, "utf-8");
-    const data = yaml.load(raw) as WorkspaceYaml;
+    const data = load(raw) as WorkspaceYaml;
     return new CatalogWorkspace(path, raw, data);
   }
 
@@ -51,7 +51,7 @@ export class CatalogWorkspace {
 
   writeVersion(packageName: string, newVersion: string): CatalogWorkspace {
     const updatedRaw = updateVersionInYaml(this.raw, packageName, newVersion);
-    return new CatalogWorkspace(this.path, updatedRaw, yaml.load(updatedRaw) as WorkspaceYaml);
+    return new CatalogWorkspace(this.path, updatedRaw, load(updatedRaw) as WorkspaceYaml);
   }
 
   save(): void {

@@ -106,8 +106,9 @@ function computeUpdates(
 
   const updates: CatalogUpdate[] = [];
   for (const name of catalogPackages) {
-    if (excludedPackages.has(name)) continue;
-    const update = CatalogUpdate.between(name, allCatalogVersions[name], fixedDeps[name] ?? "");
+    const current = allCatalogVersions[name];
+    if (excludedPackages.has(name) || current === undefined) continue;
+    const update = CatalogUpdate.between(name, current, fixedDeps[name] ?? "");
     if (update) updates.push(update);
   }
 
