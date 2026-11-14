@@ -19,6 +19,22 @@ configurable token thresholds and surfaces where to cut:
 - **MinHash cross-file similarity** — 128-hash Jaccard estimation flags near-duplicate or
   merge-candidate files across the whole set
 
+## What it prints
+
+```text
+$ npx agent-context-budget check
+
+=== CLAUDE.md Token Budget ===
+
+Root (always loaded):
+  ✓ CLAUDE.md                     146 tokens  ░░░░░░░░░░  4%  GOOD
+
+=== Health Summary ===
+  Root:       146 / 3,500 tokens  ░░░░░░░░░░  4%  GOOD
+
+✓ All files within budget.
+```
+
 📚 Full guides:
 [tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/agent-context-budget).
 

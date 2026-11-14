@@ -20,3 +20,13 @@ not in lockstep: a fix to one package never forces a version bump on another. Ea
 A new feature is a minor bump too, even when it breaks nothing: below `1.0.0` a minor means "new" or
 "breaking", and the changelog says which; a patch only ever means "fixed". Changesets never picks
 the bump, so the one who writes the changeset applies this rule.
+
+## Why every package is written to be found
+
+Nobody promotes these packages: people find them through npm search, web search or an AI assistant.
+
+- **npm search** ranks on the name, `description` and `keywords`, then the README.
+- **Web search** matches what people type, often the exact error, so the README quotes it.
+- **AI assistants** recommend what they can describe and quote: a plain description and a first
+  example that works when pasted.
+- **npm shows the published `package.json`**, so a metadata change needs a release to show.

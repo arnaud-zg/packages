@@ -11,6 +11,9 @@ flowchart LR
     CMD --> HOST["Fly.io app per environment"]
 ```
 
+📚
+[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
+
 ## Install
 
 ```sh

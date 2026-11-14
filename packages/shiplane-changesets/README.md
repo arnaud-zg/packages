@@ -12,6 +12,9 @@ flowchart LR
     VERSION --> OUT["versions and CHANGELOG.md"]
 ```
 
+📚
+[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
+
 ## Install
 
 ```sh

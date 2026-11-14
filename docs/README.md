@@ -30,8 +30,13 @@ in the first table, then pick the page that matches what you need right now.
 | Expo SDK dependency versions drifting out of sync across a pnpm catalog                  | `expo-pnpm-catalog`       | Runs `expo-doctor` / `expo install --fix` against resolved catalog versions, syncs drift back |
 | Vitest failing to resolve another workspace package's subpath export or `src/` file      | `vite-workspace-resolver` | Vite plugin that resolves workspace exports maps and deep `src/` imports                      |
 | CLAUDE.md or AGENTS.md growing past what an agent session should load                    | `agent-context-budget`    | Scores context files against token budgets, shows which sections to cut                       |
+| Releasing several apps from one repo is a pile of scripts                                | `shiplane`                | Versions, tags and ships each app through plugins (npm, Fly.io, EAS, Cloudflare Pages)        |
 
 Each is a dependency of your project, not of the others: installing one never pulls in another.
+
+shiplane plugins (`@shiplane/git`, `github`, `changesets`, `fly`, `cloudflare-pages`, `eas`, `npm`):
+each README has its install, options and an example; [shiplane § Plugins](./shiplane/plugins.md)
+lists them all.
 
 ## 🤝 Contributing to this repo
 

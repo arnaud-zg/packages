@@ -68,3 +68,16 @@ Packages version independently, not in lockstep: a fix to one package doesn't fo
 on another. Each starts at `0.1.0`: usable, not yet stable, expect breaking changes signaled by a
 `0.x` minor bump until `1.0.0`. See
 [Explanation § Versioning policy](./explanation.md#versioning-policy) for why.
+
+## Keep a package findable
+
+When you add a package or change what one does, check it against the
+[Findability rules](./reference.md#findability-rules), then:
+
+```sh
+pnpm changeset --patch <pkg> -m "Clearer npm description and keywords."
+# after the release, check what npm shows:
+npm view <pkg> description keywords
+```
+
+For a new ecosystem, add a repo topic: `gh repo edit arnaud-zg/packages --add-topic <topic>`.

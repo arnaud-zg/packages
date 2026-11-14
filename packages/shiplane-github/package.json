@@ -1,7 +1,12 @@
 {
   "name": "@shiplane/github",
   "version": "0.4.2",
-  "description": "GitHub for shiplane: pull requests, releases and deploy records, the ship workflow on Actions, and comments on what shipped.",
+  "description": "GitHub plugin for shiplane: release PRs, GitHub Releases, deployment records and the ship workflow on Actions.",
+  "keywords": [
+    "shiplane",
+    "github",
+    "github-actions"
+  ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-github#readme",
   "bugs": {
     "url": "https://github.com/arnaud-zg/packages/issues"

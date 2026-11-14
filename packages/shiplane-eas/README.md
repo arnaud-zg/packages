@@ -12,6 +12,9 @@ flowchart LR
     Q -->|"no"| UPDATE["your update script, over the air"]
 ```
 
+📚
+[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
+
 ## Install
 
 ```sh

@@ -12,6 +12,9 @@ flowchart LR
     UP --> HOST["Pages branch per environment"]
 ```
 
+📚
+[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
+
 ## Install
 
 ```sh

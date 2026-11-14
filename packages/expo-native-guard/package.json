@@ -1,17 +1,14 @@
 {
   "name": "expo-native-guard",
   "version": "0.1.1",
-  "description": "Resolve or select native-only implementations without crashing in Expo Go, with a visible reminder, shown only in Expo Go, that the native path still needs testing.",
+  "description": "Load native-only modules safely in Expo Go: picks a fallback implementation instead of crashing, and marks it with a visible badge.",
   "keywords": [
     "expo",
     "expo-go",
     "react-native",
     "native-module",
-    "fallback",
     "expo-dev-client",
-    "nitro-modules",
-    "turbomodules",
-    "typescript"
+    "turbomodules"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/expo-native-guard#readme",
   "bugs": {

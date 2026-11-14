@@ -9,6 +9,23 @@ modules like `react-native-vision-camera`, TurboModules like `react-native-onesi
 Expo module like `expo-mascot` — throws at import or resolution time when it isn't there. This
 package makes that a controlled, visible fallback instead of a crash.
 
+## Fixes these errors in Expo Go
+
+```text
+Error: Cannot find native module 'MyNativeModule'
+```
+
+```text
+Invariant Violation: TurboModuleRegistry.getEnforcing(...): 'RNMyModule' could not be found.
+```
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/arnaud-zg/packages/main/packages/expo-native-guard/assets/expo-go-fallback.png" width="300" alt="In Expo Go, a camera screen shows a 'Pick a photo instead' fallback inside a dotted red border with a 'CameraView · Expo Go' badge" />
+</p>
+
+In Expo Go, the camera screen shows its fallback with the badge. In a development build or the store
+app, the real camera shows and the badge never appears.
+
 📚 Full guides:
 [tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/expo-native-guard).
 
@@ -27,6 +44,8 @@ bundlers evaluate top-level imports eagerly regardless of which branch runs, so 
 the native variant would crash Expo Go before the check ever ran:
 
 ```tsx
+import { createExpoGoAwareComponent } from "expo-native-guard";
+
 export const CameraView = createExpoGoAwareComponent("CameraView", {
   native: () => require("./CameraView").CameraView,
   expoGo: () => require("./CameraView.expoGo").CameraView,

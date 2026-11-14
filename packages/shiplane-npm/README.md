@@ -11,6 +11,9 @@ flowchart LR
     PUB --> TAG["production: move latest to it"]
 ```
 
+📚
+[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
+
 ## Install
 
 ```sh

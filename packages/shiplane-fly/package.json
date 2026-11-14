@@ -1,7 +1,13 @@
 {
   "name": "@shiplane/fly",
   "version": "0.4.2",
-  "description": "Server hosting for shiplane: any Dockerfile on Fly.io.",
+  "description": "Fly.io plugin for shiplane: deploy any Dockerfile app per environment with flyctl.",
+  "keywords": [
+    "shiplane",
+    "fly-io",
+    "docker",
+    "deploy"
+  ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-fly#readme",
   "bugs": {
     "url": "https://github.com/arnaud-zg/packages/issues"

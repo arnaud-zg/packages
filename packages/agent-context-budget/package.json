@@ -1,15 +1,14 @@
 {
   "name": "agent-context-budget",
   "version": "0.1.1",
-  "description": "Token-budget analysis for AI agent context files like CLAUDE.md and AGENTS.md.",
+  "description": "Scores the markdown files an AI agent loads (CLAUDE.md, AGENTS.md, the docs they link) against token budgets, and shows which sections to cut.",
   "keywords": [
     "claude-code",
-    "claude-md",
     "agents-md",
-    "token-budget",
-    "context-window",
+    "markdown",
     "llm",
-    "linter",
+    "ai-agents",
+    "cursor",
     "cli"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/agent-context-budget#readme",
