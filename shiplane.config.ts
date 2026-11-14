@@ -1,5 +1,5 @@
 // How this repository releases its own packages, with shiplane itself.
-import { changesetsVersioning } from "@shiplane/changesets";
+import { changesetsVersioning, presets } from "@shiplane/changesets";
 import { gitSourceControl } from "@shiplane/git";
 import { gitHubActionsCiPipeline, gitHubCodeHost } from "@shiplane/github";
 import { npmPackageRegistry } from "@shiplane/npm";
@@ -10,7 +10,7 @@ export default defineRelease({
     sourceControl: gitSourceControl(),
     codeHost: gitHubCodeHost(),
     ciPipeline: gitHubActionsCiPipeline(),
-    versioning: changesetsVersioning(),
+    versioning: changesetsVersioning({ thanks: presets.sentence }),
   }),
   modules: [publishedPackage({ packageRegistry: npmPackageRegistry() })],
 });

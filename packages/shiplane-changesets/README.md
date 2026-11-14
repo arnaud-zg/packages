@@ -6,10 +6,10 @@ shiplane turns the pending ones into versions and changelogs on the release PR.
 
 ```mermaid
 flowchart LR
-    CS[".changeset/*.md"] --> AD["changesetsVersioning()"]
-    AD --> STATUS["changeset status: what moves"]
-    AD --> VERSION["changeset version: on the release PR"]
-    VERSION --> OUT["versions and CHANGELOG.md"]
+    CS["changeset files"] --> AD["changesetsVersioning"]
+    AD --> STATUS["changeset status, what moves"]
+    AD --> VERSION["changeset version, on the release PR"]
+    VERSION --> OUT["new versions and changelogs"]
 ```
 
 📚
@@ -48,11 +48,46 @@ export default defineRelease({
 
 It fills a flow port, so unit files take no key from it. Its factory takes:
 
-| Option    | Default                                    | Means                                 |
-| --------- | ------------------------------------------ | ------------------------------------- |
-| `version` | `["pnpm", "exec", "changeset", "version"]` | The command that versions the release |
+| Option    | Default                                    | Means                                                                |
+| --------- | ------------------------------------------ | -------------------------------------------------------------------- |
+| `version` | `["pnpm", "exec", "changeset", "version"]` | The command that versions the release                                |
+| `thanks`  | unset: changesets thanks on each line      | A template that thanks contributors once, such as `presets.sentence` |
 
 Source: `ChangesetsOptions` in `src/changesets-versioning.adapter.ts`.
+
+## Thank contributors
+
+A GitHub changelog thanks the author on every line. `thanks` thanks everyone once instead, in the
+release's changelog section and so in its release notes. Pick a preset:
+
+```ts
+import { changesetsVersioning, presets } from "@shiplane/changesets";
+
+changesetsVersioning({ thanks: presets.sentence });
+```
+
+| Preset             | Adds under the changes                                     |
+| ------------------ | ---------------------------------------------------------- |
+| `presets.sentence` | `🙏 Thanks to @arnaud-zg for this release!`                |
+| `presets.list`     | a `### Contributors` heading, then `- @arnaud-zg`          |
+| `presets.avatars`  | a `### Contributors` heading, then a row of linked avatars |
+| `presets.none`     | nothing: the inline thanks are removed                     |
+
+Or write your own template, or extend a preset. It's always one string:
+
+| Placeholder      | Becomes                                 |
+| ---------------- | --------------------------------------- |
+| `{changes}`      | the release's changes                   |
+| `{contributors}` | `@arnaud-zg`, linked                    |
+| `{list}`         | one `- @login` per line                 |
+| `{avatars}`      | a 32×32 linked GitHub avatar per person |
+
+Put your text before `{changes}` to thank people first. Without `{changes}`, the thanks go under the
+changes. Leave `thanks` out to keep changesets' own `Thanks @x!` on each line. It reads the thanks
+`@changesets/changelog-github` writes, only in the section a release just wrote, and
+`commitsVersioning()` takes it too. Every preset rendered on a real release:
+[How-to](../../docs/shiplane/how-to.md#thank-contributors-in-release-notes). Source:
+`src/thanks.ts`.
 
 ## Release from commits
 

@@ -10,9 +10,17 @@ import type {
 } from "shiplane/plugin";
 import { expandPatterns, workspacePatterns, z } from "shiplane/plugin";
 
+import { placeThanks } from "./thanks";
+
 export interface ChangesetsOptions {
   /** What versions the repository: `changeset version` by default. */
   version?: string[];
+  /**
+   * A template for the release's section that thanks its contributors once, such as
+   * `presets.sentence` or `"{changes}\n\nThanks {contributors}!"`. Unset keeps changesets' own
+   * `Thanks @x!` on each line.
+   */
+  thanks?: string;
 }
 
 const BumpSchema = z.enum(["major", "minor", "patch", "none"]);
@@ -101,6 +109,20 @@ const changesetsFiles = (
     return () => originals.forEach((text, id) => fs.writeFileSync(fileOf(id), text));
   };
 
+  /** The changelogs as they are; the returned function thanks contributors in those that changed. */
+  const thankContributors = () => {
+    const { thanks } = options;
+    if (thanks === undefined) return () => undefined;
+    const files = workspacePackages().map(({ folder }) => path.join(root, folder, "CHANGELOG.md"));
+    const read = (file: string) => (fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "");
+    const before = new Map(files.map((file) => [file, read(file)]));
+    return () =>
+      before.forEach((text, file) => {
+        const now = read(file);
+        if (now && now !== text) fs.writeFileSync(file, placeThanks(now, thanks));
+      });
+  };
+
   /** Rewrites what ships to `ceiling` at most; the returned function puts the files back. */
   const capAt = (ceiling: BumpLevel | undefined) => {
     if (!ceiling) return () => undefined;
@@ -150,11 +172,13 @@ const changesetsFiles = (
         const token = shell.env("GITHUB_TOKEN")
           ? undefined
           : (await shell.capture("gh", ["auth", "token"])).stdout.trim();
+        const thank = thankContributors();
         const status = await shell.attach(command, args, {
           cwd: root,
           ...(token ? { env: { GITHUB_TOKEN: token } } : {}),
         });
         if (status !== 0) throw new Error(`${command} ${args.join(" ")} exited with ${status}`);
+        thank();
       } catch (error) {
         // Versioning consumes what it caps; had it failed, the undo goes back to main with these.
         uncap();

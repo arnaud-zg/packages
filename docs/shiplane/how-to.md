@@ -19,6 +19,7 @@
 [Release Claude Code plugins](#release-claude-code-plugins) ·
 [Choose how versions are bumped](#choose-how-versions-are-bumped) ·
 [Release from commits](#release-from-commits) ·
+[Thank contributors in release notes](#thank-contributors-in-release-notes) ·
 [Ship a host with no plugin](#ship-a-host-with-no-plugin) · [Swap a provider](#swap-a-provider) ·
 [Write a plugin](#write-a-plugin) · [Comment on what shipped](#comment-on-what-shipped) ·
 [Set up the sign-ins](#set-up-the-sign-ins)
@@ -283,6 +284,69 @@ Any commit touching a package releases it, so a change committed as `chore:` sti
 subject counts: a `BREAKING CHANGE:` footer is not read. A pending changeset naming a package takes
 over from its commits. `.changeset/config.json` and `@changesets/cli` stay, as changesets still does
 the versioning, and shiplane's own messages keep saying `changesets`.
+
+## Thank contributors in release notes
+
+With `@changesets/changelog-github`, every line says `Thanks @someone!`. To thank everyone once,
+give the versioning adapter a template. The quickest is a preset:
+
+```ts
+import { changesetsVersioning, presets } from "@shiplane/changesets";
+
+versioning: changesetsVersioning({ thanks: presets.sentence }),
+```
+
+Each preset, on a release by `@arnaud-zg`:
+
+**`presets.sentence`** (one plain line, readable everywhere: the recommended pick)
+
+> ### Patch Changes
+>
+> - [#51](https://github.com/arnaud-zg/packages/pull/51) A unit file can list
+>   `checkEnvBeforeDeploy`…
+>
+> 🙏 Thanks to [@arnaud-zg](https://github.com/arnaud-zg) for this release!
+
+**`presets.list`**
+
+> ### Patch Changes
+>
+> - [#51](https://github.com/arnaud-zg/packages/pull/51) A unit file can list
+>   `checkEnvBeforeDeploy`…
+>
+> ### Contributors
+>
+> - [@arnaud-zg](https://github.com/arnaud-zg)
+
+**`presets.avatars`**
+
+> ### Patch Changes
+>
+> - [#51](https://github.com/arnaud-zg/packages/pull/51) A unit file can list
+>   `checkEnvBeforeDeploy`…
+>
+> ### Contributors
+>
+> <a href="https://github.com/arnaud-zg"><img src="https://github.com/arnaud-zg.png?size=64" width="32" height="32" alt="@arnaud-zg"></a>
+
+**`presets.none`** removes the thanks, and leaving `thanks` out keeps changesets' own line-by-line
+thanks.
+
+### Write your own
+
+A template is one string. `{changes}` is the release's changes; `{contributors}`, `{list}` and
+`{avatars}` are the people, as above.
+
+| You write                                  | You get                                                                  |
+| ------------------------------------------ | ------------------------------------------------------------------------ |
+| `"💜 Made by {contributors}\n\n{changes}"` | the thanks first, then the changes                                       |
+| `"Thanks {contributors}!"`                 | the changes, then `Thanks @arnaud-zg!` (no `{changes}` means under them) |
+| `${presets.sentence}\n\n🚀 Ship it!`       | the sentence preset, then your line                                      |
+
+It rewrites the changelog section the release just wrote, so the release PR shows the result before
+it ships, and the tag's release notes match. `commitsVersioning()` takes the same option. Every
+option is listed in
+[`@shiplane/changesets`](../../packages/shiplane-changesets/README.md#thank-contributors).
 
 ## Ship a host with no plugin
 
