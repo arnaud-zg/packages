@@ -1,7 +1,20 @@
 {
   "name": "@shiplane/eas",
   "version": "0.4.2",
-  "description": "Mobile distribution for shiplane: an Expo app on EAS, a store build or an over-the-air update.",
+  "description": "Expo EAS plugin for shiplane: ship a store build or an over-the-air update, picked from the native fingerprint.",
+  "keywords": [
+    "shiplane",
+    "shiplane-plugin",
+    "expo",
+    "eas",
+    "eas-build",
+    "eas-update",
+    "over-the-air",
+    "app-store",
+    "react-native",
+    "deploy",
+    "release"
+  ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-eas#readme",
   "bugs": {
     "url": "https://github.com/arnaud-zg/packages/issues"

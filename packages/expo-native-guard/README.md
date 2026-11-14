@@ -9,6 +9,19 @@ modules like `react-native-vision-camera`, TurboModules like `react-native-onesi
 Expo module like `expo-mascot` — throws at import or resolution time when it isn't there. This
 package makes that a controlled, visible fallback instead of a crash.
 
+## Fixes these errors in Expo Go
+
+```text
+Error: Cannot find native module 'MyNativeModule'
+```
+
+```text
+Invariant Violation: TurboModuleRegistry.getEnforcing(...): 'RNMyModule' could not be found.
+```
+
+Expo Go cannot load a module it was not built with. Instead of the crash, your app gets a fallback
+that you choose, with a `<name> · Expo Go` badge on it.
+
 📚 Full guides:
 [tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/expo-native-guard).
 

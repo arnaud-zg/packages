@@ -1,7 +1,20 @@
 {
   "name": "shiplane",
   "version": "0.4.2",
-  "description": "The shiplane CLI: detects what changed, versions it and triggers each app's deploy through the plugins its config composes.",
+  "description": "Release and deploy a monorepo in one command: finds what changed, versions, tags and ships each app through plugins (npm, Fly.io, EAS, Cloudflare Pages).",
+  "keywords": [
+    "shiplane",
+    "release",
+    "deploy",
+    "monorepo",
+    "release-automation",
+    "changesets",
+    "semver",
+    "ci",
+    "continuous-deployment",
+    "cli",
+    "pnpm-workspace"
+  ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane#readme",
   "bugs": {
     "url": "https://github.com/arnaud-zg/packages/issues"

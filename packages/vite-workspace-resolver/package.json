@@ -5,10 +5,15 @@
   "keywords": [
     "vite",
     "vitest",
+    "vite-plugin",
     "monorepo",
     "workspace",
+    "pnpm-workspace",
     "resolver",
     "exports-map",
+    "subpath-exports",
+    "failed-to-resolve-import",
+    "alias",
     "typescript"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/vite-workspace-resolver#readme",

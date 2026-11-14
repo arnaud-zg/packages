@@ -8,10 +8,13 @@
     "catalog",
     "monorepo",
     "expo-doctor",
+    "expo-install",
     "cli",
     "pnpm-workspace",
     "expo-sdk",
+    "expo-upgrade",
     "dependency-management",
+    "version-mismatch",
     "react-native"
   ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/expo-pnpm-catalog#readme",

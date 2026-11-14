@@ -1,7 +1,17 @@
 {
   "name": "@shiplane/changesets",
   "version": "0.4.2",
-  "description": "Versioning for shiplane: versions and changelogs from changesets.",
+  "description": "Changesets plugin for shiplane: versions and changelogs from .changeset files.",
+  "keywords": [
+    "shiplane",
+    "shiplane-plugin",
+    "changesets",
+    "versioning",
+    "changelog",
+    "release",
+    "monorepo",
+    "semver"
+  ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-changesets#readme",
   "bugs": {
     "url": "https://github.com/arnaud-zg/packages/issues"

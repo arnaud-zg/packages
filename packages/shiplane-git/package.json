@@ -1,7 +1,15 @@
 {
   "name": "@shiplane/git",
   "version": "0.4.2",
-  "description": "Source control for shiplane: commits, tags and branches through git.",
+  "description": "Git plugin for shiplane: commits, tags, release branches and pushes through the git CLI.",
+  "keywords": [
+    "shiplane",
+    "shiplane-plugin",
+    "git",
+    "tags",
+    "release-branch",
+    "release"
+  ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-git#readme",
   "bugs": {
     "url": "https://github.com/arnaud-zg/packages/issues"

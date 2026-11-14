@@ -8,7 +8,11 @@
     "agents-md",
     "token-budget",
     "context-window",
+    "context-engineering",
     "llm",
+    "ai-agents",
+    "cursor-rules",
+    "prompt",
     "linter",
     "cli"
   ],

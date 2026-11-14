@@ -5,6 +5,16 @@ subpaths, and can't reach into a package's `src/` for files that aren't exported
 `workspaceExports(rootDir)` scans every workspace package once and resolves both cases directly as a
 Vite plugin — no more hand-rolled `resolve.alias` entries per package/subpath.
 
+## Fixes these errors in Vitest and Vite
+
+```text
+Failed to resolve import "@acme/ui/button" from "src/app.test.ts". Does the file exist?
+```
+
+```text
+Missing "./button" specifier in "@acme/ui" package
+```
+
 📚 Full guides:
 [tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/vite-workspace-resolver).
 

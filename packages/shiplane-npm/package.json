@@ -1,7 +1,16 @@
 {
   "name": "@shiplane/npm",
   "version": "0.4.2",
-  "description": "Package registry for shiplane: a package on npm.",
+  "description": "npm plugin for shiplane: publish a package under next, then promote it to latest.",
+  "keywords": [
+    "shiplane",
+    "shiplane-plugin",
+    "npm",
+    "publish",
+    "dist-tag",
+    "npm-registry",
+    "release"
+  ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-npm#readme",
   "bugs": {
     "url": "https://github.com/arnaud-zg/packages/issues"

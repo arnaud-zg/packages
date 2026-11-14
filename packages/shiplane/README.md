@@ -1,5 +1,8 @@
 # 🚢 shiplane
 
+Release a monorepo with several apps and hosts from one command. No per-app release scripts, no
+hand-written tags.
+
 The release core: it finds what changed, versions it, tags it and ships each app in order. It talks
 to no host itself. You inject one adapter per port in `shiplane.config.ts`.
 

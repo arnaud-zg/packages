@@ -13,6 +13,18 @@ version strings. `expo-pnpm-catalog` temporarily resolves the catalog references
 **entire** pnpm workspace, runs the real Expo tooling against the resolved manifest, and restores
 the original `package.json` afterwards.
 
+## What it prints
+
+```text
+$ npx expo-pnpm-catalog check
+
+  Expo catalog check — 26 packages
+  17 from . · 9 additional from other workspace packages
+
+  ✗ expo-doctor reported issues
+  → Run expo-pnpm-catalog sync to fix version drift
+```
+
 📚 Full guides:
 [tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/expo-pnpm-catalog).
 

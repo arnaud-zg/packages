@@ -1,7 +1,17 @@
 {
   "name": "@shiplane/cloudflare-pages",
   "version": "0.4.2",
-  "description": "Static hosting for shiplane: a static build on Cloudflare Pages.",
+  "description": "Cloudflare Pages plugin for shiplane: deploy a static site per environment with wrangler.",
+  "keywords": [
+    "shiplane",
+    "shiplane-plugin",
+    "cloudflare-pages",
+    "cloudflare",
+    "wrangler",
+    "static-site",
+    "deploy",
+    "release"
+  ],
   "homepage": "https://github.com/arnaud-zg/packages/tree/main/packages/shiplane-cloudflare-pages#readme",
   "bugs": {
     "url": "https://github.com/arnaud-zg/packages/issues"
