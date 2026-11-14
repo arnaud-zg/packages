@@ -328,8 +328,8 @@ Each preset, on a release by `@ada` and `@lin`:
 >
 > ### Contributors
 >
-> [![@ada](https://github.com/ada.png?size=32)](https://github.com/ada)
-> [![@lin](https://github.com/lin.png?size=32)](https://github.com/lin)
+> <a href="https://github.com/ada"><img src="https://github.com/ada.png?size=64" width="32" height="32" alt="@ada"></a>
+> <a href="https://github.com/lin"><img src="https://github.com/lin.png?size=64" width="32" height="32" alt="@lin"></a>
 
 **`presets.none`** removes the thanks, and leaving `thanks` out keeps changesets' own line-by-line
 thanks.

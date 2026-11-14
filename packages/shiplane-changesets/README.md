@@ -6,10 +6,10 @@ shiplane turns the pending ones into versions and changelogs on the release PR.
 
 ```mermaid
 flowchart LR
-    CS[".changeset/*.md"] --> AD["changesetsVersioning()"]
-    AD --> STATUS["changeset status: what moves"]
-    AD --> VERSION["changeset version: on the release PR"]
-    VERSION --> OUT["versions and CHANGELOG.md"]
+    CS["changeset files"] --> AD["changesetsVersioning"]
+    AD --> STATUS["changeset status, what moves"]
+    AD --> VERSION["changeset version, on the release PR"]
+    VERSION --> OUT["new versions and changelogs"]
 ```
 
 📚
@@ -75,12 +75,12 @@ changesetsVersioning({ thanks: presets.sentence });
 
 Or write your own template, or extend a preset. It's always one string:
 
-| Placeholder      | Becomes                                                                            |
-| ---------------- | ---------------------------------------------------------------------------------- |
-| `{changes}`      | the release's changes                                                              |
-| `{contributors}` | `@ada and @lin`, linked                                                            |
-| `{list}`         | one `- @login` per line                                                            |
-| `{avatars}`      | `[![@ada](https://github.com/ada.png?size=32)](https://github.com/ada)` per person |
+| Placeholder      | Becomes                                 |
+| ---------------- | --------------------------------------- |
+| `{changes}`      | the release's changes                   |
+| `{contributors}` | `@ada and @lin`, linked                 |
+| `{list}`         | one `- @login` per line                 |
+| `{avatars}`      | a 32×32 linked GitHub avatar per person |
 
 Put your text before `{changes}` to thank people first. Without `{changes}`, the thanks go under the
 changes. Leave `thanks` out to keep changesets' own `Thanks @x!` on each line. It reads the thanks

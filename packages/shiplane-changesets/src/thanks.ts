@@ -35,7 +35,12 @@ const PLACEHOLDERS: Record<string, (contributors: readonly Contributor[]) => str
   "{contributors}": joined,
   "{list}": (contributors) => contributors.map((person) => `- ${linked(person)}`).join("\n"),
   "{avatars}": (contributors) =>
-    contributors.map(({ login, url }) => `[![@${login}](${url}.png?size=32)](${url})`).join(" "),
+    contributors
+      .map(
+        ({ login, url }) =>
+          `<a href="${url}"><img src="${url}.png?size=64" width="32" height="32" alt="@${login}"></a>`,
+      )
+      .join(" "),
 };
 
 /** The section's lines without their inline thanks, and who they thanked, each once. */

@@ -86,9 +86,9 @@ describe("thanking contributors in release notes", () => {
     );
   });
 
-  it("given the avatars preset, when a release is versioned, then each contributor shows as a linked Markdown avatar", async () => {
+  it("given the avatars preset, when a release is versioned, then each contributor shows as a linked avatar of the same size", async () => {
     expect(notes(await release(presets.avatars))).toBe(
-      `${CHANGES}\n\n### Contributors\n\n[![@ada](https://github.com/ada.png?size=32)](https://github.com/ada) [![@lin](https://github.com/lin.png?size=32)](https://github.com/lin)`,
+      `${CHANGES}\n\n### Contributors\n\n<a href="https://github.com/ada"><img src="https://github.com/ada.png?size=64" width="32" height="32" alt="@ada"></a> <a href="https://github.com/lin"><img src="https://github.com/lin.png?size=64" width="32" height="32" alt="@lin"></a>`,
     );
   });
 
