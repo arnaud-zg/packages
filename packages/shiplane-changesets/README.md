@@ -48,11 +48,34 @@ export default defineRelease({
 
 It fills a flow port, so unit files take no key from it. Its factory takes:
 
-| Option    | Default                                    | Means                                 |
-| --------- | ------------------------------------------ | ------------------------------------- |
-| `version` | `["pnpm", "exec", "changeset", "version"]` | The command that versions the release |
+| Option    | Default                                    | Means                                                                  |
+| --------- | ------------------------------------------ | ---------------------------------------------------------------------- |
+| `version` | `["pnpm", "exec", "changeset", "version"]` | The command that versions the release                                  |
+| `thanks`  | unset: changesets thanks on each line      | `false`, or `{ at, style }` to thank contributors in one block instead |
 
 Source: `ChangesetsOptions` in `src/changesets-versioning.adapter.ts`.
+
+## Thank contributors
+
+A GitHub changelog thanks the author on every line. `thanks` gathers everyone once, at the `"top"`
+or `"bottom"` of the release's changelog section, so of its release notes too:
+
+```ts
+changesetsVersioning({ thanks: { at: "bottom", style: "avatars" } });
+```
+
+| `style`              | Renders                                                            |
+| -------------------- | ------------------------------------------------------------------ |
+| `"sentence"`         | `🙏 Thanks to @ada and @lin for this release!` (default)           |
+| `"list"`             | a `### Contributors` heading, one `- @login` per line              |
+| `"avatars"`          | a `### Contributors` heading, one linked GitHub avatar per person  |
+| your text            | `{contributors}` (`@ada and @lin`, linked) and `{count}` filled in |
+| `(contributors) => ` | your function's text; each contributor is `{ login, url }`         |
+
+`thanks: false` drops the thanks altogether. It reads the thanks `@changesets/changelog-github`
+writes, and only in the section a release just wrote. `commitsVersioning()` takes it too.
+[How-to](../../docs/shiplane/how-to.md#thank-contributors-in-release-notes). Source:
+`src/thanks.ts`.
 
 ## Release from commits
 

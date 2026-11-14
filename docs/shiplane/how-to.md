@@ -19,6 +19,7 @@
 [Release Claude Code plugins](#release-claude-code-plugins) ·
 [Choose how versions are bumped](#choose-how-versions-are-bumped) ·
 [Release from commits](#release-from-commits) ·
+[Thank contributors in release notes](#thank-contributors-in-release-notes) ·
 [Ship a host with no plugin](#ship-a-host-with-no-plugin) · [Swap a provider](#swap-a-provider) ·
 [Write a plugin](#write-a-plugin) · [Comment on what shipped](#comment-on-what-shipped) ·
 [Set up the sign-ins](#set-up-the-sign-ins)
@@ -283,6 +284,26 @@ Any commit touching a package releases it, so a change committed as `chore:` sti
 subject counts: a `BREAKING CHANGE:` footer is not read. A pending changeset naming a package takes
 over from its commits. `.changeset/config.json` and `@changesets/cli` stay, as changesets still does
 the versioning, and shiplane's own messages keep saying `changesets`.
+
+## Thank contributors in release notes
+
+With `@changesets/changelog-github`, every line says `Thanks @someone!`. To thank everyone once
+instead, pick where and how in the versioning adapter:
+
+```ts
+versioning: changesetsVersioning({ thanks: { at: "bottom", style: "list" } }),
+```
+
+- `at`: `"top"` or `"bottom"` of the release's notes.
+- `style`: `"sentence"` (default), `"list"` or `"avatars"`; or your own text, such as
+  `"Made by {contributors} 🙌"` (`{count}` works too); or a function `(contributors) => string`,
+  each contributor being `{ login, url }`.
+- `thanks: false` thanks no one.
+
+It rewrites the changelog section the release just wrote, so the release PR shows the result before
+it ships, and the tag's release notes match. `commitsVersioning()` takes the same option. All the
+styles, rendered:
+[`@shiplane/changesets`](../../packages/shiplane-changesets/README.md#thank-contributors).
 
 ## Ship a host with no plugin
 
