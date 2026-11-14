@@ -1,7 +1,7 @@
 {
   "name": "vite-workspace-resolver",
   "version": "0.1.0",
-  "description": "Fix Vitest \"Failed to resolve import\" in a monorepo: a Vite plugin that resolves workspace exports-map subpaths and deep src/ imports, no aliases.",
+  "description": "Vite and Vitest plugin that resolves workspace packages' exports-map subpaths and deep src/ imports, without per-package aliases.",
   "keywords": [
     "vite",
     "vitest",

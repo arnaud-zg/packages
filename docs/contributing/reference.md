@@ -44,7 +44,7 @@ Every package that is not `private` follows these. Why: see
 
 | Where                         | Rule                                                                                                                                                                                         |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `package.json` `description`  | One sentence, under 160 characters, starting with the outcome a user wants. Names the tool it plugs into (Expo, Vite, CLAUDE.md, ...)                                                        |
+| `package.json` `description`  | One clear sentence, under 160 characters, saying what the package does and the tool it works with (Expo, Vite, CLAUDE.md, ...). No error messages: those go in the README's "Fixes" section  |
 | `package.json` `keywords`     | 3 to 7, lowercase. Only tags with a big community (`expo`, `react-native`, `vite`, `vitest`, `monorepo`, `claude-code`, ...): niche words add noise. Error text goes in the README, not here |
 | `package.json` `homepage`     | The package's README on GitHub: `https://github.com/arnaud-zg/packages/tree/main/packages/<dir>#readme`                                                                                      |
 | `package.json` `repository`   | `git+https://github.com/arnaud-zg/packages.git`, with `directory: packages/<dir>`                                                                                                            |

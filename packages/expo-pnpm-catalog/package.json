@@ -1,7 +1,7 @@
 {
   "name": "expo-pnpm-catalog",
   "version": "0.1.1",
-  "description": "Keep Expo SDK versions right in a pnpm monorepo: runs expo-doctor and expo install --fix against your pnpm catalogs, for the whole workspace.",
+  "description": "Checks and syncs Expo SDK versions in pnpm catalogs, like expo-doctor and expo install --fix for a whole pnpm workspace.",
   "keywords": [
     "expo",
     "react-native",

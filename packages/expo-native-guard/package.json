@@ -1,7 +1,7 @@
 {
   "name": "expo-native-guard",
   "version": "0.1.1",
-  "description": "Stop Expo Go crashing on native-only modules (Nitro, TurboModules, custom Expo modules): load a fallback, with a badge reminding you to test the native path.",
+  "description": "Load native-only modules safely in Expo Go: picks a fallback implementation instead of crashing, and marks it with a visible badge.",
   "keywords": [
     "expo",
     "expo-go",

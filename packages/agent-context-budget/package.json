@@ -1,7 +1,7 @@
 {
   "name": "agent-context-budget",
   "version": "0.1.1",
-  "description": "Keep CLAUDE.md and AGENTS.md small: scores AI agent context files against token budgets and shows which sections to cut.",
+  "description": "Scores CLAUDE.md, AGENTS.md and other AI agent context files against token budgets, and shows which sections to cut.",
   "keywords": [
     "claude-code",
     "agents-md",
