@@ -48,32 +48,44 @@ export default defineRelease({
 
 It fills a flow port, so unit files take no key from it. Its factory takes:
 
-| Option    | Default                                    | Means                                                                  |
-| --------- | ------------------------------------------ | ---------------------------------------------------------------------- |
-| `version` | `["pnpm", "exec", "changeset", "version"]` | The command that versions the release                                  |
-| `thanks`  | unset: changesets thanks on each line      | `false`, or `{ at, style }` to thank contributors in one block instead |
+| Option    | Default                                    | Means                                                                |
+| --------- | ------------------------------------------ | -------------------------------------------------------------------- |
+| `version` | `["pnpm", "exec", "changeset", "version"]` | The command that versions the release                                |
+| `thanks`  | unset: changesets thanks on each line      | A template that thanks contributors once, such as `presets.sentence` |
 
 Source: `ChangesetsOptions` in `src/changesets-versioning.adapter.ts`.
 
 ## Thank contributors
 
-A GitHub changelog thanks the author on every line. `thanks` gathers everyone once, at the `"top"`
-or `"bottom"` of the release's changelog section, so of its release notes too:
+A GitHub changelog thanks the author on every line. `thanks` thanks everyone once instead, in the
+release's changelog section and so in its release notes. Pick a preset:
 
 ```ts
-changesetsVersioning({ thanks: { at: "bottom", style: "avatars" } });
+import { changesetsVersioning, presets } from "@shiplane/changesets";
+
+changesetsVersioning({ thanks: presets.sentence });
 ```
 
-| `style`              | Renders                                                            |
-| -------------------- | ------------------------------------------------------------------ |
-| `"sentence"`         | `🙏 Thanks to @ada and @lin for this release!` (default)           |
-| `"list"`             | a `### Contributors` heading, one `- @login` per line              |
-| `"avatars"`          | a `### Contributors` heading, one linked GitHub avatar per person  |
-| your text            | `{contributors}` (`@ada and @lin`, linked) and `{count}` filled in |
-| `(contributors) => ` | your function's text; each contributor is `{ login, url }`         |
+| Preset             | Adds under the changes                                     |
+| ------------------ | ---------------------------------------------------------- |
+| `presets.sentence` | `🙏 Thanks to @ada and @lin for this release!`             |
+| `presets.list`     | a `### Contributors` heading, then `- @ada` and `- @lin`   |
+| `presets.avatars`  | a `### Contributors` heading, then a row of linked avatars |
+| `presets.none`     | nothing: the inline thanks are removed                     |
 
-`thanks: false` drops the thanks altogether. It reads the thanks `@changesets/changelog-github`
-writes, and only in the section a release just wrote. `commitsVersioning()` takes it too.
+Or write your own template, or extend a preset. It's always one string:
+
+| Placeholder      | Becomes                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| `{changes}`      | the release's changes                                                              |
+| `{contributors}` | `@ada and @lin`, linked                                                            |
+| `{list}`         | one `- @login` per line                                                            |
+| `{avatars}`      | `[![@ada](https://github.com/ada.png?size=32)](https://github.com/ada)` per person |
+
+Put your text before `{changes}` to thank people first. Without `{changes}`, the thanks go under the
+changes. Leave `thanks` out to keep changesets' own `Thanks @x!` on each line. It reads the thanks
+`@changesets/changelog-github` writes, only in the section a release just wrote, and
+`commitsVersioning()` takes it too. Every preset rendered on a real release:
 [How-to](../../docs/shiplane/how-to.md#thank-contributors-in-release-notes). Source:
 `src/thanks.ts`.
 

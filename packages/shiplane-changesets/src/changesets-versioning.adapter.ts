@@ -10,17 +10,17 @@ import type {
 } from "shiplane/plugin";
 import { expandPatterns, workspacePatterns, z } from "shiplane/plugin";
 
-import type { ThanksOption } from "./thanks";
 import { placeThanks } from "./thanks";
 
 export interface ChangesetsOptions {
   /** What versions the repository: `changeset version` by default. */
   version?: string[];
   /**
-   * How a release thanks its contributors. Unset keeps changesets' own thanks on each line; `false`
-   * drops them; `{ at, style }` gathers them into one block at the top or the bottom.
+   * A template for the release's section that thanks its contributors once, such as
+   * `presets.sentence` or `"{changes}\n\nThanks {contributors}!"`. Unset keeps changesets' own
+   * `Thanks @x!` on each line.
    */
-  thanks?: ThanksOption;
+  thanks?: string;
 }
 
 const BumpSchema = z.enum(["major", "minor", "patch", "none"]);
@@ -111,14 +111,15 @@ const changesetsFiles = (
 
   /** The changelogs as they are; the returned function thanks contributors in those that changed. */
   const thankContributors = () => {
-    if (options.thanks === undefined) return () => undefined;
+    const { thanks } = options;
+    if (thanks === undefined) return () => undefined;
     const files = workspacePackages().map(({ folder }) => path.join(root, folder, "CHANGELOG.md"));
     const read = (file: string) => (fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "");
     const before = new Map(files.map((file) => [file, read(file)]));
     return () =>
       before.forEach((text, file) => {
         const now = read(file);
-        if (now && now !== text) fs.writeFileSync(file, placeThanks(now, options.thanks));
+        if (now && now !== text) fs.writeFileSync(file, placeThanks(now, thanks));
       });
   };
 

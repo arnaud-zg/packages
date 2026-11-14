@@ -287,22 +287,67 @@ the versioning, and shiplane's own messages keep saying `changesets`.
 
 ## Thank contributors in release notes
 
-With `@changesets/changelog-github`, every line says `Thanks @someone!`. To thank everyone once
-instead, pick where and how in the versioning adapter:
+With `@changesets/changelog-github`, every line says `Thanks @someone!`. To thank everyone once,
+give the versioning adapter a template. The quickest is a preset:
 
 ```ts
-versioning: changesetsVersioning({ thanks: { at: "bottom", style: "list" } }),
+import { changesetsVersioning, presets } from "@shiplane/changesets";
+
+versioning: changesetsVersioning({ thanks: presets.sentence }),
 ```
 
-- `at`: `"top"` or `"bottom"` of the release's notes.
-- `style`: `"sentence"` (default), `"list"` or `"avatars"`; or your own text, such as
-  `"Made by {contributors} 🙌"` (`{count}` works too); or a function `(contributors) => string`,
-  each contributor being `{ login, url }`.
-- `thanks: false` thanks no one.
+Each preset, on a release by `@ada` and `@lin`:
+
+**`presets.sentence`** (one plain line, readable everywhere: the recommended pick)
+
+> ### Patch Changes
+>
+> - [#51](https://github.com/arnaud-zg/packages/pull/51) A unit file can list
+>   `checkEnvBeforeDeploy`…
+>
+> 🙏 Thanks to [@ada](https://github.com/ada) and [@lin](https://github.com/lin) for this release!
+
+**`presets.list`**
+
+> ### Patch Changes
+>
+> - [#51](https://github.com/arnaud-zg/packages/pull/51) A unit file can list
+>   `checkEnvBeforeDeploy`…
+>
+> ### Contributors
+>
+> - [@ada](https://github.com/ada)
+> - [@lin](https://github.com/lin)
+
+**`presets.avatars`**
+
+> ### Patch Changes
+>
+> - [#51](https://github.com/arnaud-zg/packages/pull/51) A unit file can list
+>   `checkEnvBeforeDeploy`…
+>
+> ### Contributors
+>
+> [![@ada](https://github.com/ada.png?size=32)](https://github.com/ada)
+> [![@lin](https://github.com/lin.png?size=32)](https://github.com/lin)
+
+**`presets.none`** removes the thanks, and leaving `thanks` out keeps changesets' own line-by-line
+thanks.
+
+### Write your own
+
+A template is one string. `{changes}` is the release's changes; `{contributors}`, `{list}` and
+`{avatars}` are the people, as above.
+
+| You write                                  | You get                                                                     |
+| ------------------------------------------ | --------------------------------------------------------------------------- |
+| `"💜 Made by {contributors}\n\n{changes}"` | the thanks first, then the changes                                          |
+| `"Thanks {contributors}!"`                 | the changes, then `Thanks @ada and @lin!` (no `{changes}` means under them) |
+| `${presets.sentence}\n\n🚀 Ship it!`       | the sentence preset, then your line                                         |
 
 It rewrites the changelog section the release just wrote, so the release PR shows the result before
-it ships, and the tag's release notes match. `commitsVersioning()` takes the same option. All the
-styles, rendered:
+it ships, and the tag's release notes match. `commitsVersioning()` takes the same option. Every
+option is listed in
 [`@shiplane/changesets`](../../packages/shiplane-changesets/README.md#thank-contributors).
 
 ## Ship a host with no plugin
