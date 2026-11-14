@@ -1,5 +1,26 @@
 # @shiplane/changesets
 
+## 0.5.0
+
+### Minor Changes
+
+- [#57](https://github.com/arnaud-zg/packages/pull/57) [`17e436e`](https://github.com/arnaud-zg/packages/commit/17e436e573b056598266164081de2261716fea9f) - A release can thank its contributors once, with one template string: pick a preset
+  (`presets.sentence`, `presets.list`, `presets.avatars` or `presets.none`), extend one, or write your
+  own with `{changes}`, `{contributors}`, `{list}` and `{avatars}`:
+  `changesetsVersioning({ thanks: presets.sentence })`. Left out, changesets' own thanks stay on each
+  line.
+
+### Patch Changes
+
+- [#58](https://github.com/arnaud-zg/packages/pull/58) [`2b11fcf`](https://github.com/arnaud-zg/packages/commit/2b11fcf651ff2f47946199c0db726fc6938f8110) - The README links each guide page directly (tutorial, how-to, reference, explanation, or the example
+  config) instead of a folder listing.
+
+- [#56](https://github.com/arnaud-zg/packages/pull/56) [`8517d57`](https://github.com/arnaud-zg/packages/commit/8517d57bf1ff7ed13561d9686529a4718cf581da) - Clearer npm description and keywords, so the package shows up in npm and web search.
+- Updated dependencies [[`956673f`](https://github.com/arnaud-zg/packages/commit/956673f131cda3b7e1b25fe01c0dfb9124657147), [`8517d57`](https://github.com/arnaud-zg/packages/commit/8517d57bf1ff7ed13561d9686529a4718cf581da), [`956673f`](https://github.com/arnaud-zg/packages/commit/956673f131cda3b7e1b25fe01c0dfb9124657147)]:
+  - shiplane@0.5.0
+
+🙏 Thanks to [@arnaud-zg](https://github.com/arnaud-zg) for this release!
+
 ## 0.4.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "shiplane",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Release and deploy a monorepo in one command: finds what changed, versions, tags and ships each app through plugins (npm, Fly.io, EAS, Cloudflare Pages).",
   "keywords": [
     "release",

@@ -1,5 +1,19 @@
 # shiplane
 
+## 0.5.0
+
+### Patch Changes
+
+- [#59](https://github.com/arnaud-zg/packages/pull/59) [`956673f`](https://github.com/arnaud-zg/packages/commit/956673f131cda3b7e1b25fe01c0dfb9124657147) - Update runtime dependencies to their latest stable versions.
+
+- [#56](https://github.com/arnaud-zg/packages/pull/56) [`8517d57`](https://github.com/arnaud-zg/packages/commit/8517d57bf1ff7ed13561d9686529a4718cf581da) - Clearer npm description and keywords, so the package shows up in npm and web search.
+
+- [#59](https://github.com/arnaud-zg/packages/pull/59) [`956673f`](https://github.com/arnaud-zg/packages/commit/956673f131cda3b7e1b25fe01c0dfb9124657147) - A pull request that has to merge first, such as moving production's version, now stops when it's
+  closed without a merge, and leaves it for later when it waits for approval, instead of shipping as
+  if it had merged.
+
+🙏 Thanks to [@arnaud-zg](https://github.com/arnaud-zg) for this release!
+
 ## 0.4.2
 
 ### Patch Changes

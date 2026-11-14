@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/eas",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Expo EAS plugin for shiplane: ship a store build or an over-the-air update, picked from the native fingerprint.",
   "keywords": [
     "shiplane",
