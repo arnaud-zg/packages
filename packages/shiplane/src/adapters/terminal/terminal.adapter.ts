@@ -2,7 +2,7 @@ import { emitKeypressEvents } from "node:readline";
 import { createInterface } from "node:readline/promises";
 import { setTimeout as sleep } from "node:timers/promises";
 import { styleText } from "node:util";
-import type { Option } from "@clack/prompts";
+import type { CANCEL_SYMBOL, Option } from "@clack/prompts";
 import { confirm, isCancel, multiselect, select, text } from "@clack/prompts";
 
 import type { Display } from "../../domain/display";
@@ -75,7 +75,8 @@ const waitForKey = (display: Display, label: string, ms: number, keys: readonly 
 const asOptions = <Value extends string>(choices: Choice<Value>[]) =>
   choices as unknown as Option<Value>[];
 
-const orNull = <Value>(answer: Value | symbol): Value | null => (isCancel(answer) ? null : answer);
+const orNull = <Value>(answer: Value | typeof CANCEL_SYMBOL): Value | null =>
+  isCancel(answer) ? null : answer;
 
 const NO_MASCOT: Display = { verbose: false, mascot: null, motion: false };
 

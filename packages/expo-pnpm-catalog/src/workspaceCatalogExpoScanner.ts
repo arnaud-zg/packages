@@ -46,10 +46,10 @@ export class WorkspaceCatalogExpoScanner {
     const sourceName = pkg.name ?? path.basename(path.dirname(packageJsonPath));
 
     for (const [name, version] of Object.entries(allDeps)) {
-      if (!isCatalogRef(version) || !(name in allCatalogVersions)) continue;
-      result.byPackage[name] ??= [];
-      result.byPackage[name].push(sourceName);
-      result.versions[name] = allCatalogVersions[name];
+      const catalogVersion = allCatalogVersions[name];
+      if (!isCatalogRef(version) || catalogVersion === undefined) continue;
+      (result.byPackage[name] ??= []).push(sourceName);
+      result.versions[name] = catalogVersion;
     }
   }
 }

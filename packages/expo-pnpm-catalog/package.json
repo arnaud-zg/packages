@@ -46,18 +46,17 @@
     "prepublishOnly": "pnpm build",
     "start": "node dist/cli.js",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc -p tsconfig.lib.json --noEmit --emitDeclarationOnly false"
   },
   "prettier": "@arnaud-zg/configs/prettier",
   "dependencies": {
-    "chalk": "^5.6.2",
-    "commander": "^15.0.0",
-    "js-yaml": "^4.2.0",
-    "ora": "^9.4.0"
+    "chalk": "^6.0.1",
+    "commander": "^15.1.0",
+    "js-yaml": "^5.5.0",
+    "ora": "^10.0.0"
   },
   "devDependencies": {
     "@arnaud-zg/configs": "catalog:",
-    "@types/js-yaml": "^4.0.9",
     "@types/node": "catalog:node",
     "builder-pattern": "^2.2.0",
     "eslint": "catalog:",

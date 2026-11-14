@@ -58,10 +58,10 @@
     "typecheck": "tsc -p tsconfig.typecheck.json"
   },
   "dependencies": {
-    "@clack/prompts": "1.7.0",
+    "@clack/prompts": "1.9.0",
     "jiti": "2.7.0",
-    "ora": "9.4.1",
-    "yaml": "2.9.0",
+    "ora": "10.0.0",
+    "yaml": "2.9.1",
     "zod": "catalog:"
   },
   "devDependencies": {

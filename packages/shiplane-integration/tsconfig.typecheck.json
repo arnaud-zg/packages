@@ -1,5 +1,5 @@
 {
-  "extends": ["@arnaud-zg/configs/tsconfig/base.json"],
+  "extends": ["@arnaud-zg/configs/tsconfig/base.json", "../../tsconfig.base.json"],
   "compilerOptions": {
     "module": "esnext",
     "moduleResolution": "bundler",

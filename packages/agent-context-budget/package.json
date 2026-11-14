@@ -48,12 +48,12 @@
     "prepublishOnly": "pnpm build",
     "start": "node dist/cli.js",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc -p tsconfig.lib.json --noEmit --emitDeclarationOnly false"
   },
   "prettier": "@arnaud-zg/configs/prettier",
   "dependencies": {
-    "commander": "^15.0.0",
-    "zod": "^4.3.6"
+    "commander": "^15.1.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@arnaud-zg/configs": "catalog:",

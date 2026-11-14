@@ -17,6 +17,10 @@ packages/
 docs/                       this documentation
 ```
 
+Every package `tsconfig` extends `@arnaud-zg/configs`, then the root `tsconfig.base.json`, which
+turns `noUncheckedIndexedAccess` back on: an indexed read stays `T | undefined`, so guards on it
+keep checking a real case.
+
 Each package's `dist/` (gitignored) is what its `package.json` `exports` actually resolve to.
 `expo-native-guard` and `vite-workspace-resolver` build through `tsdown`; `expo-pnpm-catalog` and
 `agent-context-budget` build through `tsc` directly, since their `bin` entry point (`dist/cli.js`)

@@ -1,5 +1,5 @@
 {
   "files": [],
   "include": [],
-  "extends": ["@arnaud-zg/configs/tsconfig/internal-package.json"]
+  "extends": ["@arnaud-zg/configs/tsconfig/internal-package.json", "../../tsconfig.base.json"]
 }

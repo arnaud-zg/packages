@@ -1,7 +1,7 @@
 {
   "files": [],
   "include": ["src/**/*.ts", "*.config.ts"],
-  "extends": ["@arnaud-zg/configs/tsconfig/base.json"],
+  "extends": ["@arnaud-zg/configs/tsconfig/base.json", "../../tsconfig.base.json"],
   "compilerOptions": {
     "types": ["node"]
   }
