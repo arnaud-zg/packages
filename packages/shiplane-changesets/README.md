@@ -68,8 +68,8 @@ changesetsVersioning({ thanks: presets.sentence });
 
 | Preset             | Adds under the changes                                     |
 | ------------------ | ---------------------------------------------------------- |
-| `presets.sentence` | `🙏 Thanks to @ada and @lin for this release!`             |
-| `presets.list`     | a `### Contributors` heading, then `- @ada` and `- @lin`   |
+| `presets.sentence` | `🙏 Thanks to @arnaud-zg for this release!`                |
+| `presets.list`     | a `### Contributors` heading, then `- @arnaud-zg`          |
 | `presets.avatars`  | a `### Contributors` heading, then a row of linked avatars |
 | `presets.none`     | nothing: the inline thanks are removed                     |
 
@@ -78,7 +78,7 @@ Or write your own template, or extend a preset. It's always one string:
 | Placeholder      | Becomes                                 |
 | ---------------- | --------------------------------------- |
 | `{changes}`      | the release's changes                   |
-| `{contributors}` | `@ada and @lin`, linked                 |
+| `{contributors}` | `@arnaud-zg`, linked                    |
 | `{list}`         | one `- @login` per line                 |
 | `{avatars}`      | a 32×32 linked GitHub avatar per person |
 

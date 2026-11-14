@@ -296,7 +296,7 @@ import { changesetsVersioning, presets } from "@shiplane/changesets";
 versioning: changesetsVersioning({ thanks: presets.sentence }),
 ```
 
-Each preset, on a release by `@ada` and `@lin`:
+Each preset, on a release by `@arnaud-zg`:
 
 **`presets.sentence`** (one plain line, readable everywhere: the recommended pick)
 
@@ -305,7 +305,7 @@ Each preset, on a release by `@ada` and `@lin`:
 > - [#51](https://github.com/arnaud-zg/packages/pull/51) A unit file can list
 >   `checkEnvBeforeDeploy`…
 >
-> 🙏 Thanks to [@ada](https://github.com/ada) and [@lin](https://github.com/lin) for this release!
+> 🙏 Thanks to [@arnaud-zg](https://github.com/arnaud-zg) for this release!
 
 **`presets.list`**
 
@@ -316,8 +316,7 @@ Each preset, on a release by `@ada` and `@lin`:
 >
 > ### Contributors
 >
-> - [@ada](https://github.com/ada)
-> - [@lin](https://github.com/lin)
+> - [@arnaud-zg](https://github.com/arnaud-zg)
 
 **`presets.avatars`**
 
@@ -328,8 +327,7 @@ Each preset, on a release by `@ada` and `@lin`:
 >
 > ### Contributors
 >
-> <a href="https://github.com/ada"><img src="https://github.com/ada.png?size=64" width="32" height="32" alt="@ada"></a>
-> <a href="https://github.com/lin"><img src="https://github.com/lin.png?size=64" width="32" height="32" alt="@lin"></a>
+> <a href="https://github.com/arnaud-zg"><img src="https://github.com/arnaud-zg.png?size=64" width="32" height="32" alt="@arnaud-zg"></a>
 
 **`presets.none`** removes the thanks, and leaving `thanks` out keeps changesets' own line-by-line
 thanks.
@@ -339,11 +337,11 @@ thanks.
 A template is one string. `{changes}` is the release's changes; `{contributors}`, `{list}` and
 `{avatars}` are the people, as above.
 
-| You write                                  | You get                                                                     |
-| ------------------------------------------ | --------------------------------------------------------------------------- |
-| `"💜 Made by {contributors}\n\n{changes}"` | the thanks first, then the changes                                          |
-| `"Thanks {contributors}!"`                 | the changes, then `Thanks @ada and @lin!` (no `{changes}` means under them) |
-| `${presets.sentence}\n\n🚀 Ship it!`       | the sentence preset, then your line                                         |
+| You write                                  | You get                                                                  |
+| ------------------------------------------ | ------------------------------------------------------------------------ |
+| `"💜 Made by {contributors}\n\n{changes}"` | the thanks first, then the changes                                       |
+| `"Thanks {contributors}!"`                 | the changes, then `Thanks @arnaud-zg!` (no `{changes}` means under them) |
+| `${presets.sentence}\n\n🚀 Ship it!`       | the sentence preset, then your line                                      |
 
 It rewrites the changelog section the release just wrote, so the release PR shows the result before
 it ships, and the tag's release notes match. `commitsVersioning()` takes the same option. Every

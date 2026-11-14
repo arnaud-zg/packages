@@ -1,12 +1,12 @@
 /**
  * Ready-made templates for `thanks`. Each is a plain string: use one as it is, extend it, or copy it
- * and edit. Placeholders: `{changes}` the release's changes, `{contributors}` `@ada and @lin`,
+ * and edit. Placeholders: `{changes}` the release's changes, `{contributors}` `@arnaud-zg`,
  * `{list}` one `- @login` per line, `{avatars}` a row of GitHub avatars.
  */
 export const presets = {
-  /** `🙏 Thanks to @ada and @lin for this release!` under the changes. */
+  /** `🙏 Thanks to @arnaud-zg for this release!` under the changes. */
   sentence: "{changes}\n\n🙏 Thanks to {contributors} for this release!",
-  /** A `### Contributors` heading under the changes, then `- @ada`, `- @lin`. */
+  /** A `### Contributors` heading under the changes, then `- @arnaud-zg`. */
   list: "{changes}\n\n### Contributors\n\n{list}",
   /** A `### Contributors` heading under the changes, then a row of linked avatars. */
   avatars: "{changes}\n\n### Contributors\n\n{avatars}",
