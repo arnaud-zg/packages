@@ -39,21 +39,18 @@ isn't part of the `exports` map `tsdown` generates from.
 
 ## Findability rules
 
-Every package that is not `private` follows these. Why: see
-[Explanation § Why every package is written to be found](./explanation.md#why-every-package-is-written-to-be-found).
+For every published package. Why: see
+[Explanation](./explanation.md#why-every-package-is-written-to-be-found).
 
-| Where                         | Rule                                                                                                                                                                                         |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `package.json` `description`  | One clear sentence, under 160 characters, saying what the package does and the tool it works with (Expo, Vite, CLAUDE.md, ...). No error messages: those go in the README's "Fixes" section  |
-| `package.json` `keywords`     | 3 to 7, lowercase. Only tags with a big community (`expo`, `react-native`, `vite`, `vitest`, `monorepo`, `claude-code`, ...): niche words add noise. Error text goes in the README, not here |
-| `package.json` `homepage`     | The package's README on GitHub: `https://github.com/arnaud-zg/packages/tree/main/packages/<dir>#readme`                                                                                      |
-| `package.json` `repository`   | `git+https://github.com/arnaud-zg/packages.git`, with `directory: packages/<dir>`                                                                                                            |
-| README, first paragraph       | The problem in the reader's words, then what the package does. It is the snippet npm and Google show                                                                                         |
-| README, "Fixes" section       | When the package fixes an error, quote the exact error text in a code block, so a search for that text finds it                                                                              |
-| README, visual                | One picture of the result (screenshot, GIF, diagram or terminal output) above the API sections                                                                                               |
-| `@shiplane/*` plugins         | Keywords: `shiplane`, then the host's own big tags (`cloudflare`, `expo`, `github-actions`, `docker`, ...)                                                                                   |
-| Where details live            | In the package README, which npm publishes as the package page. Root README: one line per package, no copied details                                                                         |
-| Private packages              | Not for search, but still a README: what it is for, how to run it, what each test proves, when to add to it                                                                                  |
-| README, first code example    | Copy-paste complete: the `import` line included, so an AI assistant can quote it as is                                                                                                       |
-| Root README and `docs/README` | Every top-level package is listed in both tables (`@shiplane/*` plugins are reached through `shiplane`), with a "You're hitting" line written as a symptom                                   |
-| GitHub repo topics            | Cover every package's main ecosystem. Update them when a package for a new ecosystem is added                                                                                                |
+| Where                         | Rule                                                                                                                   |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `description`                 | One plain sentence, under 160 characters: what it does and the tool it works with. No error messages                   |
+| `keywords`                    | 3 to 7 tags with a big community (`expo`, `vite`, `monorepo`, `claude-code`...). Plugins: `shiplane` + the host's tags |
+| `homepage`, `repository`      | The package's README on GitHub, and `directory: packages/<dir>`                                                        |
+| README, top                   | The problem in the reader's words, then one picture of the result (screenshot, diagram or terminal output)             |
+| README, "Fixes" section       | The exact error text, when the package fixes one                                                                       |
+| README, first code example    | Complete, `import` line included                                                                                       |
+| Root README and `docs/README` | One symptom line per top-level package, linking to its README. Details stay in the package README                      |
+
+A private package needs no search work, but still a README: what it is for, how to run it, and when
+to add to it.

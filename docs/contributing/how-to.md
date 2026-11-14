@@ -71,23 +71,13 @@ on another. Each starts at `0.1.0`: usable, not yet stable, expect breaking chan
 
 ## Keep a package findable
 
-Apply this when you add a package, or change what one does, its name, or its README opening. The
-rules are in [Reference § Findability rules](./reference.md#findability-rules).
+When you add a package or change what one does, check it against the
+[Findability rules](./reference.md#findability-rules), then:
 
-1. Write the `description` and `keywords` in `package.json` from the user's side: what are they
-   stuck on, and what would they type? Collect the exact error text if there is one.
-2. Check the README opening and the "Fixes" section against the rules.
-3. Add a patch changeset, since npm only shows the published `package.json`:
+```sh
+pnpm changeset --patch <pkg> -m "Clearer npm description and keywords."
+# after the release, check what npm shows:
+npm view <pkg> description keywords
+```
 
-   ```sh
-   pnpm changeset --patch <pkg> -m "Better npm search description and keywords."
-   ```
-
-4. After the release, check what npm really serves:
-
-   ```sh
-   npm view <pkg> description keywords repository.url
-   ```
-
-5. For a new ecosystem, add it to the GitHub repo topics:
-   `gh repo edit arnaud-zg/packages --add-topic <topic>`.
+For a new ecosystem, add a repo topic: `gh repo edit arnaud-zg/packages --add-topic <topic>`.

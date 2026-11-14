@@ -22,7 +22,7 @@ configurable token thresholds and surfaces where to cut:
 ## What it prints
 
 ```text
-$ npx context-budget check
+$ npx agent-context-budget check
 
 === CLAUDE.md Token Budget ===
 

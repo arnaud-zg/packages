@@ -23,20 +23,10 @@ the bump, so the one who writes the changeset applies this rule.
 
 ## Why every package is written to be found
 
-Nobody promotes these packages. People find them in two ways only: npm search, and a web search for
-the error or the task they are stuck on. Both read the same few fields, so those fields are written
-for that reader, not for the author:
+Nobody promotes these packages: people find them through npm search, web search or an AI assistant.
 
-- **npm search** ranks on the package name, `description` and `keywords`, then the README. A package
-  with no keywords is close to invisible there, which is why every published package must have some.
-- **Web search** matches the words people type: the exact error message, or "how to X with Y". A
-  README that only names the solution ("fallback", "resolver") misses them; one that quotes the
-  error string matches it.
-- **AI assistants** (ChatGPT, Claude, Copilot, Cursor) recommend packages they can describe with
-  confidence, from the npm page and the README. So the description says plainly what the package
-  does, and the first example works when pasted, imports included.
-- **npm shows the published `package.json`, not `main`.** A keyword or description change does
-  nothing until the package is released again. That is why such a change gets its own changeset.
-
-The rules themselves are in [Reference § Findability rules](./reference.md#findability-rules), and
-the steps in [How-to § Keep a package findable](./how-to.md#keep-a-package-findable).
+- **npm search** ranks on the name, `description` and `keywords`, then the README.
+- **Web search** matches what people type, often the exact error, so the README quotes it.
+- **AI assistants** recommend what they can describe and quote: a plain description and a first
+  example that works when pasted.
+- **npm shows the published `package.json`**, so a metadata change needs a release to show.
