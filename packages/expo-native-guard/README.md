@@ -22,6 +22,13 @@ Invariant Violation: TurboModuleRegistry.getEnforcing(...): 'RNMyModule' could n
 Expo Go cannot load a module it was not built with. Instead of the crash, your app gets a fallback
 that you choose, with a `<name> · Expo Go` badge on it.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/arnaud-zg/packages/main/packages/expo-native-guard/assets/expo-go-fallback.png" width="300" alt="In Expo Go, a camera screen shows a 'Pick a photo instead' fallback inside a dotted red border with a 'CameraView · Expo Go' badge" />
+</p>
+
+In Expo Go, the camera screen shows its fallback with the badge. In a development build or the store
+app, the real camera shows and the badge never appears.
+
 📚 Full guides:
 [tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/expo-native-guard).
 
