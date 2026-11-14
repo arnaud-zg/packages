@@ -46,28 +46,28 @@ bar.
 
 ## 📦 Packages
 
-| Package                                                         | What it does                                                                                                                       | Install                                          |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| [`expo-native-guard`](./packages/expo-native-guard)             | Load native-only modules (Nitro, TurboModules, custom Expo modules) without crashing in **Expo Go**, with a visible fallback badge | `npm install expo-native-guard`                  |
-| [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog)             | Check and sync **Expo SDK** versions in **pnpm catalogs**, like `expo-doctor` and `expo install --fix` for a whole workspace       | `npm install --save-dev expo-pnpm-catalog`       |
-| [`vite-workspace-resolver`](./packages/vite-workspace-resolver) | Resolve workspace packages' **exports-map subpaths** and deep `src/` imports in **Vite/Vitest**, without per-package aliases       | `npm install --save-dev vite-workspace-resolver` |
-| [`agent-context-budget`](./packages/agent-context-budget)       | Score **CLAUDE.md**, **AGENTS.md** and the docs they reference against **token budgets**, and show which sections to cut           | `npm install --save-dev agent-context-budget`    |
-| [`shiplane`](./packages/shiplane)                               | Detect what changed, **version** it and **deploy** each app through plugins; `npx shiplane setup` sets it up in one command        | `npm install --save-dev shiplane`                |
+| Package                                                                   | What it does                                                                                                                       | Install                                          |
+| ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| [`expo-native-guard`](./packages/expo-native-guard/README.md)             | Load native-only modules (Nitro, TurboModules, custom Expo modules) without crashing in **Expo Go**, with a visible fallback badge | `npm install expo-native-guard`                  |
+| [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog/README.md)             | Check and sync **Expo SDK** versions in **pnpm catalogs**, like `expo-doctor` and `expo install --fix` for a whole workspace       | `npm install --save-dev expo-pnpm-catalog`       |
+| [`vite-workspace-resolver`](./packages/vite-workspace-resolver/README.md) | Resolve workspace packages' **exports-map subpaths** and deep `src/` imports in **Vite/Vitest**, without per-package aliases       | `npm install --save-dev vite-workspace-resolver` |
+| [`agent-context-budget`](./packages/agent-context-budget/README.md)       | Score **CLAUDE.md**, **AGENTS.md** and the docs they reference against **token budgets**, and show which sections to cut           | `npm install --save-dev agent-context-budget`    |
+| [`shiplane`](./packages/shiplane/README.md)                               | Detect what changed, **version** it and **deploy** each app through plugins; `npx shiplane setup` sets it up in one command        | `npm install --save-dev shiplane`                |
 
 More packages will land here over time. ⭐ Star or watch the repo to hear about them.
 
 ### 🤔 Which one do I need?
 
 - **"My app crashes in Expo Go because a library needs native code."** →
-  [`expo-native-guard`](./packages/expo-native-guard#readme)
+  [`expo-native-guard`](./packages/expo-native-guard/README.md)
 - **"`expo-doctor` can't read my `catalog:` versions in a pnpm monorepo."** →
-  [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog#readme)
+  [`expo-pnpm-catalog`](./packages/expo-pnpm-catalog/README.md)
 - **"Vitest can't resolve `@my/pkg/subpath` from another workspace package."** →
-  [`vite-workspace-resolver`](./packages/vite-workspace-resolver#readme)
+  [`vite-workspace-resolver`](./packages/vite-workspace-resolver/README.md)
 - **"My CLAUDE.md keeps growing and every agent session pays for it."** →
-  [`agent-context-budget`](./packages/agent-context-budget#readme)
+  [`agent-context-budget`](./packages/agent-context-budget/README.md)
 - **"Releasing several apps from one repo is a pile of scripts."** →
-  [`shiplane`](./packages/shiplane#readme)
+  [`shiplane`](./packages/shiplane/README.md)
 
 ## 📚 Documentation
 

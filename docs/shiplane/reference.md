@@ -132,7 +132,8 @@ one. Type: `Mascot` from `shiplane`. Source: `src/domain/display.ts`.
 ## `shiplane.unit.yml`
 
 One per app, next to its `package.json`, which gives its name and version. Every module has one;
-[`examples/repository`](../../packages/shiplane/examples/repository) holds one of each.
+[`examples/repository`](../../packages/shiplane/examples/repository/shiplane.config.ts) holds one of
+each.
 
 ```yaml
 module: backend-service # a module of shiplane.config.ts

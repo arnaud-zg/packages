@@ -54,3 +54,15 @@ For every published package. Why: see
 
 A private package needs no search work, but still a README: what it is for, how to run it, and when
 to add to it.
+
+## Link rules
+
+A reader goes from one page to the next without landing on a folder listing.
+
+| Link                     | Rule                                                                                           |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| To a doc or a package    | A specific `.md` file (`docs/<pkg>/how-to.md`, `packages/<pkg>/README.md`), never its folder   |
+| Package README to docs   | One link per page: `📚 Guides: 🚀 Tutorial · 🛠️ How-to · 📖 Reference · 💡 Explanation`        |
+| In a published README    | An absolute `https://github.com/arnaud-zg/packages/blob/main/...` URL, so it also works on npm |
+| Top of every `docs` page | The nav bar: 🏠 Home, 📚 Docs, then every sibling page of that package                         |
+| To an example            | The file to read first (`examples/shiplane.config.ts`), not the `examples/` folder             |

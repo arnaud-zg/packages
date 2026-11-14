@@ -35,4 +35,4 @@ and points at the sections worth cutting.
    ```
 
 Exit code `1` means a file is over a hard budget, `2` means advisory findings only. Every option is
-in the [package README](../../packages/agent-context-budget#readme).
+in the [package README](../../packages/agent-context-budget/README.md).

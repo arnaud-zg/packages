@@ -35,8 +35,12 @@ Root (always loaded):
 ✓ All files within budget.
 ```
 
-📚 Full guides:
-[tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/agent-context-budget).
+📚 Guides:
+[🚀 Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/tutorial.md)
+· [🛠️ How-to](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/how-to.md) ·
+[📖 Reference](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/reference.md)
+·
+[💡 Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/explanation.md)
 
 ## Install
 

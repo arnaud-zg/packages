@@ -25,8 +25,12 @@ $ npx expo-pnpm-catalog check
   → Run expo-pnpm-catalog sync to fix version drift
 ```
 
-📚 Full guides:
-[tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/expo-pnpm-catalog).
+📚 Guides:
+[🚀 Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/tutorial.md) ·
+[🛠️ How-to](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/how-to.md) ·
+[📖 Reference](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/reference.md)
+·
+[💡 Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/explanation.md)
 
 ## Install
 
