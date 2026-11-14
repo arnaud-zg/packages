@@ -1,19 +1,9 @@
-# expo-pnpm-catalog
+# 📦 expo-pnpm-catalog
 
-<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-<a href="https://www.npmjs.com/package/expo-pnpm-catalog"><img src="https://img.shields.io/npm/v/expo-pnpm-catalog.svg" alt="npm version"></a>
-<img src="https://img.shields.io/badge/CLI-ready-brightgreen" alt="CLI ready">
-
-Deterministic Expo SDK checks and sync for [pnpm catalogs](https://pnpm.io/catalogs), like
-`expo-doctor` for a whole workspace.
-
-If you manage Expo SDK dependency versions through a pnpm catalog (`catalog:` or `catalog:expo`),
-`expo-doctor` and `expo install --fix` can't read those references directly: they expect concrete
-version strings. `expo-pnpm-catalog` temporarily resolves the catalog references across your
-**entire** pnpm workspace, runs the real Expo tooling against the resolved manifest, and restores
-the original `package.json` afterwards.
-
-## What it prints
+`expo-doctor` and `expo install --fix` can't read `catalog:` references from a
+[pnpm catalog](https://pnpm.io/catalogs): they expect concrete version strings. `expo-pnpm-catalog`
+resolves the catalog references across your whole pnpm workspace, runs the real Expo tooling against
+the resolved manifest, and restores the original `package.json` afterwards.
 
 ```text
 $ npx expo-pnpm-catalog check
@@ -25,27 +15,16 @@ $ npx expo-pnpm-catalog check
   → Run expo-pnpm-catalog sync to fix version drift
 ```
 
-📚 Guides:
-[🚀 Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/tutorial.md) ·
-[🛠️ How-to](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/how-to.md) ·
-[📖 Reference](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/reference.md)
-·
-[💡 Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/explanation.md)
-
-## Install
+## ⚡ Install
 
 ```bash
 npm install --save-dev expo-pnpm-catalog
+npx expo-pnpm-catalog check --app-dir apps/expo
 ```
 
-## Usage
+## ⚙️ Usage
 
 Run directly with `npx`, or add scripts to your workspace root `package.json`:
-
-```sh
-npx expo-pnpm-catalog check --app-dir apps/expo
-npx expo-pnpm-catalog sync --app-dir apps/expo
-```
 
 ```json
 {
@@ -56,18 +35,16 @@ npx expo-pnpm-catalog sync --app-dir apps/expo
 }
 ```
 
-## Requirements
+`check` resolves every `catalog:*` reference, in the Expo app and in every other workspace package
+that shares an Expo-managed dependency, runs `expo-doctor` against that resolved manifest, then
+restores the original file regardless of outcome (including on `Ctrl-C`).
 
-- A pnpm workspace (a `pnpm-workspace.yaml` somewhere above the Expo app)
-- An Expo app whose `package.json` declares Expo-managed dependencies via `catalog:` references
-  (e.g. `"expo-camera": "catalog:expo"`)
+`sync` runs `expo install --fix` against the resolved manifest, writes the versions the current Expo
+SDK wants back into the matching `catalogs.*` section of `pnpm-workspace.yaml` (preserving comments
+and formatting), and runs `pnpm install`. Packages listed under `expo.install.exclude` in the Expo
+app's `package.json` are skipped.
 
-### `expo-pnpm-catalog check`
-
-Mirrors what `expo-doctor` would see in CI: resolves every `catalog:*` reference, in the Expo app
-and in every other workspace package that shares an Expo-managed dependency, to its concrete
-version, runs `expo-doctor` against that resolved manifest, then restores the original file
-regardless of outcome (including on `Ctrl-C`).
+## 📋 Options
 
 ```
 Usage: expo-pnpm-catalog check [options]
@@ -76,12 +53,6 @@ Options:
   --dry-run         show resolved versions per package without running expo-doctor
   --app-dir <path>  path to the Expo app (defaults to the current working directory)
 ```
-
-### `expo-pnpm-catalog sync`
-
-Runs `expo install --fix` against the resolved manifest to compute the versions the current Expo SDK
-actually wants, then writes those versions back into the matching `catalogs.*` section of
-`pnpm-workspace.yaml` (preserving comments and formatting), and runs `pnpm install`.
 
 ```
 Usage: expo-pnpm-catalog sync [options]
@@ -92,10 +63,9 @@ Options:
   --app-dir <path>  path to the Expo app (defaults to the current working directory)
 ```
 
-Packages listed under `expo.install.exclude` in the Expo app's `package.json` are skipped by `sync`,
-matching `expo install --fix`'s own exclusion behavior.
+Source: `src/cli.ts`.
 
-## Programmatic use
+## 🧰 Programmatic use
 
 ```ts
 import path from "path";
@@ -114,11 +84,25 @@ const passed = runCheck(paths, { dryRun: false });
 await runSync(paths, { dryRun: false, yes: true });
 ```
 
-## How workspace packages are discovered
+## 🔑 Requirements
 
-By default, `expo-pnpm-catalog` derives the top-level workspace directories to scan (e.g. `apps`,
-`packages`) from the `packages:` globs declared in `pnpm-workspace.yaml`. If none are declared, it
-falls back to `apps`, `packages`, `tooling`.
+- A pnpm workspace (a `pnpm-workspace.yaml` somewhere above the Expo app)
+- An Expo app whose `package.json` declares Expo-managed dependencies via `catalog:` references
+  (e.g. `"expo-camera": "catalog:expo"`)
+
+## 📚 Docs
+
+- 🚀
+  **[Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/tutorial.md)**:
+  keep Expo SDK versions in sync across a pnpm catalog
+- 🛠️ **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/how-to.md)**:
+  check, sync, exclude a package, use it from code
+- 📖
+  **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/reference.md)**:
+  CLI flags, exported functions, how workspace packages are discovered
+- 💡
+  **[Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/expo-pnpm-catalog/explanation.md)**:
+  why the whole workspace, why `expo install --fix`, why the manifest is always restored
 
 ## 📈 Downloads
 

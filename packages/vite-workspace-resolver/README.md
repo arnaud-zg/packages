@@ -1,36 +1,22 @@
-# vite-workspace-resolver
+# 🧭 vite-workspace-resolver
 
-Vite's test resolver won't follow a workspace package's `package.json` `exports` map for non-`"."`
-subpaths, and can't reach into a package's `src/` for files that aren't exported at all.
-`workspaceExports(rootDir)` scans every workspace package once and resolves both cases directly as a
-Vite plugin — no more hand-rolled `resolve.alias` entries per package/subpath.
+Vite's test resolver won't follow a workspace package's `exports` map for non-`"."` subpaths, and
+can't reach into a package's `src/` for files that aren't exported at all.
+`workspaceExports(rootDir)` scans every workspace package once and resolves both cases as a Vite
+plugin, so you stop hand-rolling `resolve.alias` entries per package and subpath.
 
-## Fixes these errors in Vitest and Vite
-
-```text
-Failed to resolve import "@acme/ui/button" from "src/app.test.ts". Does the file exist?
+```mermaid
+flowchart LR
+    IMPORT["import '@acme/ui/button'"] --> PLUGIN["workspaceExports(rootDir)"]
+    PLUGIN -->|"workspace package"| FILE["File from its exports map or src/"]
+    PLUGIN -->|"anything else"| VITE["Vite's default resolver"]
 ```
 
-```text
-Missing "./button" specifier in "@acme/ui" package
-```
-
-📚 Guides:
-[🚀 Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/tutorial.md)
-·
-[🛠️ How-to](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/how-to.md)
-·
-[📖 Reference](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/reference.md)
-·
-[💡 Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/explanation.md)
-
-## Install
+## ⚡ Install
 
 ```sh
 npm install --save-dev vite-workspace-resolver
 ```
-
-## Usage
 
 ```ts
 import path from "node:path";
@@ -42,7 +28,19 @@ export default defineConfig({
 });
 ```
 
-Then, from a test, any of these resolve to the right file in the workspace:
+## 🩹 Fixes these errors
+
+```text
+Failed to resolve import "@acme/ui/button" from "src/app.test.ts". Does the file exist?
+```
+
+```text
+Missing "./button" specifier in "@acme/ui" package
+```
+
+## ⚙️ Usage
+
+From a test, any of these resolve to the right file in the workspace:
 
 ```ts
 import { core } from "@acme/sse/core"; // exports["./core"]
@@ -50,9 +48,13 @@ import { config } from "@acme/theme/src/config"; // deep src/ import, probes .ts
 import { tokens } from "@acme/tokens"; // exports["."]
 ```
 
-## API
+Every directory with a named `package.json` under one of the groups is a workspace package, whatever
+its scope. Specifiers that don't name one (`react`, relative paths) return `null` and fall through
+to Vite's default resolver.
 
-### `workspaceExports(rootDir, options?)`
+## 📋 Options
+
+`workspaceExports(rootDir, options?)`:
 
 | Option   | Type       | Default        | Description                                                    |
 | -------- | ---------- | -------------- | -------------------------------------------------------------- |
@@ -62,23 +64,22 @@ import { tokens } from "@acme/tokens"; // exports["."]
 workspaceExports(root, { groups: ["packages", "tooling", "apps"] });
 ```
 
-Every directory with a named `package.json` under one of the groups is a workspace package, whatever
-its scope. Specifiers that don't name one (`react`, relative paths) return `null` and fall through
-to Vite's default resolver.
+Source: `src/workspaceExports.ts`.
 
-## Design notes
+## 📚 Docs
 
-- Exports-map resolution itself is delegated to
-  [`resolve.exports`](https://github.com/lukeed/resolve.exports) — a tiny, spec-compliant
-  implementation of the actual Node ESM resolution algorithm (conditional exports, wildcard
-  subpaths). This package only owns the workspace scan and Vite plugin wiring, not exports-map
-  parsing.
-- Deep `src/` imports (`<pkg>/src/<rest>`) are a separate mechanism — for reaching a file that isn't
-  declared in the package's `exports` map at all. Probes `.ts`/`.tsx` extensions, since Vite doesn't
-  re-probe a `resolveId` return value.
-- Ships as a built package (`tsdown` → `dist/`), not raw source — a package consumed inside a
-  `vitest.config.ts` file needs plain JS. Node's synchronous config-loading path only transpiles the
-  config file itself, not files reached transitively through an `import`.
+- 🚀
+  **[Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/tutorial.md)**:
+  resolve workspace imports in Vitest
+- 🛠️
+  **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/how-to.md)**:
+  resolve packages outside `packages/`
+- 📖
+  **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/reference.md)**:
+  `workspaceExports` and its options
+- 💡
+  **[Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/explanation.md)**:
+  why `resolve.exports`, deep `src/` imports, a built package
 
 ## 📈 Downloads
 
@@ -88,7 +89,3 @@ to Vite's default resolver.
     <img alt="vite-workspace-resolver npm downloads per week, last 90 days" src="https://shieldcn.dev/chart/npm/vite-workspace-resolver.svg?days=90&logo=false&mode=light" />
   </picture>
 </a>
-
-## License
-
-[MIT](./LICENSE) © Arnaud Zheng

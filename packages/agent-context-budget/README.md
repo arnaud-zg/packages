@@ -1,25 +1,26 @@
-# agent-context-budget
+# 📏 agent-context-budget
 
-Token-budget analysis for AI agent context files (CLAUDE.md, AGENTS.md, etc.).
+CLAUDE.md, AGENTS.md and per-package context docs load on every agent session, so every extra token
+is a recurring tax. `agent-context-budget` scores a repo's context files against configurable token
+thresholds and shows where to cut.
 
-Large context files (CLAUDE.md, AGENTS.md, per-package context docs) load on every agent session —
-every extra token is a recurring tax. `agent-context-budget` scores a repo's context files against
-configurable token thresholds and surfaces where to cut:
+```mermaid
+flowchart LR
+    ROOT["CLAUDE.md"] --> CHECK["context-budget check"]
+    REFS["Referenced docs"] --> CHECK
+    SUB["Subdirectory CLAUDE.md files"] --> CHECK
+    CHECK --> REPORT["Health bar per file, Pareto breakdown, similarity report"]
+    CHECK --> EXIT["Exit 0, 1 or 2"]
+```
 
-- **Calibrated token estimation** — prose, code, and markdown structure tokenize at different rates;
-  a flat chars-per-token estimate is calibrated per content type instead
-- **Section-level Pareto analysis** — which headings account for most of a file's tokens, flagged
-  for extraction once the file is over 85% of budget
-- **Gzip-ratio redundancy scoring** — a low compression ratio is a proxy for repetitive content
-  worth tightening
-- **TTR + Shannon entropy composite** — type-token ratio and word-level entropy combine into a
-  single redundancy score
-- **MAD-based adaptive thresholds** — a median + 1.5×MAD outlier line, resistant to a few very large
-  files skewing the picture
-- **MinHash cross-file similarity** — 128-hash Jaccard estimation flags near-duplicate or
-  merge-candidate files across the whole set
+## ⚡ Install
 
-## What it prints
+```sh
+npm install --save-dev agent-context-budget
+npx agent-context-budget check
+```
+
+It installs the `context-budget` command; `npx agent-context-budget` runs it without installing.
 
 ```text
 $ npx agent-context-budget check
@@ -35,22 +36,7 @@ Root (always loaded):
 ✓ All files within budget.
 ```
 
-📚 Guides:
-[🚀 Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/tutorial.md)
-· [🛠️ How-to](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/how-to.md) ·
-[📖 Reference](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/reference.md)
-·
-[💡 Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/explanation.md)
-
-## Install
-
-```sh
-npm install --save-dev agent-context-budget
-```
-
-It installs the `context-budget` command; `npx agent-context-budget` runs it without installing.
-
-## Usage
+## ⚙️ Usage
 
 ```sh
 npx agent-context-budget check
@@ -61,12 +47,8 @@ npx agent-context-budget check --explain CLAUDE.md
 File discovery is relative to the current working directory, so run it from the directory containing
 the root context file.
 
-### `context-budget check`
-
-Analyzes the root context file, every file it references (matched via `root.referencePattern`), and
-every `CLAUDE.md` found one level under the configured `subdir.dirs`. Reports a health bar per file,
-a Pareto breakdown for files near their budget, dead/orphaned reference-graph warnings, and a
-cross-file similarity report.
+`check` analyzes the root context file, every file it references (matched via
+`root.referencePattern`), and every `CLAUDE.md` found one level under the configured `subdir.dirs`.
 
 ```
 Usage: context-budget check [options]
@@ -78,14 +60,12 @@ Options:
 
 Exit codes: `0` all files within budget, `1` a hard-failing file exceeded its threshold, `2`
 advisory-only findings (noise, redundancy, orphans, dead refs, near-duplicate files) with nothing
-over budget. `--json` exits with the same code as the human report. A missing root file or an
-invalid config file prints the reason and exits `1`.
+over budget.
 
-## Configuration
+## 📋 Options
 
-Reads `./agent-context-budget.config.json` if present (or an explicit path via `loadConfig(path)`
-programmatically), deep-merged over the built-in defaults — a partial override only needs the fields
-it changes:
+Reads `./agent-context-budget.config.json` if present, deep-merged over the built-in defaults, so a
+partial override only needs the fields it changes:
 
 ```json
 {
@@ -93,10 +73,6 @@ it changes:
   "subdir": { "dirs": ["apps", "packages", "tooling"] }
 }
 ```
-
-The previous name, `context-budget.config.json`, still works but prints a deprecation warning and
-will be removed in the next release: rename the file to keep your settings. If both files exist,
-`agent-context-budget.config.json` wins and the old one is ignored.
 
 | Field                     | Default                                   | Meaning                                                                   |
 | ------------------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
@@ -113,9 +89,9 @@ will be removed in the next release: rename the file to keep your settings. If b
 | `health.normalBelow`      | `0.85`                                    | Ratio-of-budget below which a file is "normal" (above is "warning"/"bad") |
 | `planningDir`             | `".planning/codebase"`                    | Directory scanned for orphaned reference docs not linked from `root.file` |
 
-With no config file present, `loadConfig()` returns exactly these defaults.
+Source: `src/config.ts`.
 
-## Programmatic use
+## 🧰 Programmatic use
 
 ```ts
 import { analyzeFile, estimateTokens, findSimilarFiles, loadConfig } from "agent-context-budget";
@@ -132,11 +108,7 @@ const pairs = findSimilarFiles([
 ]);
 ```
 
-`analyzeFile` is path-agnostic and returns `path: ""` — attaching a real path and deciding whether a
-`"bad"` health upgrades `"warn"` to a hard `"error"` is the caller's policy, matching how the CLI's
-`check` command wires it up per file kind (root vs. reference vs. subdirectory).
-
-## Run it on every commit
+## 🔁 Run it on every commit
 
 Point a pre-commit hook at your context files so a bloated CLAUDE.md never lands. With
 [Lefthook](https://github.com/evilmartians/lefthook):
@@ -151,6 +123,21 @@ pre-commit:
 
 Exit code `2` means advisory findings only; treat it as a pass if you only want to block on budgets:
 `npx agent-context-budget check || [ $? -eq 2 ]`.
+
+## 📚 Docs
+
+- 🚀
+  **[Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/tutorial.md)**:
+  keep your context files under a token budget
+- 🛠️
+  **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/how-to.md)**:
+  block a commit, explain one file, read the result in CI
+- 📖
+  **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/reference.md)**:
+  CLI, exit codes, every config field, exports
+- 💡
+  **[Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/agent-context-budget/explanation.md)**:
+  what the score measures
 
 ## 📈 Downloads
 

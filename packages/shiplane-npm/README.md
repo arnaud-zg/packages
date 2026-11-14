@@ -1,7 +1,8 @@
 # 🔌 @shiplane/npm
 
-Publishes a package to npm: fills [shiplane](../shiplane/README.md)'s **package registry** port with
-`pnpm publish` and `npm dist-tag`.
+Publishes a package to npm: fills
+[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)'s **package
+registry** port with `pnpm publish` and `npm dist-tag`.
 
 ```mermaid
 flowchart LR
@@ -11,16 +12,13 @@ flowchart LR
     PUB --> TAG["production: move latest to it"]
 ```
 
-📚
-[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
-
-## Install
+## ⚡ Install
 
 ```sh
 pnpm add -D shiplane @shiplane/npm
 ```
 
-## Configure
+## ⚙️ Configure
 
 Give the adapter to `publishedPackage`. From
 [`examples/shiplane.config.ts`](./examples/shiplane.config.ts):
@@ -43,7 +41,7 @@ export default defineRelease({
 });
 ```
 
-## Unit file keys
+## 📋 Unit file keys
 
 In the package's `shiplane.unit.yml`, next to `module: published-package`.
 
@@ -55,7 +53,7 @@ In the package's `shiplane.unit.yml`, next to `module: published-package`.
 
 Source: `NpmOptions` in `src/npm-package-registry.adapter.ts`.
 
-## Example
+## 🧪 Example
 
 From [`examples/packages/toolkit/shiplane.unit.yml`](./examples/packages/toolkit/shiplane.unit.yml):
 
@@ -84,7 +82,7 @@ moved, so nothing publishes twice. It publishes this checkout, so it stops when 
 tag; production waits for a version preview published. `init` offers this adapter for a public
 package with a `bin`, `exports` or `main`.
 
-## Tools and sign-ins
+## 🔑 Tools and sign-ins
 
 | Tool  | Checked with | Fixed with  | In CI                                |
 | ----- | ------------ | ----------- | ------------------------------------ |
@@ -92,6 +90,17 @@ package with a `bin`, `exports` or `main`.
 
 Source: `requirements` in `src/npm-package-registry.adapter.ts`. `pnpm shiplane doctor` runs each
 check and offers the fix.
+
+## 📚 Docs
+
+- 🔌 **[Plugins](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md)**: how
+  shiplane plugins work, and how to write one
+- 🚢 **[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)**:
+  the release tool this plugin fills a port of
+- 🛠️ **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md)**: add an
+  app, promote, ship from CI
+- 📖 **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/reference.md)**:
+  commands, flags, the config and unit files
 
 ## 📈 Downloads
 

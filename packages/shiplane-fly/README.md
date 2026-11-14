@@ -1,7 +1,8 @@
 # 🔌 @shiplane/fly
 
-Ships a backend to Fly.io: fills [shiplane](../shiplane/README.md)'s **server hosting** port with
-`flyctl deploy`. Any app with a Dockerfile works.
+Ships a backend to Fly.io: fills
+[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)'s **server
+hosting** port with `flyctl deploy`. Any app with a Dockerfile works.
 
 ```mermaid
 flowchart LR
@@ -11,16 +12,13 @@ flowchart LR
     CMD --> HOST["Fly.io app per environment"]
 ```
 
-📚
-[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
-
-## Install
+## ⚡ Install
 
 ```sh
 pnpm add -D shiplane @shiplane/fly
 ```
 
-## Configure
+## ⚙️ Configure
 
 Give the adapter to `backendService`. From
 [`examples/shiplane.config.ts`](./examples/shiplane.config.ts):
@@ -43,7 +41,7 @@ export default defineRelease({
 });
 ```
 
-## Unit file keys
+## 📋 Unit file keys
 
 In the app's `shiplane.unit.yml`, next to `module: backend-service`. A key marked per environment
 also takes a `preview:` / `production:` map.
@@ -58,7 +56,7 @@ also takes a `preview:` / `production:` map.
 
 Source: `FlyOptions` in `src/fly-server-hosting.adapter.ts`. `shiplane docs fly` prints the same.
 
-## Example
+## 🧪 Example
 
 From [`examples/apps/api/shiplane.unit.yml`](./examples/apps/api/shiplane.unit.yml):
 
@@ -93,7 +91,7 @@ The deploy waits until Fly rolled it out, then records it. `init` offers this ad
 with a `fly.toml` (or `fly-preview.toml` and `fly-production.toml`), and as a possibility for a
 folder with only a Dockerfile.
 
-## Tools and sign-ins
+## 🔑 Tools and sign-ins
 
 | Tool     | Checked with         | Fixed with          | In CI           |
 | -------- | -------------------- | ------------------- | --------------- |
@@ -101,6 +99,17 @@ folder with only a Dockerfile.
 
 Source: `requirements` in `src/fly-server-hosting.adapter.ts`. `pnpm shiplane doctor` runs each
 check and offers the fix.
+
+## 📚 Docs
+
+- 🔌 **[Plugins](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md)**: how
+  shiplane plugins work, and how to write one
+- 🚢 **[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)**:
+  the release tool this plugin fills a port of
+- 🛠️ **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md)**: add an
+  app, promote, ship from CI
+- 📖 **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/reference.md)**:
+  commands, flags, the config and unit files
 
 ## 📈 Downloads
 

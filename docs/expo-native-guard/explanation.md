@@ -39,3 +39,11 @@ environment is running belongs outside `expo-native-guard`, in whatever shared l
 can call into. If a native and an Expo Go implementation of the same feature start looking like two
 large, mostly-duplicated files, that's a sign shared logic hasn't been factored out of the caller
 yet, not a sign this package needs new options.
+
+## Why the indicator uses only `react-native`
+
+`withExpoGoIndicator` uses `StyleSheet.create` and nothing else: no UI or styling library beyond
+`react-native`. Tests render real `react-native` primitives via `react-native-web` (dev-only, see
+`vitest.config.ts`), not a hand-rolled stub, so its coverage exercises the same component tree shape
+a consumer would actually get. The package is published standalone (`tsdown` to `dist/`) because the
+problem it solves isn't specific to any one app or monorepo.

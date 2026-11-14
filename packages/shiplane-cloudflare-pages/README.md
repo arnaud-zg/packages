@@ -1,6 +1,7 @@
 # 🔌 @shiplane/cloudflare-pages
 
-Ships a static site to Cloudflare Pages: fills [shiplane](../shiplane/README.md)'s **static
+Ships a static site to Cloudflare Pages: fills
+[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)'s **static
 hosting** port. Each release builds against its environment, then uploads with wrangler.
 
 ```mermaid
@@ -12,16 +13,13 @@ flowchart LR
     UP --> HOST["Pages branch per environment"]
 ```
 
-📚
-[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
-
-## Install
+## ⚡ Install
 
 ```sh
 pnpm add -D shiplane @shiplane/cloudflare-pages
 ```
 
-## Configure
+## ⚙️ Configure
 
 Give the adapter to `webApp`. From [`examples/shiplane.config.ts`](./examples/shiplane.config.ts):
 
@@ -43,7 +41,7 @@ export default defineRelease({
 });
 ```
 
-## Unit file keys
+## 📋 Unit file keys
 
 In the app's `shiplane.unit.yml`, next to `module: web-app`.
 
@@ -58,7 +56,7 @@ In the app's `shiplane.unit.yml`, next to `module: web-app`.
 
 Source: `PagesOptions` in `src/cloudflare-pages-static-hosting.adapter.ts`.
 
-## Example
+## 🧪 Example
 
 From [`examples/apps/site/shiplane.unit.yml`](./examples/apps/site/shiplane.unit.yml):
 
@@ -90,7 +88,7 @@ build:
 The upload is the deploy: it returns in seconds. `init` offers this adapter for a folder with a
 `wrangler.toml` or `wrangler.json(c)`, and for an Astro, Next, Nuxt, Svelte or Vite site.
 
-## Tools and sign-ins
+## 🔑 Tools and sign-ins
 
 | Tool       | Checked with                        | Fixed with                         | In CI                  |
 | ---------- | ----------------------------------- | ---------------------------------- | ---------------------- |
@@ -98,6 +96,17 @@ The upload is the deploy: it returns in seconds. `init` offers this adapter for 
 
 Source: `requirements` in `src/cloudflare-pages-static-hosting.adapter.ts`; the version follows
 `wrangler`. `pnpm shiplane doctor` runs each check and offers the fix.
+
+## 📚 Docs
+
+- 🔌 **[Plugins](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md)**: how
+  shiplane plugins work, and how to write one
+- 🚢 **[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)**:
+  the release tool this plugin fills a port of
+- 🛠️ **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md)**: add an
+  app, promote, ship from CI
+- 📖 **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/reference.md)**:
+  commands, flags, the config and unit files
 
 ## 📈 Downloads
 

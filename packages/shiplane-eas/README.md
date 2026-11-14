@@ -1,7 +1,9 @@
 # 🔌 @shiplane/eas
 
-Ships an Expo app with EAS: fills [shiplane](../shiplane/README.md)'s **mobile distribution** port.
-Each release is a store build or an over-the-air update, picked from the native fingerprint.
+Ships an Expo app with EAS: fills
+[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)'s **mobile
+distribution** port. Each release is a store build or an over-the-air update, picked from the native
+fingerprint.
 
 ```mermaid
 flowchart LR
@@ -12,16 +14,13 @@ flowchart LR
     Q -->|"no"| UPDATE["your update script, over the air"]
 ```
 
-📚
-[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
-
-## Install
+## ⚡ Install
 
 ```sh
 pnpm add -D shiplane @shiplane/eas
 ```
 
-## Configure
+## ⚙️ Configure
 
 Give the adapter to `mobileApp`. From
 [`examples/shiplane.config.ts`](./examples/shiplane.config.ts):
@@ -44,7 +43,7 @@ export default defineRelease({
 });
 ```
 
-## Unit file keys
+## 📋 Unit file keys
 
 In the app's `shiplane.unit.yml`, next to `module: mobile-app`.
 
@@ -55,7 +54,7 @@ In the app's `shiplane.unit.yml`, next to `module: mobile-app`.
 
 Source: `EasOptions` in `src/eas-mobile-distribution.adapter.ts`.
 
-## Example
+## 🧪 Example
 
 From [`examples/apps/mobile/shiplane.unit.yml`](./examples/apps/mobile/shiplane.unit.yml):
 
@@ -86,7 +85,7 @@ run from this machine and return at once (`--no-wait`). An update script with `-
 starts a staged rollout that `shiplane promote` widens. `init` offers this adapter for a folder with
 an `eas.json`.
 
-## Tools and sign-ins
+## 🔑 Tools and sign-ins
 
 | Tool  | Checked with                       | Fixed with                        | In CI        |
 | ----- | ---------------------------------- | --------------------------------- | ------------ |
@@ -94,6 +93,17 @@ an `eas.json`.
 
 Source: `requirements` in `src/eas-mobile-distribution.adapter.ts`. `pnpm shiplane doctor` runs each
 check and offers the fix.
+
+## 📚 Docs
+
+- 🔌 **[Plugins](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md)**: how
+  shiplane plugins work, and how to write one
+- 🚢 **[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)**:
+  the release tool this plugin fills a port of
+- 🛠️ **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md)**: add an
+  app, promote, ship from CI
+- 📖 **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/reference.md)**:
+  commands, flags, the config and unit files
 
 ## 📈 Downloads
 
