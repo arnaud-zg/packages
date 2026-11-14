@@ -7,11 +7,14 @@ Reference** · [💡 Explanation](./explanation.md)
 
 ```
 packages/
-  expo-native-guard/     src/index.ts (barrel), src/core.ts (no React import)
-  expo-pnpm-catalog/     src/index.ts (programmatic API), src/cli.ts (bin entry point)
-  vite-workspace-resolver/ src/index.ts (Vite plugin)
-  agent-context-budget/        src/index.ts (programmatic API), src/cli.ts (bin entry point)
-docs/                    this documentation
+  expo-native-guard/        src/index.ts (barrel), src/core.ts (no React import)
+  expo-pnpm-catalog/        src/index.ts (programmatic API), src/cli.ts (bin entry point)
+  vite-workspace-resolver/  src/index.ts (Vite plugin)
+  agent-context-budget/     src/index.ts (programmatic API), src/cli.ts (bin entry point)
+  shiplane/                 src/cli.ts (bin entry point), the release core
+  shiplane-<host>/          one plugin per host: changesets, cloudflare-pages, eas, fly, git, github, npm
+  shiplane-integration/     private: tests across several plugins
+docs/                       this documentation
 ```
 
 Each package's `dist/` (gitignored) is what its `package.json` `exports` actually resolve to.
@@ -39,17 +42,17 @@ isn't part of the `exports` map `tsdown` generates from.
 Every package that is not `private` follows these. Why: see
 [Explanation § Why every package is written to be found](./explanation.md#why-every-package-is-written-to-be-found).
 
-| Where                         | Rule                                                                                                                                  |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `package.json` `description`  | One sentence, under 160 characters, starting with the outcome a user wants. Names the tool it plugs into (Expo, Vite, CLAUDE.md, ...) |
-| `package.json` `keywords`     | 8 to 15, lowercase, kebab-case. Mix: the ecosystem, the task, the error or symptom, and the tools it is "like"                        |
-| `package.json` `homepage`     | The package's README on GitHub: `https://github.com/arnaud-zg/packages/tree/main/packages/<dir>#readme`                               |
-| `package.json` `repository`   | `git+https://github.com/arnaud-zg/packages.git`, with `directory: packages/<dir>`                                                     |
-| README, first paragraph       | The problem in the reader's words, then what the package does. It is the snippet npm and Google show                                  |
-| README, "Fixes" section       | When the package fixes an error, quote the exact error text in a code block, so a search for that text finds it                       |
-| README, visual                | One picture of the result (screenshot, GIF, diagram or terminal output) above the API sections                                        |
-| `@shiplane/*` plugins         | Keywords include `shiplane`, `shiplane-plugin`, and the host it targets (`fly-io`, `eas`, `cloudflare-pages`, `npm`, `github`, ...)   |
-| Where details live            | In the package README, which npm publishes as the package page. Root README: one line per package, no copied details                  |
-| Private packages              | Not for search, but still a README: what it is for, how to run it, what each test proves, when to add to it                           |
-| Root README and `docs/README` | Every published package is listed in both tables, with a "You're hitting" line written as a symptom                                   |
-| GitHub repo topics            | Cover every package's main ecosystem. Update them when a package for a new ecosystem is added                                         |
+| Where                         | Rule                                                                                                                                                       |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `package.json` `description`  | One sentence, under 160 characters, starting with the outcome a user wants. Names the tool it plugs into (Expo, Vite, CLAUDE.md, ...)                      |
+| `package.json` `keywords`     | 8 to 15, lowercase, kebab-case. Mix: the ecosystem, the task, the error or symptom, and the tools it is "like"                                             |
+| `package.json` `homepage`     | The package's README on GitHub: `https://github.com/arnaud-zg/packages/tree/main/packages/<dir>#readme`                                                    |
+| `package.json` `repository`   | `git+https://github.com/arnaud-zg/packages.git`, with `directory: packages/<dir>`                                                                          |
+| README, first paragraph       | The problem in the reader's words, then what the package does. It is the snippet npm and Google show                                                       |
+| README, "Fixes" section       | When the package fixes an error, quote the exact error text in a code block, so a search for that text finds it                                            |
+| README, visual                | One picture of the result (screenshot, GIF, diagram or terminal output) above the API sections                                                             |
+| `@shiplane/*` plugins         | Keywords include `shiplane`, `shiplane-plugin`, and the host it targets (`fly-io`, `eas`, `cloudflare-pages`, `npm`, `github`, ...)                        |
+| Where details live            | In the package README, which npm publishes as the package page. Root README: one line per package, no copied details                                       |
+| Private packages              | Not for search, but still a README: what it is for, how to run it, what each test proves, when to add to it                                                |
+| Root README and `docs/README` | Every top-level package is listed in both tables (`@shiplane/*` plugins are reached through `shiplane`), with a "You're hitting" line written as a symptom |
+| GitHub repo topics            | Cover every package's main ecosystem. Update them when a package for a new ecosystem is added                                                              |
