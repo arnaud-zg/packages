@@ -50,5 +50,6 @@ Every package that is not `private` follows these. Why: see
 | README, visual                | One picture of the result (screenshot, GIF, diagram or terminal output) above the API sections                                        |
 | `@shiplane/*` plugins         | Keywords include `shiplane`, `shiplane-plugin`, and the host it targets (`fly-io`, `eas`, `cloudflare-pages`, `npm`, `github`, ...)   |
 | Where details live            | In the package README, which npm publishes as the package page. Root README: one line per package, no copied details                  |
+| Private packages              | Not for search, but still a README: what it is for, how to run it, what each test proves, when to add to it                           |
 | Root README and `docs/README` | Every published package is listed in both tables, with a "You're hitting" line written as a symptom                                   |
 | GitHub repo topics            | Cover every package's main ecosystem. Update them when a package for a new ecosystem is added                                         |
