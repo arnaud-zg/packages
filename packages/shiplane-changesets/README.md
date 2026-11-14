@@ -71,7 +71,7 @@ puts the files back when it ends; a release consumes them on its branch, and put
 
 ## Example
 
-[`examples/`](./examples) holds one pending changeset,
+[`examples/`](./examples/shiplane.config.ts) holds one pending changeset,
 [`.changeset/quiet-seeds-wait.md`](./examples/.changeset/quiet-seeds-wait.md):
 
 ```md

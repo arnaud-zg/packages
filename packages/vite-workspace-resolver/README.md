@@ -15,8 +15,14 @@ Failed to resolve import "@acme/ui/button" from "src/app.test.ts". Does the file
 Missing "./button" specifier in "@acme/ui" package
 ```
 
-📚 Full guides:
-[tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/vite-workspace-resolver).
+📚 Guides:
+[🚀 Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/tutorial.md)
+·
+[🛠️ How-to](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/how-to.md)
+·
+[📖 Reference](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/reference.md)
+·
+[💡 Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/vite-workspace-resolver/explanation.md)
 
 ## Install
 

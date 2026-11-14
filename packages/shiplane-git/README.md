@@ -60,7 +60,8 @@ Source: `GitOptions` in `src/git-source-control.adapter.ts`.
 
 ## Example
 
-`pnpm shiplane status` in [`examples/`](./examples), on `trunk`, with its one tool never tagged:
+`pnpm shiplane status` in [`examples/`](./examples/shiplane.config.ts), on `trunk`, with its one
+tool never tagged:
 
 ```text
   Release status  ·  live

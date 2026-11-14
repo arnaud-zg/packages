@@ -26,8 +26,12 @@ Invariant Violation: TurboModuleRegistry.getEnforcing(...): 'RNMyModule' could n
 In Expo Go, the camera screen shows its fallback with the badge. In a development build or the store
 app, the real camera shows and the badge never appears.
 
-📚 Full guides:
-[tutorial, how-to, reference and explanation](https://github.com/arnaud-zg/packages/tree/main/docs/expo-native-guard).
+📚 Guides:
+[🚀 Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/expo-native-guard/tutorial.md) ·
+[🛠️ How-to](https://github.com/arnaud-zg/packages/blob/main/docs/expo-native-guard/how-to.md) ·
+[📖 Reference](https://github.com/arnaud-zg/packages/blob/main/docs/expo-native-guard/reference.md)
+·
+[💡 Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/expo-native-guard/explanation.md)
 
 ## Install
 
