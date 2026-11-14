@@ -1,7 +1,8 @@
 # 🔌 @shiplane/git
 
-Reads and writes the repository through the git CLI: fills [shiplane](../shiplane/README.md)'s
-**source control** port. Versions, tags, the release branch and every push go through it.
+Reads and writes the repository through the git CLI: fills
+[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)'s **source
+control** port. Versions, tags, the release branch and every push go through it.
 
 ```mermaid
 flowchart LR
@@ -11,16 +12,13 @@ flowchart LR
     GIT --> ORIGIN["origin: branches and tags"]
 ```
 
-📚
-[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
-
-## Install
+## ⚡ Install
 
 ```sh
 pnpm add -D shiplane @shiplane/git
 ```
 
-## Configure
+## ⚙️ Configure
 
 Give the adapter to `releaseFlow`. From
 [`examples/shiplane.config.ts`](./examples/shiplane.config.ts):
@@ -46,7 +44,7 @@ export default defineRelease({
 });
 ```
 
-## Options
+## 📋 Options
 
 It fills a flow port, so unit files take no key from it. Its factory takes:
 
@@ -58,7 +56,7 @@ It fills a flow port, so unit files take no key from it. Its factory takes:
 
 Source: `GitOptions` in `src/git-source-control.adapter.ts`.
 
-## Example
+## 🧪 Example
 
 `pnpm shiplane status` in [`examples/`](./examples/shiplane.config.ts), on `trunk`, with its one
 tool never tagged:
@@ -77,7 +75,7 @@ Pushes skip the pre-push hooks (what a release pushes, main already checked) and
 connection drops, never when it is refused. A tag is signed when your commits are
 (`commit.gpgsign`), annotated otherwise. Offline, the last fetched `origin` still answers.
 
-## Tools and sign-ins
+## 🔑 Tools and sign-ins
 
 | Tool  | Checked with    |
 | ----- | --------------- |
@@ -85,6 +83,17 @@ connection drops, never when it is refused. A tag is signed when your commits ar
 
 Source: `requirements` in `src/git-source-control.adapter.ts`; no fix is offered. Pushing needs your
 own rights on `origin`.
+
+## 📚 Docs
+
+- 🔌 **[Plugins](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md)**: how
+  shiplane plugins work, and how to write one
+- 🚢 **[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)**:
+  the release tool this plugin fills a port of
+- 🛠️ **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md)**: add an
+  app, promote, ship from CI
+- 📖 **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/reference.md)**:
+  commands, flags, the config and unit files
 
 ## 📈 Downloads
 

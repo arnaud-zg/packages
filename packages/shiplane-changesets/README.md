@@ -1,8 +1,9 @@
 # 🔌 @shiplane/changesets
 
 Versions from `.changeset` files, through the changesets CLI: fills
-[shiplane](../shiplane/README.md)'s **versioning** port. A changeset is the intent to release;
-shiplane turns the pending ones into versions and changelogs on the release PR.
+[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)'s
+**versioning** port. A changeset is the intent to release; shiplane turns the pending ones into
+versions and changelogs on the release PR.
 
 ```mermaid
 flowchart LR
@@ -12,16 +13,13 @@ flowchart LR
     VERSION --> OUT["new versions and changelogs"]
 ```
 
-📚
-[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
-
-## Install
+## ⚡ Install
 
 ```sh
 pnpm add -D shiplane @shiplane/changesets @changesets/cli
 ```
 
-## Configure
+## ⚙️ Configure
 
 Give the adapter to `releaseFlow`. From
 [`examples/shiplane.config.ts`](./examples/shiplane.config.ts):
@@ -44,7 +42,7 @@ export default defineRelease({
 });
 ```
 
-## Options
+## 📋 Options
 
 It fills a flow port, so unit files take no key from it. Its factory takes:
 
@@ -55,7 +53,7 @@ It fills a flow port, so unit files take no key from it. Its factory takes:
 
 Source: `ChangesetsOptions` in `src/changesets-versioning.adapter.ts`.
 
-## Thank contributors
+## 🙏 Thank contributors
 
 A GitHub changelog thanks the author on every line. `thanks` thanks everyone once instead, in the
 release's changelog section and so in its release notes. Pick a preset:
@@ -86,25 +84,26 @@ Put your text before `{changes}` to thank people first. Without `{changes}`, the
 changes. Leave `thanks` out to keep changesets' own `Thanks @x!` on each line. It reads the thanks
 `@changesets/changelog-github` writes, only in the section a release just wrote, and
 `commitsVersioning()` takes it too. Every preset rendered on a real release:
-[How-to](../../docs/shiplane/how-to.md#thank-contributors-in-release-notes). Source:
-`src/thanks.ts`.
+[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md#thank-contributors-in-release-notes).
+Source: `src/thanks.ts`.
 
-## Release from commits
+## 🔁 Release from commits
 
 `commitsVersioning()` takes the same options and needs no changeset written: the commits since each
 package's version become the release's changesets, and the changesets CLI does the rest. `feat` is a
 minor, a subject marked `!` a major (a minor below 1.0), and anything else a patch.
-[How-to](../../docs/shiplane/how-to.md#release-from-commits). Source:
-`src/commits-versioning.adapter.ts`.
+[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md#release-from-commits).
+Source: `src/commits-versioning.adapter.ts`.
 
-## Force another version
+## ⏫ Force another version
 
-When a person [picks another version](../../docs/shiplane/how-to.md#force-another-version), shiplane
-adds a changeset at that level and hands both adapters a `ceiling`: no line ships above it. A plan
-puts the files back when it ends; a release consumes them on its branch, and puts them back if
-`changeset version` fails.
+When a person
+[picks another version](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md#force-another-version),
+shiplane adds a changeset at that level and hands both adapters a `ceiling`: no line ships above it.
+A plan puts the files back when it ends; a release consumes them on its branch, and puts them back
+if `changeset version` fails.
 
-## Example
+## 🧪 Example
 
 [`examples/`](./examples/shiplane.config.ts) holds one pending changeset,
 [`.changeset/quiet-seeds-wait.md`](./examples/.changeset/quiet-seeds-wait.md):
@@ -132,7 +131,7 @@ What moves is read with `changeset status`, which writes nothing. Changesets hel
 release are set aside only while it versions. A GitHub changelog asks GitHub who wrote each change:
 `GITHUB_TOKEN` when set, your `gh` sign-in otherwise.
 
-## Tools and sign-ins
+## 🔑 Tools and sign-ins
 
 | Tool                               | Needed for                                       |
 | ---------------------------------- | ------------------------------------------------ |
@@ -141,6 +140,17 @@ release are set aside only while it versions. A GitHub changelog asks GitHub who
 
 The adapter declares no `requirements`, so `doctor` checks neither. Source:
 `src/changesets-versioning.adapter.ts`.
+
+## 📚 Docs
+
+- 🔌 **[Plugins](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md)**: how
+  shiplane plugins work, and how to write one
+- 🚢 **[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)**:
+  the release tool this plugin fills a port of
+- 🛠️ **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md)**: add an
+  app, promote, ship from CI
+- 📖 **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/reference.md)**:
+  commands, flags, the config and unit files
 
 ## 📈 Downloads
 

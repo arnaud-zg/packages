@@ -1,7 +1,7 @@
 # 🔌 @shiplane/github
 
-GitHub for [shiplane](../shiplane/README.md), through the `gh` CLI. Two adapters and a feature, one
-sign-in:
+GitHub for [shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md),
+through the `gh` CLI. Two adapters and a feature, one sign-in:
 
 | Factory                     | Fills            | Does                                                         |
 | --------------------------- | ---------------- | ------------------------------------------------------------ |
@@ -21,16 +21,13 @@ flowchart LR
     RC --> GH
 ```
 
-📚
-[How shiplane plugins work](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md).
-
-## Install
+## ⚡ Install
 
 ```sh
 pnpm add -D shiplane @shiplane/github
 ```
 
-## Configure
+## ⚙️ Configure
 
 From [`examples/shiplane.config.ts`](./examples/shiplane.config.ts):
 
@@ -57,7 +54,7 @@ export default defineRelease({
 });
 ```
 
-## Options
+## 📋 Options
 
 It fills flow ports, so unit files take no key from it. The factories take:
 
@@ -72,7 +69,7 @@ It fills flow ports, so unit files take no key from it. The factories take:
 Source: `src/github-code-host.adapter.ts`, `src/github-actions-ci-pipeline.adapter.ts`,
 `ReleaseCommentsOptions` in `src/release-comments.feature.ts`.
 
-## Example
+## 🧪 Example
 
 `pnpm shiplane plan` in [`examples/`](./examples/shiplane.config.ts) shows the ship through GitHub
 Actions dispatching `deploy.yml`:
@@ -92,13 +89,24 @@ Actions dispatching `deploy.yml`:
 On the runner, the workflow runs `shiplane ship` with the same unit files. Each comment carries a
 marker, so a version tells a PR once per environment, however many times it ships.
 
-## Tools and sign-ins
+## 🔑 Tools and sign-ins
 
 | Tool | Checked with     | Fixed with      | In CI      |
 | ---- | ---------------- | --------------- | ---------- |
 | `gh` | `gh auth status` | `gh auth login` | `GH_TOKEN` |
 
 Source: `requirements` in both adapters. `pnpm shiplane doctor` runs the check and offers the fix.
+
+## 📚 Docs
+
+- 🔌 **[Plugins](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md)**: how
+  shiplane plugins work, and how to write one
+- 🚢 **[shiplane](https://github.com/arnaud-zg/packages/blob/main/packages/shiplane/README.md)**:
+  the release tool this plugin fills a port of
+- 🛠️ **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md)**: add an
+  app, promote, ship from CI
+- 📖 **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/reference.md)**:
+  commands, flags, the config and unit files
 
 ## 📈 Downloads
 

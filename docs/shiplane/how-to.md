@@ -346,7 +346,7 @@ A template is one string. `{changes}` is the release's changes; `{contributors}`
 It rewrites the changelog section the release just wrote, so the release PR shows the result before
 it ships, and the tag's release notes match. `commitsVersioning()` takes the same option. Every
 option is listed in
-[`@shiplane/changesets`](../../packages/shiplane-changesets/README.md#thank-contributors).
+[`@shiplane/changesets`](../../packages/shiplane-changesets/README.md#-thank-contributors).
 
 ## Ship a host with no plugin
 

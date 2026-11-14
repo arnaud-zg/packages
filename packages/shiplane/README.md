@@ -95,15 +95,15 @@ export default defineRelease({
 
 Swap any piece:
 
-| Want                                                    | Use                                                                                      |
-| ------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| To write the changelog yourself                         | [`changesetsVersioning()`](../../docs/shiplane/how-to.md#choose-how-versions-are-bumped) |
-| Any host with a deploy command                          | [`shellServerHosting()`](../../docs/shiplane/plugins.md#built-in-shellserverhosting)     |
-| To release Claude Code, Codex, Cursor or Gemini plugins | [`agentPlugin()`](../../docs/shiplane/how-to.md#release-claude-code-plugins)             |
-| To comment on each PR when it ships                     | [`releaseComments()`](../../docs/shiplane/how-to.md#comment-on-what-shipped)             |
-| Your own host                                           | [Write a plugin](../../docs/shiplane/how-to.md#write-a-plugin)                           |
-| To ship from this machine, not Actions                  | [`--via local`](../../docs/shiplane/how-to.md#choose-github-actions-or-this-machine)     |
-| A quieter terminal                                      | [`display: { mascot: false }`](../../docs/shiplane/how-to.md#turn-the-mascot-off)        |
+| Want                                                    | Use                                                                                                                                |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| To write the changelog yourself                         | [`changesetsVersioning()`](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md#choose-how-versions-are-bumped) |
+| Any host with a deploy command                          | [`shellServerHosting()`](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md#built-in-shellserverhosting)     |
+| To release Claude Code, Codex, Cursor or Gemini plugins | [`agentPlugin()`](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md#release-claude-code-plugins)             |
+| To comment on each PR when it ships                     | [`releaseComments()`](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md#comment-on-what-shipped)             |
+| Your own host                                           | [Write a plugin](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md#write-a-plugin)                           |
+| To ship from this machine, not Actions                  | [`--via local`](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md#choose-github-actions-or-this-machine)     |
+| A quieter terminal                                      | [`display: { mascot: false }`](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md#turn-the-mascot-off)        |
 
 `pnpm shiplane plugins` in that repository shows what got injected where:
 
@@ -134,16 +134,21 @@ Features, after the ship
 ```
 
 The adapters come from separate packages:
-**[the adapters you can inject](../../docs/shiplane/plugins.md)**.
+**[the adapters you can inject](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md)**.
 
 ## 📚 Docs
 
-- 🚀 **[Tutorial](../../docs/shiplane/tutorial.md)**: release your first package
-- 🛠️ **[How-to](../../docs/shiplane/how-to.md)**: add an app, promote, ship from CI, write a plugin
-- 📖 **[Reference](../../docs/shiplane/reference.md)**: commands, flags, the config and unit files
-- 🔌 **[Plugins](../../docs/shiplane/plugins.md)**: the adapters you can inject, and how to write
-  one
-- 💡 **[Explanation](../../docs/shiplane/explanation.md)**: why it works this way
+- 🚀 **[Tutorial](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/tutorial.md)**:
+  release your first package
+- 🛠️ **[How-to](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/how-to.md)**: add an
+  app, promote, ship from CI, write a plugin
+- 📖 **[Reference](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/reference.md)**:
+  commands, flags, the config and unit files
+- 🔌 **[Plugins](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/plugins.md)**: the
+  adapters you can inject, and how to write one
+- 💡
+  **[Explanation](https://github.com/arnaud-zg/packages/blob/main/docs/shiplane/explanation.md)**:
+  why it works this way
 
 ## 📈 Downloads
 
