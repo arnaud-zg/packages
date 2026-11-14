@@ -1,6 +1,6 @@
 {
   "name": "@shiplane/fly",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Fly.io plugin for shiplane: deploy any Dockerfile app per environment with flyctl.",
   "keywords": [
     "shiplane",
