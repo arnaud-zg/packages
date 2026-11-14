@@ -32,6 +32,9 @@ for that reader, not for the author:
 - **Web search** matches the words people type: the exact error message, or "how to X with Y". A
   README that only names the solution ("fallback", "resolver") misses them; one that quotes the
   error string matches it.
+- **AI assistants** (ChatGPT, Claude, Copilot, Cursor) recommend packages they can describe with
+  confidence, from the npm page and the README. So the description says plainly what the package
+  does, and the first example works when pasted, imports included.
 - **npm shows the published `package.json`, not `main`.** A keyword or description change does
   nothing until the package is released again. That is why such a change gets its own changeset.
 

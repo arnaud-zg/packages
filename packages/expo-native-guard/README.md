@@ -40,6 +40,8 @@ bundlers evaluate top-level imports eagerly regardless of which branch runs, so 
 the native variant would crash Expo Go before the check ever ran:
 
 ```tsx
+import { createExpoGoAwareComponent } from "expo-native-guard";
+
 export const CameraView = createExpoGoAwareComponent("CameraView", {
   native: () => require("./CameraView").CameraView,
   expoGo: () => require("./CameraView.expoGo").CameraView,

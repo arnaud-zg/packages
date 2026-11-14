@@ -1,10 +1,11 @@
 {
   "name": "agent-context-budget",
   "version": "0.1.1",
-  "description": "Scores CLAUDE.md, AGENTS.md and other AI agent context files against token budgets, and shows which sections to cut.",
+  "description": "Scores the markdown files an AI agent loads (CLAUDE.md, AGENTS.md, the docs they link) against token budgets, and shows which sections to cut.",
   "keywords": [
     "claude-code",
     "agents-md",
+    "markdown",
     "llm",
     "ai-agents",
     "cursor",
